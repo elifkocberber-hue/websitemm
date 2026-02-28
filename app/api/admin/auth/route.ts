@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as bcrypt from 'bcrypt';
+import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
 
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@ter-aseramik.com';
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || '';
@@ -35,7 +36,26 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting: max 5 login attempts per 15 minutes
+    const rateLimitKey = getRateLimitKey(request, 'admin-login');
+    const { allowed, remaining } = checkRateLimit(rateLimitKey, 5, 15 * 60 * 1000);
+
+    if (!allowed) {
+      return NextResponse.json(
+        { success: false, error: 'Çok fazla başarısız giriş denemesi. Lütfen 15 dakika sonra tekrar deneyin.' },
+        { status: 429, headers: { 'Retry-After': '900' } }
+      );
+    }
+
     const { email, password } = await request.json();
+
+    // Validate input
+    if (!email || typeof email !== 'string' || !password || typeof password !== 'string') {
+      return NextResponse.json(
+        { success: false, error: 'Geçersiz e-posta veya şifre' },
+        { status: 401 }
+      );
+    }
 
     // Validate email
     if (email !== ADMIN_EMAIL) {
@@ -99,4 +119,27 @@ export async function DELETE(request: NextRequest) {
     console.error('Logout error:', error);
     return NextResponse.json({ success: false }, { status: 500 });
   }
+}
+
+// Handle CORS preflight requests
+export async function OPTIONS(request: NextRequest) {
+  const response = new NextResponse();
+  
+  const origin = request.headers.get('origin');
+  const allowedOrigins = [
+    process.env.NEXT_PUBLIC_APP_URL,
+    'https://websitemm.vercel.app',
+    'http://localhost:3000',
+  ].filter(Boolean);
+
+  if (origin && allowedOrigins.includes(origin)) {
+    response.headers.set('Access-Control-Allow-Origin', origin);
+  }
+
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  response.headers.set('Access-Control-Max-Age', '86400');
+
+  return response;
 }

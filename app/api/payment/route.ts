@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as crypto from 'crypto';
 import { getOrCreateUser, createOrder, createOrderItems } from '@/lib/supabase';
+import { validateCustomerData } from '@/lib/validation';
+import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
 
 function generateRandomId(): string {
   return Math.random().toString(36).substring(2, 15);
@@ -15,7 +17,43 @@ function generateSignature(message: string, secretKey: string): string {
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting: max 10 payment attempts per hour
+    const rateLimitKey = getRateLimitKey(request, 'payment');
+    const { allowed } = checkRateLimit(rateLimitKey, 10, 60 * 60 * 1000);
+
+    if (!allowed) {
+      return NextResponse.json(
+        { success: false, error: 'Çok fazla ödeme denemesi. Lütfen daha sonra tekrar deneyin.' },
+        { status: 429, headers: { 'Retry-After': '3600' } }
+      );
+    }
+
     const { totalPrice, items, customer } = await request.json();
+
+    // Validate customer data
+    const validation = validateCustomerData(customer);
+    if (!validation.valid) {
+      return NextResponse.json(
+        { success: false, error: 'Geçersiz müşteri bilgileri', details: validation.errors },
+        { status: 400 }
+      );
+    }
+
+    // Validate total price
+    if (!totalPrice || totalPrice <= 0) {
+      return NextResponse.json(
+        { success: false, error: 'Geçersiz ödeme tutarı' },
+        { status: 400 }
+      );
+    }
+
+    // Validate items array
+    if (!Array.isArray(items) || items.length === 0) {
+      return NextResponse.json(
+        { success: false, error: 'Geçersiz ürün bilgileri' },
+        { status: 400 }
+      );
+    }
 
     const apiKey = process.env.NEXT_PUBLIC_IYZICO_API_KEY || '';
     const secretKey = process.env.NEXT_PUBLIC_IYZICO_SECRET_KEY || '';
@@ -180,4 +218,27 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+// Handle CORS preflight requests
+export async function OPTIONS(request: NextRequest) {
+  const response = new NextResponse();
+  
+  const origin = request.headers.get('origin');
+  const allowedOrigins = [
+    process.env.NEXT_PUBLIC_APP_URL,
+    'https://websitemm.vercel.app',
+    'http://localhost:3000',
+  ].filter(Boolean);
+
+  if (origin && allowedOrigins.includes(origin)) {
+    response.headers.set('Access-Control-Allow-Origin', origin);
+  }
+
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  response.headers.set('Access-Control-Max-Age', '86400');
+
+  return response;
+}
 }
