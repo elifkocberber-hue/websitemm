@@ -1,42 +1,54 @@
+import Link from 'next/link';
+
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-stone-900 text-white mt-16">
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+    <footer className="bg-charcoal text-bone mt-0">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16 md:py-20">
+        {/* Top — Large serif statement */}
+        <div className="mb-16">
+          <p className="heading-display text-4xl md:text-5xl lg:text-6xl max-w-2xl leading-tight">
+            Her parça,<br />bir hikaye taşır.
+          </p>
+        </div>
+
+        {/* Links Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16">
           <div>
-            <h4 className="text-lg font-bold text-amber-500 mb-4">El&apos;s Dream Factory</h4>
-            <p className="text-stone-400 text-sm leading-relaxed">
-              Geleneksel Kütahya seramik sanatını modern tasarımlarla buluşturan el yapımı seramik atölyesi.
-            </p>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-stone-300 mb-4">Keşfet</h4>
-            <ul className="space-y-2 text-stone-400 text-sm">
-              <li><a href="/" className="hover:text-amber-400 transition-colors">Ana Sayfa</a></li>
-              <li><a href="/ceramics" className="hover:text-amber-400 transition-colors">Koleksiyon</a></li>
-              <li><a href="/about" className="hover:text-amber-400 transition-colors">Hakkımızda</a></li>
+            <h4 className="text-[11px] tracking-[0.2em] uppercase text-clay mb-5">Keşfet</h4>
+            <ul className="space-y-3">
+              <li><Link href="/" className="text-sm text-bone/60 hover:text-bone transition-colors">Ana Sayfa</Link></li>
+              <li><Link href="/ceramics" className="text-sm text-bone/60 hover:text-bone transition-colors">Koleksiyon</Link></li>
+              <li><Link href="/about" className="text-sm text-bone/60 hover:text-bone transition-colors">Hakkımızda</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-stone-300 mb-4">Bilgi</h4>
-            <ul className="space-y-2 text-stone-400 text-sm">
-              <li><a href="/privacy" className="hover:text-amber-400 transition-colors">Gizlilik Politikası</a></li>
-              <li><a href="#" className="hover:text-amber-400 transition-colors">Kullanım Şartları</a></li>
-              <li><a href="#" className="hover:text-amber-400 transition-colors">İade Politikası</a></li>
+            <h4 className="text-[11px] tracking-[0.2em] uppercase text-clay mb-5">Bilgi</h4>
+            <ul className="space-y-3">
+              <li><Link href="/privacy" className="text-sm text-bone/60 hover:text-bone transition-colors">Gizlilik Politikası</Link></li>
+              <li><a href="#" className="text-sm text-bone/60 hover:text-bone transition-colors">Kullanım Şartları</a></li>
+              <li><a href="#" className="text-sm text-bone/60 hover:text-bone transition-colors">İade Politikası</a></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-stone-300 mb-4">İletişim</h4>
-            <ul className="space-y-2 text-stone-400 text-sm">
-              <li>info@elsdreamfactory.com</li>
-              <li>Kütahya, Türkiye</li>
-              <li>Pzt - Cuma: 09:00 - 18:00</li>
+            <h4 className="text-[11px] tracking-[0.2em] uppercase text-clay mb-5">İletişim</h4>
+            <ul className="space-y-3">
+              <li className="text-sm text-bone/60">info@elsdreamfactory.com</li>
+              <li className="text-sm text-bone/60">Kütahya, Türkiye</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-[11px] tracking-[0.2em] uppercase text-clay mb-5">Takip Et</h4>
+            <ul className="space-y-3">
+              <li><a href="#" className="text-sm text-bone/60 hover:text-bone transition-colors">Instagram</a></li>
+              <li><a href="#" className="text-sm text-bone/60 hover:text-bone transition-colors">Pinterest</a></li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-stone-800 pt-8 flex flex-col md:flex-row justify-between items-center text-stone-500 text-sm">
-          <p>&copy; 2026 El&apos;s Dream Factory. Tüm hakları saklıdır.</p>
-          <p className="mt-2 md:mt-0">Kütahya, Türkiye&apos;den sevgiyle üretildi.</p>
+
+        {/* Bottom */}
+        <div className="border-t border-bone/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-bone/30">&copy; 2026 El&apos;s Dream Factory</p>
+          <p className="text-xs text-bone/30">Kütahya&apos;dan sevgiyle</p>
         </div>
       </div>
     </footer>

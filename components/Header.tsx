@@ -2,74 +2,92 @@
 
 import Link from 'next/link';
 import { useCart } from '@/context/CeramicCartContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export const Header: React.FC = () => {
   const { totalItems } = useCart();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <header className="bg-white shadow">
-      <nav className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-amber-600 tracking-tight">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-500 ${
+        scrolled
+          ? 'bg-[#F7F3EE]/95 backdrop-blur-md shadow-[0_1px_0_rgba(0,0,0,0.06)]'
+          : 'bg-[#F7F3EE]/60 backdrop-blur-sm'
+      }`}
+    >
+      <nav className="max-w-[1400px] mx-auto px-6 md:px-10 flex items-center justify-between h-[72px]">
+        {/* Logo */}
+        <Link href="/" className="heading-serif text-xl tracking-tight text-charcoal">
           El&apos;s Dream Factory
         </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex gap-8 items-center">
-          <Link href="/" className="text-gray-600 hover:text-amber-600 font-medium">
-            Ana Sayfa
-          </Link>
-          <Link href="/ceramics" className="text-gray-600 hover:text-amber-600 font-medium">
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-10">
+          <Link
+            href="/ceramics"
+            className="link-line text-[13px] tracking-[0.12em] uppercase text-earth hover:text-charcoal transition-colors"
+          >
             Koleksiyon
           </Link>
-          <Link href="/about" className="text-gray-600 hover:text-amber-600 font-medium">
+          <Link
+            href="/about"
+            className="link-line text-[13px] tracking-[0.12em] uppercase text-earth hover:text-charcoal transition-colors"
+          >
             Hakkımızda
           </Link>
           <Link
             href="/cart"
-            className="relative bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-700 font-medium"
+            className="relative flex items-center gap-2"
+            aria-label={`Sepet${totalItems > 0 ? ` (${totalItems} ürün)` : ''}`}
           >
-            Sepet
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-charcoal">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 01-8 0" />
+            </svg>
             {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+              <span className="absolute -top-2 -right-3 w-5 h-5 bg-accent text-white text-[10px] font-medium flex items-center justify-center rounded-full">
                 {totalItems}
               </span>
             )}
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Toggle */}
         <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded hover:bg-gray-100"
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="md:hidden w-8 h-8 flex flex-col justify-center items-center gap-1.5"
+          aria-label="Menü"
+          aria-expanded={menuOpen}
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          <span className={`block w-6 h-[1.5px] bg-charcoal transition-all duration-300 origin-center ${menuOpen ? 'rotate-45 translate-y-[4.5px]' : ''}`} />
+          <span className={`block w-6 h-[1.5px] bg-charcoal transition-all duration-300 origin-center ${menuOpen ? '-rotate-45 -translate-y-[4.5px]' : ''}`} />
         </button>
       </nav>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-gray-50 border-t">
-          <div className="px-4 py-4 space-y-3">
-            <Link href="/" className="block text-gray-600 hover:text-amber-600 font-medium py-2">
-              Ana Sayfa
-            </Link>
-            <Link href="/ceramics" className="block text-gray-600 hover:text-amber-600 font-medium py-2">
-              Koleksiyon
-            </Link>
-            <Link href="/about" className="block text-gray-600 hover:text-amber-600 font-medium py-2">
-              Hakkımızda
-            </Link>
-            <Link
-              href="/cart"
-              className="block bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-700 font-medium text-center"
-            >
-              Sepet ({totalItems})
-            </Link>
-          </div>
+      {/* Mobile Menu — Full-screen overlay */}
+      {menuOpen && (
+        <div className="md:hidden fixed inset-0 top-[72px] bg-bone z-40 flex flex-col items-center justify-center gap-10">
+          <Link href="/" onClick={() => setMenuOpen(false)} className="heading-serif text-3xl text-charcoal hover:text-accent transition-colors">
+            Ana Sayfa
+          </Link>
+          <Link href="/ceramics" onClick={() => setMenuOpen(false)} className="heading-serif text-3xl text-charcoal hover:text-accent transition-colors">
+            Koleksiyon
+          </Link>
+          <Link href="/about" onClick={() => setMenuOpen(false)} className="heading-serif text-3xl text-charcoal hover:text-accent transition-colors">
+            Hakkımızda
+          </Link>
+          <Link href="/cart" onClick={() => setMenuOpen(false)} className="heading-serif text-3xl text-charcoal hover:text-accent transition-colors">
+            Sepet{totalItems > 0 ? ` (${totalItems})` : ''}
+          </Link>
         </div>
       )}
     </header>

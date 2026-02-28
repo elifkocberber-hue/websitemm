@@ -1,31 +1,239 @@
 @import "tailwindcss";
 
+/* =============================================
+   DESIGN SYSTEM — Wabi-Sabi × Modern Brutalism
+   ============================================= */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F7F3EE;
+  --foreground: #1C1917;
+  --accent: #C2410C;
+  --accent-hover: #9A3412;
+  --earth: #78716C;
+  --clay: #A8A29E;
+  --bone: #F7F3EE;
+  --charcoal: #292524;
+  --warm-gray: #E7E0D8;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-earth: var(--earth);
+  --color-clay: var(--clay);
+  --color-bone: var(--bone);
+  --color-charcoal: var(--charcoal);
+  --color-warm-gray: var(--warm-gray);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-playfair);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base ── */
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Optima, 'Optima Nova', Palatino, 'Palatino Linotype', serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Header logo font exception */
-header a {
-  font-family: var(--font-geist-sans);
+::selection {
+  background-color: var(--accent);
+  color: #fff;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bone); }
+::-webkit-scrollbar-thumb { background: var(--clay); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ── Typography ── */
+
+.heading-serif {
+  font-family: var(--font-serif), Georgia, 'Times New Roman', serif;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.heading-display {
+  font-family: var(--font-serif), Georgia, 'Times New Roman', serif;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  line-height: 1.08;
+}
+
+/* ── Custom Cursor (desktop only) ── */
+
+@media (hover: hover) and (pointer: fine) {
+  html,
+  a, button, [role="button"], input, select, textarea, label {
+    cursor: none !important;
+  }
+
+  .custom-cursor {
+    position: fixed;
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid var(--charcoal);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition:
+      width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease,
+      background-color 0.25s ease;
+    mix-blend-mode: difference;
+    background-color: transparent;
+  }
+
+  .custom-cursor--hover {
+    width: 52px;
+    height: 52px;
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: #fff;
+  }
+}
+
+/* ── Scroll Reveal Animations ── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-left--visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-right--visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-scale--visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ── Product Card Image Hover ── */
+
+.product-image-hover {
+  overflow: hidden;
+}
+.product-image-hover .img-primary {
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.5s ease;
+}
+.product-image-hover .img-secondary {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+.product-image-hover:hover .img-primary {
+  transform: scale(1.06);
+  opacity: 0;
+}
+.product-image-hover:hover .img-secondary {
+  opacity: 1;
+}
+
+/* ── Marquee ── */
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee-track {
+  display: inline-flex;
+  animation: marquee 35s linear infinite;
+}
+.marquee-container:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ── Link Underline ── */
+
+.link-line {
+  position: relative;
+  display: inline-block;
+}
+.link-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-line:hover::after {
+  width: 100%;
+}
+
+/* ── Parallax ── */
+
+.parallax-section {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+@media (max-width: 768px) {
+  .parallax-section {
+    background-attachment: scroll;
+  }
+}
+
+/* ── Scroll Indicator ── */
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(1); }
+  50% { opacity: 0.8; transform: scaleY(1.3); }
+}
+.scroll-indicator {
+  animation: scrollPulse 2s ease-in-out infinite;
+  transform-origin: top;
 }

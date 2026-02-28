@@ -2,9 +2,9 @@
 
 import { ceramicProducts, getCeramicCategories, getClayTypes } from '@/data/ceramicProducts';
 import { CeramicProductCard } from '@/components/CeramicProductCard';
+import { ScrollReveal } from '@/components/ScrollReveal';
 import Link from 'next/link';
 import { useState } from 'react';
-import { CeramicProduct } from '@/types/ceramic';
 
 export default function CeramicsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -17,155 +17,142 @@ export default function CeramicsPage() {
   const clayTypeLabels: Record<string, string> = {
     stoneware: 'Stoneware',
     porcelain: 'Porselen',
-    earthenware: 'Toprak Çanak',
-    'bone-china': 'Kemik Porseleni',
+    earthenware: 'Toprak',
+    'bone-china': 'Bone China',
     terracotta: 'Terracotta',
   };
 
   let filteredProducts = ceramicProducts;
+  if (selectedCategory) filteredProducts = filteredProducts.filter(p => p.category === selectedCategory);
+  if (selectedClayType) filteredProducts = filteredProducts.filter(p => p.clayType === selectedClayType);
+  if (showHandmadeOnly) filteredProducts = filteredProducts.filter(p => p.handmade);
 
-  if (selectedCategory) {
-    filteredProducts = filteredProducts.filter(p => p.category === selectedCategory);
-  }
-  if (selectedClayType) {
-    filteredProducts = filteredProducts.filter(p => p.clayType === selectedClayType);
-  }
-  if (showHandmadeOnly) {
-    filteredProducts = filteredProducts.filter(p => p.handmade);
-  }
+  const hasActiveFilters = selectedCategory || selectedClayType || showHandmadeOnly;
+
+  const imageClasses = ['aspect-[4/5]', 'aspect-[3/4]', 'aspect-square', 'aspect-[5/6]', 'aspect-[4/5]'];
 
   return (
-    <div className="py-12">
+    <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-12 md:py-20">
       {/* Header */}
-      <section className="mb-10">
-        <p className="text-amber-600 font-medium text-sm uppercase tracking-wider mb-2">Koleksiyon</p>
-        <h1 className="text-4xl font-bold text-gray-900 mb-3">Seramik Ürünleri</h1>
-        <p className="text-lg text-gray-500 mb-6">
-          Geleneksel seramik sanatının en güzel örnekleri. Her ürün benzersiz ve kaliteli malzemelerle yapılmıştır.
-        </p>
-      </section>
+      <ScrollReveal>
+        <div className="mb-12 md:mb-16">
+          <div className="flex items-center gap-2 text-xs tracking-[0.15em] uppercase text-earth mb-4">
+            <Link href="/" className="hover:text-charcoal transition-colors">Ana Sayfa</Link>
+            <span>/</span>
+            <span className="text-charcoal">Koleksiyon</span>
+          </div>
+          <h1 className="heading-display text-4xl md:text-5xl text-charcoal">Koleksiyon</h1>
+          <p className="text-earth mt-4 max-w-xl leading-relaxed">
+            Geleneksel seramik sanatının en güzel örnekleri — her biri benzersiz ve el yapımı.
+          </p>
+        </div>
+      </ScrollReveal>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Sidebar - Filtreleme */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow-md p-5 sticky top-4">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 border-b pb-3">Filtreler</h3>
+      <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10 md:gap-14">
+        {/* Sidebar Filters */}
+        <aside className="lg:sticky lg:top-[92px] lg:self-start">
+          <div className="space-y-8">
+            {/* Handmade toggle */}
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={showHandmadeOnly}
+                onChange={(e) => setShowHandmadeOnly(e.target.checked)}
+                className="sr-only"
+              />
+              <div className={`w-5 h-5 border flex items-center justify-center transition-colors ${
+                showHandmadeOnly ? 'bg-charcoal border-charcoal' : 'border-clay group-hover:border-charcoal'
+              }`}>
+                {showHandmadeOnly && (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+              </div>
+              <span className="text-sm text-charcoal">Sadece El Yapımı</span>
+            </label>
 
-            {/* Handmade Filter */}
-            <div className="mb-6">
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={showHandmadeOnly}
-                  onChange={(e) => setShowHandmadeOnly(e.target.checked)}
-                  className="w-4 h-4 rounded"
-                />
-                <span className="ml-2 text-gray-700 font-medium">Sadece El Yapımı</span>
-              </label>
-            </div>
-
-            {/* Category Filter */}
-            <div className="mb-6">
-              <h4 className="font-semibold text-gray-800 mb-3">Kategori</h4>
+            {/* Category */}
+            <div>
+              <h3 className="text-[11px] tracking-[0.15em] uppercase text-earth mb-4">Kategori</h3>
               <div className="space-y-2">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className={`block w-full text-left px-3 py-2 rounded transition-colors ${
-                    selectedCategory === null
-                      ? 'bg-amber-600 text-white font-medium'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                  className={`block text-sm transition-colors ${!selectedCategory ? 'text-charcoal font-medium' : 'text-earth hover:text-charcoal'}`}
                 >
                   Tümü
                 </button>
-                {categories.map(category => (
+                {categories.map(cat => (
                   <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`block w-full text-left px-3 py-2 rounded transition-colors ${
-                      selectedCategory === category
-                        ? 'bg-amber-600 text-white font-medium'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`block text-sm transition-colors ${selectedCategory === cat ? 'text-charcoal font-medium' : 'text-earth hover:text-charcoal'}`}
                   >
-                    {category}
+                    {cat}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Clay Type Filter */}
+            {/* Clay Type */}
             <div>
-              <h4 className="font-semibold text-gray-800 mb-3">Çamur Tipi</h4>
-              <div className="space-y-2 max-h-48 overflow-y-auto">
+              <h3 className="text-[11px] tracking-[0.15em] uppercase text-earth mb-4">Malzeme</h3>
+              <div className="space-y-2">
                 <button
                   onClick={() => setSelectedClayType(null)}
-                  className={`block w-full text-left px-3 py-2 rounded transition-colors ${
-                    selectedClayType === null
-                      ? 'bg-amber-600 text-white font-medium'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                  className={`block text-sm transition-colors ${!selectedClayType ? 'text-charcoal font-medium' : 'text-earth hover:text-charcoal'}`}
                 >
                   Tümü
                 </button>
-                {clayTypes.map(clayType => (
+                {clayTypes.map(ct => (
                   <button
-                    key={clayType}
-                    onClick={() => setSelectedClayType(clayType)}
-                    className={`block w-full text-left px-3 py-2 rounded transition-colors text-sm ${
-                      selectedClayType === clayType
-                        ? 'bg-amber-600 text-white font-medium'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
+                    key={ct}
+                    onClick={() => setSelectedClayType(ct)}
+                    className={`block text-sm transition-colors ${selectedClayType === ct ? 'text-charcoal font-medium' : 'text-earth hover:text-charcoal'}`}
                   >
-                    {clayTypeLabels[clayType]}
+                    {clayTypeLabels[ct]}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Clear Filters */}
-            {(selectedCategory || selectedClayType || showHandmadeOnly) && (
+            {/* Clear filters */}
+            {hasActiveFilters && (
               <button
-                onClick={() => {
-                  setSelectedCategory(null);
-                  setSelectedClayType(null);
-                  setShowHandmadeOnly(false);
-                }}
-                className="w-full mt-6 bg-stone-100 hover:bg-stone-200 text-stone-800 font-medium py-2 px-4 rounded-lg transition-colors"
+                onClick={() => { setSelectedCategory(null); setSelectedClayType(null); setShowHandmadeOnly(false); }}
+                className="text-sm text-accent hover:text-charcoal transition-colors"
               >
                 Filtreleri Temizle
               </button>
             )}
           </div>
-        </div>
+        </aside>
 
-        {/* Products Grid */}
-        <div className="lg:col-span-3">
-          <div className="mb-6 flex justify-between items-center">
-            <p className="text-gray-700 font-medium">
-              {filteredProducts.length} ürün gösteriliyor
-            </p>
-          </div>
+        {/* Products — masonry via CSS columns */}
+        <div>
+          <p className="text-sm text-earth mb-8">{filteredProducts.length} ürün</p>
 
           {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map(product => (
-                <CeramicProductCard key={product.id} product={product} />
+            <div className="columns-1 md:columns-2 gap-x-8">
+              {filteredProducts.map((product, i) => (
+                <div key={product.id} className="mb-8 break-inside-avoid">
+                  <ScrollReveal delay={Math.min(i * 60, 400)}>
+                    <CeramicProductCard
+                      product={product}
+                      imageClass={imageClasses[i % imageClasses.length]}
+                    />
+                  </ScrollReveal>
+                </div>
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-md p-12 text-center">
-              <p className="text-xl text-gray-600 mb-4">Seçili filtrelere uygun ürün bulunamadı.</p>
+            <div className="text-center py-20">
+              <p className="heading-serif text-xl text-charcoal mb-4">Ürün bulunamadı</p>
               <button
-                onClick={() => {
-                  setSelectedCategory(null);
-                  setSelectedClayType(null);
-                  setShowHandmadeOnly(false);
-                }}
-                className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                onClick={() => { setSelectedCategory(null); setSelectedClayType(null); setShowHandmadeOnly(false); }}
+                className="text-sm text-accent hover:text-charcoal transition-colors"
               >
-                Filtreleri Sıfırla
+                Filtreleri Temizle
               </button>
             </div>
           )}

@@ -21,10 +21,10 @@ export default function CeramicDetailPage() {
 
   if (!product) {
     return (
-      <div className="py-12 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">Ürün Bulunamadı</h1>
-        <Link href="/ceramics" className="text-amber-600 hover:text-amber-800 font-medium">
-          Seramik ürünlerine dön
+      <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-20 text-center">
+        <h1 className="heading-serif text-3xl text-charcoal mb-4">Ürün Bulunamadı</h1>
+        <Link href="/ceramics" className="text-accent hover:text-charcoal transition-colors">
+          Koleksiyona dön
         </Link>
       </div>
     );
@@ -50,9 +50,9 @@ export default function CeramicDetailPage() {
   };
 
   return (
-    <div className="py-12">
+    <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-12">
       {/* Breadcrumb */}
-      <div className="mb-8 text-sm text-gray-600">
+      <div className="mb-8 text-sm text-earth">
         <Link href="/" className="hover:text-amber-600">Ana Sayfa</Link>
         <span className="mx-2">›</span>
         <Link href="/ceramics" className="hover:text-amber-600">Seramik Ürünleri</Link>

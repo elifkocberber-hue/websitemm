@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="py-12">
+    <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-12">
       {/* Breadcrumb */}
-      <div className="mb-8 text-sm text-gray-400">
+      <div className="mb-8 text-sm text-earth">
         <Link href="/" className="hover:text-amber-600 transition-colors">Ana Sayfa</Link>
         <span className="mx-2">/</span>
         <span className="text-gray-900">Gizlilik Politikası</span>
