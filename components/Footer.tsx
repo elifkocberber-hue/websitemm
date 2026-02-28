@@ -29,7 +29,6 @@ export const Footer: React.FC = () => {
             <h4 className="text-sm font-semibold uppercase tracking-wider text-stone-300 mb-4">İletişim</h4>
             <ul className="space-y-2 text-stone-400 text-sm">
               <li>info@elsdreamfactory.com</li>
-              <li>+90 555 987 6543</li>
               <li>Kütahya, Türkiye</li>
               <li>Pzt - Cuma: 09:00 - 18:00</li>
             </ul>

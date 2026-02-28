@@ -139,7 +139,6 @@ export default function AboutPage() {
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Bize Ulaşın</h2>
         <div className="flex flex-col md:flex-row justify-center gap-8 text-stone-300 mb-8">
           <p>info@elsdreamfactory.com</p>
-          <p>+90 555 987 6543</p>
           <p>Kütahya, Türkiye</p>
         </div>
         <Link
