@@ -17,25 +17,33 @@ export const Header: React.FC = () => {
   }, []);
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-all duration-500 overflow-visible ${
-        scrolled
-          ? 'bg-[#F7F3EE]/95 backdrop-blur-md shadow-[0_1px_0_rgba(0,0,0,0.06)]'
-          : 'bg-[#F7F3EE]/60 backdrop-blur-sm'
-      }`}
-    >
-      <nav className="max-w-[1400px] mx-auto px-6 md:px-10 flex items-center justify-between h-[72px] overflow-visible">
-        {/* Logo - circular */}
-        <Link href="/" className="relative flex items-center justify-center z-50 -mb-[72px]" style={{ marginTop: '36px' }}>
-          <Image
-            src="/images/Logo.jpg"
-            alt="El's Dream Factory"
-            width={144}
-            height={144}
-            className="relative h-36 w-36 rounded-full object-cover drop-shadow-md"
-            priority
-          />
-        </Link>
+    <>
+      {/* Fixed circular logo - centered on header bottom edge */}
+      <Link
+        href="/"
+        className="fixed left-1/2 -translate-x-1/2 z-[60]"
+        style={{ top: '0px' }}
+      >
+        <Image
+          src="/images/Logo.jpg"
+          alt="El's Dream Factory"
+          width={144}
+          height={144}
+          className="h-36 w-36 rounded-full object-cover drop-shadow-md"
+          priority
+        />
+      </Link>
+
+      <header
+        className={`sticky top-0 z-50 transition-all duration-500 overflow-visible ${
+          scrolled
+            ? 'bg-[#F7F3EE]/95 backdrop-blur-md shadow-[0_1px_0_rgba(0,0,0,0.06)]'
+            : 'bg-[#F7F3EE]/60 backdrop-blur-sm'
+        }`}
+      >
+        <nav className="max-w-[1400px] mx-auto px-6 md:px-10 flex items-center justify-between h-[72px] overflow-visible">
+          {/* Spacer for logo */}
+          <div className="w-36" />
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-10">
@@ -98,6 +106,7 @@ export const Header: React.FC = () => {
           </Link>
         </div>
       )}
-    </header>
+      </header>
+    </>
   );
 };
