@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+// Disable static generation for this route
+export const dynamic = 'force-dynamic';
+
 function isAdminAuthenticated(request: NextRequest): boolean {
   const token = request.cookies.get('adminToken')?.value;
   return !!token;
