@@ -3,33 +3,57 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/context/CeramicCartContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export const Header: React.FC = () => {
   const { totalItems } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const logoRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 20);
+      // 0 → 1 arası: 0px'den 300px'e kadar scroll progress
+      const progress = Math.min(y / 300, 1);
+      setScrollProgress(progress);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Logo boyutu: 144px → 48px (küçülme)
+  const logoSize = 144 - scrollProgress * 96;
+  // Logo pozisyonu: ortadan (left 50%) → sola (left 40px)
+  const logoLeft = `calc(50% - ${scrollProgress * (50)}vw + ${scrollProgress * 40}px + ${scrollProgress * logoSize / 2}px)`;
+  const logoTop = scrollProgress * 12; // biraz aşağı kayar header içine oturması için
+
   return (
     <>
-      {/* Fixed circular logo - centered on header bottom edge */}
+      {/* Fixed circular logo - animates from center to left on scroll */}
       <Link
+        ref={logoRef}
         href="/"
-        className="fixed left-1/2 -translate-x-1/2 z-[60]"
-        style={{ top: '0px' }}
+        className="fixed z-[60] transition-none"
+        style={{
+          left: `calc(50% - ${scrollProgress * 50}% + ${scrollProgress * (24 + logoSize / 2)}px)`,
+          top: `${logoTop}px`,
+          transform: 'translateX(-50%)',
+        }}
       >
         <Image
           src="/images/Logo.jpg"
           alt="El's Dream Factory"
           width={144}
           height={144}
-          className="h-36 w-36 rounded-full object-cover drop-shadow-md"
+          className="rounded-full object-cover drop-shadow-md"
+          style={{
+            width: `${logoSize}px`,
+            height: `${logoSize}px`,
+            transition: 'none',
+          }}
           priority
         />
       </Link>
