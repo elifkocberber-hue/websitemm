@@ -1,0 +1,241 @@
+[
+  {
+    "id": 1,
+    "name": "El Yapımı Dekoratif Çanak",
+    "description": "Geleneksel teknikle yapılan, el boyama detaylarıyla süslenmiş, günlük kullanım ve dekorasyon için idealdir.",
+    "price": 89.99,
+    "stock": 12,
+    "clayType": "stoneware",
+    "category": "Çanak & Kase",
+    "handmade": true,
+    "glaze": "Mat beyaz",
+    "dimensions": {
+      "diameter": 20,
+      "height": 10
+    },
+    "weight": 450,
+    "dishwasherSafe": false,
+    "microwave": true,
+    "images": [
+      "https://picsum.photos/500/500?random=101",
+      "https://picsum.photos/500/500?random=102",
+      "https://picsum.photos/500/500?random=103",
+      "https://picsum.photos/500/500?random=104"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Porselen Espresso Fincanı Seti",
+    "description": "Lüks porselen ev yapımı espresso fincan seti, altın filigran tasarım, 2 fincan ve tabak içerir.",
+    "price": 149.99,
+    "stock": 8,
+    "clayType": "porcelain",
+    "category": "Fincan & Tabak",
+    "handmade": true,
+    "glaze": "İpek parlaklığı",
+    "dimensions": {
+      "diameter": 8,
+      "height": 6
+    },
+    "weight": 200,
+    "dishwasherSafe": false,
+    "microwave": false,
+    "images": [
+      "https://picsum.photos/500/500?random=105",
+      "https://picsum.photos/500/500?random=106",
+      "https://picsum.photos/500/500?random=107",
+      "https://picsum.photos/500/500?random=108"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Seramik Dekoratif Vazo",
+    "description": "Seramik vazo, modern minimalist tasarım, salon ve yaşam alanları için ideal, çiçek arrangementı için uygundur.",
+    "price": 129.99,
+    "stock": 15,
+    "clayType": "earthenware",
+    "category": "Vazolar",
+    "handmade": true,
+    "glaze": "Mat siyah",
+    "dimensions": {
+      "height": 30,
+      "diameter": 12
+    },
+    "weight": 650,
+    "dishwasherSafe": false,
+    "microwave": false,
+    "images": [
+      "https://picsum.photos/500/500?random=109",
+      "https://picsum.photos/500/500?random=110",
+      "https://picsum.photos/500/500?random=111",
+      "https://picsum.photos/500/500?random=112"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Stoneware Dinner Plate Seti",
+    "description": "Sağlam stoneware tabak seti, sofistike gri renk, günlük kullanım için çok dayanıklı, 4 tabaktan oluşan set.",
+    "price": 99.99,
+    "stock": 20,
+    "clayType": "stoneware",
+    "category": "Tabaklar",
+    "handmade": false,
+    "glaze": "Mat parlaklık",
+    "dimensions": {
+      "diameter": 27
+    },
+    "weight": 1200,
+    "dishwasherSafe": true,
+    "microwave": true,
+    "images": [
+      "https://picsum.photos/500/500?random=113",
+      "https://picsum.photos/500/500?random=114",
+      "https://picsum.photos/500/500?random=115",
+      "https://picsum.photos/500/500?random=116"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Terracotta Sürahi",
+    "description": "Geleneksel terracotta sürahi, doğal toprak rengi, su ve içecek dağıtımı için tasarlandı, boho tarzı dekorasyon.",
+    "price": 74.99,
+    "stock": 18,
+    "clayType": "terracotta",
+    "category": "Kaplar",
+    "handmade": true,
+    "glaze": "Doğal finish",
+    "dimensions": {
+      "height": 25,
+      "diameter": 10
+    },
+    "weight": 500,
+    "dishwasherSafe": false,
+    "microwave": false,
+    "images": [
+      "https://picsum.photos/500/500?random=117",
+      "https://picsum.photos/500/500?random=118",
+      "https://picsum.photos/500/500?random=119",
+      "https://picsum.photos/500/500?random=120"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Bone China Çay Fincanı",
+    "description": "Premium bone china çay fincanı, zarif floral deseni, İngiliz geleneksel tasarımı, bu koleksiyonu tamamlayan tabak ile gelir.",
+    "price": 179.99,
+    "stock": 10,
+    "clayType": "bone-china",
+    "category": "Fincan & Tabak",
+    "handmade": false,
+    "glaze": "Cilalı finish",
+    "dimensions": {
+      "diameter": 9,
+      "height": 8
+    },
+    "weight": 250,
+    "dishwasherSafe": false,
+    "microwave": false,
+    "images": [
+      "https://picsum.photos/500/500?random=121",
+      "https://picsum.photos/500/500?random=122",
+      "https://picsum.photos/500/500?random=123",
+      "https://picsum.photos/500/500?random=124"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "El Yapımı Seramik Mangkuk Seti",
+    "description": "Renkli el yapımı seramik mangkuk seti, her biri benzersiz desenleriyle, atıştırmalık veya tatlı sunumuna ideal.",
+    "price": 119.99,
+    "stock": 14,
+    "clayType": "earthenware",
+    "category": "Çanak & Kase",
+    "handmade": true,
+    "glaze": "Parlak renkli",
+    "dimensions": {
+      "diameter": 14,
+      "height": 7
+    },
+    "weight": 350,
+    "dishwasherSafe": true,
+    "microwave": true,
+    "images": [
+      "https://picsum.photos/500/500?random=125",
+      "https://picsum.photos/500/500?random=126",
+      "https://picsum.photos/500/500?random=127",
+      "https://picsum.photos/500/500?random=128"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Seramik Dekoratif Tablo",
+    "description": "Serili seramik tablo, sanat yapıtı olarak duvar süsü, soyut tasarım, modern ve klasik intiyörlere uygun.",
+    "price": 199.99,
+    "stock": 6,
+    "clayType": "porcelain",
+    "category": "Dekorasyon",
+    "handmade": true,
+    "glaze": "Mat ve cilalı karışım",
+    "dimensions": {
+      "height": 40,
+      "width": 40
+    },
+    "weight": 800,
+    "dishwasherSafe": false,
+    "microwave": false,
+    "images": [
+      "https://picsum.photos/500/500?random=129",
+      "https://picsum.photos/500/500?random=130",
+      "https://picsum.photos/500/500?random=131",
+      "https://picsum.photos/500/500?random=132"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Stoneware Mutfak Kapları",
+    "description": "Depolayadıştırma için dayanıklı stoneware kapları, modern tasarım, hava geçirmez kapaklar, 3'lü set.",
+    "price": 159.99,
+    "stock": 11,
+    "clayType": "stoneware",
+    "category": "Mutfak",
+    "handmade": false,
+    "glaze": "Mat gri",
+    "dimensions": {
+      "diameter": 15,
+      "height": 12
+    },
+    "weight": 900,
+    "dishwasherSafe": true,
+    "microwave": true,
+    "images": [
+      "https://picsum.photos/500/500?random=133",
+      "https://picsum.photos/500/500?random=134",
+      "https://picsum.photos/500/500?random=135",
+      "https://picsum.photos/500/500?random=136"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Seramik Tencere & Kapaklı Kap",
+    "description": "Seramik tencere, pirolitik kaportma sistemli, sağlıklı pişirme için, sauna ve fırın uyumlu, antrenemi ısı yayılımı.",
+    "price": 189.99,
+    "stock": 7,
+    "clayType": "stoneware",
+    "category": "Pişirme Kapları",
+    "handmade": false,
+    "glaze": "Mat beyaz",
+    "dimensions": {
+      "diameter": 26,
+      "height": 14
+    },
+    "weight": 1400,
+    "dishwasherSafe": true,
+    "microwave": false,
+    "images": [
+      "https://picsum.photos/500/500?random=137",
+      "https://picsum.photos/500/500?random=138",
+      "https://picsum.photos/500/500?random=139",
+      "https://picsum.photos/500/500?random=140"
+    ]
+  }
+]
