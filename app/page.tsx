@@ -15,7 +15,7 @@ export default function Home() {
           src="/images/arkaplan.jpg"
           alt="El yapımı seramik ürünler - Dekoratif seramik koleksiyonu"
           fill
-          className="object-cover"
+          className="object-cover scale-[0.85] origin-center"
           priority
         />
         <div className="absolute inset-0 bg-charcoal/50" />
