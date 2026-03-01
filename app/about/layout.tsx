@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Hakkımızda | Kütahya\'dan El Yapımı Seramik Sanatı',
-  description: 'El\'s Dream Factory\'nin hikayesi. 1994\'ten bu yana Kütahya\'nın üç kuşaklık seramik geleneğini yaşatıyoruz. El yapımı seramik sanatımızı keşfedin.',
-  keywords: 'Kütahya seramiği, el yapımı seramik atölye, seramik sanatı, geleneksel seramik',
+  title: 'Hakkımızda | El Yapımı Seramik Sanatı',
+  description: 'El\'s Dream Factory\'nin hikayesi. El yapımı seramik sanatımızı ve üç kuşaklık geleneğimizi keşfedin.',
+  keywords: 'el yapımı seramik atölye, seramik sanatı, geleneksel seramik, handmade seramik',
   openGraph: {
     title: 'Hakkımızda | El\'s Dream Factory',
-    description: 'Kütahya\'dan el yapımı seramik sanatı — üç kuşaklık gelenekle modern tasarımın buluşması.',
+    description: 'El yapımı seramik sanatı — üç kuşaklık gelenekle modern tasarımın buluşması.',,
     type: 'website',
   },
 };

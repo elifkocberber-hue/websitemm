@@ -9,7 +9,7 @@ export default function AboutPage() {
       <section className="relative h-[60vh] min-h-[400px] overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1604424321003-50b9174b28e3?w=1920&q=80"
-          alt="El's Dream Factory seramik atölyesi - Kütahya el yapımı seramik üretim"
+          alt="El's Dream Factory seramik atölyesi - el yapımı seramik üretim"
           fill
           className="object-cover"
           priority

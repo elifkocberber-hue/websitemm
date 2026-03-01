@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     default: "El's Dream Factory | El Yapımı Seramik Ürünler & Hediyeler",
     template: "%s | El's Dream Factory",
   },
-  description: "El yapımı seramik ürünler, sevimli kedi figürleri, dekoratif objeler ve özel hediyeler. Kütahya'nın seramik geleneğiyle üretilen benzersiz el yapımı seramik kupalar, vazolar ve hediye seçenekleri.",
+  description: "El yapımı seramik ürünler, sevimli kedi figürleri, dekoratif objeler ve özel hediyeler. Benzersiz el yapımı seramik kupalar, vazolar ve hediye seçenekleri.",
   keywords: [
     "el yapımı seramik",
     "seramik ürünler",
@@ -38,7 +38,6 @@ export const metadata: Metadata = {
     "dekoratif seramik",
     "seramik kupa",
     "seramik hediye",
-    "Kütahya seramiği",
     "sevimli seramik objeler",
     "el yapımı hediye",
     "seramik ev dekorasyonu",
@@ -129,11 +128,11 @@ export default function RootLayout({
               alternateName: "Els Dream Factory",
               url: "https://elsdreamfactory.com",
               logo: "https://elsdreamfactory.com/logo.png",
-              description: "El yapımı seramik ürünler, sevimli kedi figürleri, dekoratif objeler ve özel hediyeler. Kütahya'nın seramik geleneğiyle üretilen benzersiz sanat eserleri.",
+              description: "El yapımı seramik ürünler, sevimli kedi figürleri, dekoratif objeler ve özel hediyeler. Benzersiz sanat eserleri.",
               foundingDate: "1994",
               foundingLocation: {
                 "@type": "Place",
-                name: "Kütahya, Türkiye",
+                name: "Türkiye",
               },
               sameAs: [
                 "https://www.instagram.com/elsdreamfactory",
@@ -187,7 +186,6 @@ export default function RootLayout({
               description: "El yapımı seramik ürünler, kedi figürleri, dekoratif objeler ve özel hediye seçenekleri",
               address: {
                 "@type": "PostalAddress",
-                addressLocality: "Kütahya",
                 addressCountry: "TR",
               },
               priceRange: "₺₺",

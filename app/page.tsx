@@ -13,7 +13,7 @@ export default function Home() {
       <section className="relative h-[85vh] min-h-[550px] overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=1920&q=85"
-          alt="El yapımı seramik ürünler - Kütahya'dan dekoratif seramik koleksiyonu"
+          alt="El yapımı seramik ürünler - Dekoratif seramik koleksiyonu"
           fill
           className="object-cover"
           priority
@@ -139,7 +139,7 @@ export default function Home() {
             <div className="relative h-[400px] md:h-[520px]">
               <Image
                 src="https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?w=800&q=80"
-              alt="El yapımı seramik atölyesi - Kütahya seramik üretim süreci"
+              alt="El yapımı seramik atölyesi - seramik üretim süreci"
                 fill
                 className="object-cover"
               />
