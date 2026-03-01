@@ -48,7 +48,7 @@ export const Header: React.FC = () => {
           alt="El's Dream Factory"
           width={144}
           height={144}
-          className="rounded-full object-cover drop-shadow-md"
+          className="rounded-full object-cover"
           style={{
             width: `${logoSize}px`,
             height: `${logoSize}px`,
