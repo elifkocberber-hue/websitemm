@@ -12,7 +12,7 @@ export default function Home() {
       {/* ═══════ HERO ═══════ */}
       <section className="relative h-[85vh] min-h-[550px] overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=1920&q=85"
+          src="/images/arkaplan.JPG"
           alt="El yapımı seramik ürünler - Dekoratif seramik koleksiyonu"
           fill
           className="object-cover"
