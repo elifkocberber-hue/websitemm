@@ -33,14 +33,14 @@ export const Footer: React.FC = () => {
           <div>
             <h4 className="text-[11px] tracking-[0.2em] uppercase text-clay mb-5">İletişim</h4>
             <ul className="space-y-3">
-              <li className="text-sm text-bone/60">info@elsdreamfactory.com</li>
+              <li><a href="mailto:elsdreamfactory@gmail.com" className="text-sm text-bone/60 hover:text-bone transition-colors">elsdreamfactory@gmail.com</a></li>
               <li className="text-sm text-bone/60">Türkiye</li>
             </ul>
           </div>
           <div>
             <h4 className="text-[11px] tracking-[0.2em] uppercase text-clay mb-5">Takip Et</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-sm text-bone/60 hover:text-bone transition-colors">Instagram</a></li>
+              <li><a href="https://instagram.com/elsdreamfactory" target="_blank" rel="noopener noreferrer" className="text-sm text-bone/60 hover:text-bone transition-colors">Instagram</a></li>
               <li><a href="#" className="text-sm text-bone/60 hover:text-bone transition-colors">Pinterest</a></li>
             </ul>
           </div>

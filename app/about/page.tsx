@@ -117,7 +117,8 @@ export default function AboutPage() {
           <p className="text-xs tracking-[0.2em] uppercase text-earth mb-3">İletişim</p>
           <h2 className="heading-display text-3xl md:text-4xl text-charcoal mb-6">Bize Ulaşın</h2>
           <div className="flex flex-col md:flex-row justify-center gap-8 text-earth mb-10">
-            <p>info@elsdreamfactory.com</p>
+            <p><a href="mailto:elsdreamfactory@gmail.com" className="hover:text-charcoal transition-colors">elsdreamfactory@gmail.com</a></p>
+            <p><a href="https://instagram.com/elsdreamfactory" target="_blank" rel="noopener noreferrer" className="hover:text-charcoal transition-colors">instagram.com/elsdreamfactory</a></p>
             <p>Türkiye</p>
           </div>
           <Link

@@ -365,8 +365,8 @@ export default function CookiePolicyPage() {
           </div>
           <p className="text-gray-600 leading-relaxed mt-4">
             Haklarınızı kullanmak için{' '}
-            <a href="mailto:info@elsdreamfactory.com" className="text-amber-600 hover:text-amber-700 underline">
-              info@elsdreamfactory.com
+            <a href="mailto:elsdreamfactory@gmail.com" className="text-amber-600 hover:text-amber-700 underline">
+              elsdreamfactory@gmail.com
             </a>{' '}
             adresine başvurabilirsiniz. Detaylı bilgi için{' '}
             <Link href="/privacy" className="text-amber-600 hover:text-amber-700 underline">
@@ -395,10 +395,10 @@ export default function CookiePolicyPage() {
             bizimle iletişime geçebilirsiniz.
           </p>
           <a
-            href="mailto:info@elsdreamfactory.com"
+            href="mailto:elsdreamfactory@gmail.com"
             className="inline-block bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
           >
-            info@elsdreamfactory.com
+            elsdreamfactory@gmail.com
           </a>
         </section>
       </div>

@@ -149,7 +149,7 @@ export default function RootLayout({
               contactPoint: {
                 "@type": "ContactPoint",
                 contactType: "Customer Service",
-                email: "info@elsdreamfactory.com",
+                email: "elsdreamfactory@gmail.com",
                 telephone: "+90-555-123-4567",
                 availableLanguage: ["Turkish", "English"],
               },

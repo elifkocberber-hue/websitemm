@@ -39,7 +39,7 @@ export default function PrivacyPage() {
           <div className="bg-stone-50 rounded-xl p-6">
             <p className="text-gray-600 leading-relaxed">
               <strong>Unvan:</strong> El&apos;s Dream Factory<br />
-              <strong>E-posta:</strong> info@elsdreamfactory.com<br />
+              <strong>E-posta:</strong> elsdreamfactory@gmail.com<br />
               <strong>Web:</strong> elsdreamfactory.com
             </p>
           </div>
@@ -321,7 +321,7 @@ export default function PrivacyPage() {
             <ul className="space-y-3 text-gray-600">
               <li className="flex items-start gap-3">
                 <span className="text-amber-600 font-bold mt-0.5">&#8226;</span>
-                <span><strong>E-posta:</strong> info@elsdreamfactory.com adresine kimliğinizi tespit edici bilgiler ile birlikte yazılı başvuru</span>
+                <span><strong>E-posta:</strong> elsdreamfactory@gmail.com adresine kimliğinizi tespit edici bilgiler ile birlikte yazılı başvuru</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-amber-600 font-bold mt-0.5">&#8226;</span>
@@ -354,10 +354,10 @@ export default function PrivacyPage() {
             Gizlilik politikamız veya kişisel verilerinizin işlenmesiyle ilgili her türlü sorunuz için bizimle iletişime geçin.
           </p>
           <a
-            href="mailto:info@elsdreamfactory.com"
+            href="mailto:elsdreamfactory@gmail.com"
             className="inline-block bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
           >
-            info@elsdreamfactory.com
+            elsdreamfactory@gmail.com
           </a>
         </section>
       </div>
