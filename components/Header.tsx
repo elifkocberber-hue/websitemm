@@ -44,7 +44,7 @@ export const Header: React.FC = () => {
         }}
       >
         <Image
-          src="/images/Logo.jpg"
+          src="/images/logo.png"
           alt="El's Dream Factory"
           width={144}
           height={144}
