@@ -13,7 +13,7 @@ export default function Home() {
       <section className="relative h-[85vh] min-h-[550px] overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=1920&q=85"
-          alt="El yapımı seramik"
+          alt="El yapımı seramik ürünler - Kütahya'dan dekoratif seramik koleksiyonu"
           fill
           className="object-cover"
           priority
@@ -23,13 +23,13 @@ export default function Home() {
         <div className="relative z-10 h-full flex items-end pb-16 md:pb-24">
           <div className="max-w-[1400px] mx-auto px-6 md:px-10 w-full">
             <p className="text-bone/50 text-xs tracking-[0.3em] uppercase mb-6">
-              El Yapımı Seramik
+              El Yapımı Seramik Ürünler & Hediyeler
             </p>
             <h1 className="heading-display text-bone text-5xl md:text-7xl lg:text-8xl mb-6">
               Topraktan<br />Sanata
             </h1>
             <p className="text-bone/70 max-w-md text-lg mb-10 leading-relaxed">
-              Kütahya&apos;nın üç kuşaklık seramik geleneğini modern tasarımla buluşturuyoruz.
+              Kütahya&apos;nın üç kuşaklık seramik geleneğini modern tasarımla buluşturuyoruz. Sevimli kedi figürlerinden el yapımı kupalara, özel hediye seçenekleri keşfedin.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
@@ -139,7 +139,7 @@ export default function Home() {
             <div className="relative h-[400px] md:h-[520px]">
               <Image
                 src="https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?w=800&q=80"
-                alt="Seramik atölyesi"
+              alt="El yapımı seramik atölyesi - Kütahya seramik üretim süreci"
                 fill
                 className="object-cover"
               />

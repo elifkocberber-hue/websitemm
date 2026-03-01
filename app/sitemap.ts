@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { ceramicProducts } from '@/data/ceramicProducts';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://elsdreamfactory.com';
@@ -12,68 +13,38 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/ceramics`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/payment`,
+      url: `${baseUrl}/about`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/cart`,
-      lastModified: new Date(),
-      changeFrequency: 'hourly',
-      priority: 0.6,
-    },
-  ];
-
-  // Ürünler
-  const products: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/product/1`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/product/2`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/product/3`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-  ];
-
-  // Seramikler
-  const ceramics: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/ceramic/1`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/ceramic/2`,
+      url: `${baseUrl}/privacy`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/cookie-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
     },
   ];
 
-  return [...pages, ...products, ...ceramics];
+  // Tüm seramik ürünler için dinamik sitemap
+  const ceramicPages: MetadataRoute.Sitemap = ceramicProducts.map((product) => ({
+    url: `${baseUrl}/ceramic/${product.id}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }));
+
+  return [...pages, ...ceramicPages];
 }

@@ -24,11 +24,30 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  // Basic SEO
-  title: "El's Dream Factory | Handmade Ceramic Products & Home Decor",
-  description: "Discover beautiful handmade ceramic products, pottery, and home décor items. High-quality Turkish ceramics crafted with care.",
-  keywords: "ceramic, pottery, handmade, home decor, Turkish ceramics, seramik, el yapımı",
-  
+  // Basic SEO — Ana sayfa için hedef anahtar kelimeler
+  title: {
+    default: "El's Dream Factory | El Yapımı Seramik Ürünler & Hediyeler",
+    template: "%s | El's Dream Factory",
+  },
+  description: "El yapımı seramik ürünler, sevimli kedi figürleri, dekoratif objeler ve özel hediyeler. Kütahya'nın seramik geleneğiyle üretilen benzersiz el yapımı seramik kupalar, vazolar ve hediye seçenekleri.",
+  keywords: [
+    "el yapımı seramik",
+    "seramik ürünler",
+    "handmade seramik",
+    "seramik kedi figür",
+    "dekoratif seramik",
+    "seramik kupa",
+    "seramik hediye",
+    "Kütahya seramiği",
+    "sevimli seramik objeler",
+    "el yapımı hediye",
+    "seramik ev dekorasyonu",
+    "handmade ceramic",
+    "Turkish ceramics",
+    "ceramic cat figurine",
+    "handmade pottery gifts",
+  ],
+
   // Verification
   verification: {
     google: "google_verification_code_here", // Google Search Console
@@ -39,15 +58,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "tr_TR",
     url: "https://elsdreamfactory.com",
-    title: "El's Dream Factory | Handmade Ceramic Products",
-    description: "Discover beautiful handmade ceramic products and home décor items.",
+    title: "El's Dream Factory | El Yapımı Seramik & Hediye",
+    description: "Sevimli kedi figürleri, el yapımı seramik kupalar ve dekoratif objeler. Sevdiklerinize özel, sanatsal hediyeler keşfedin.",
     siteName: "El's Dream Factory",
     images: [
       {
         url: "https://elsdreamfactory.com/og-image.png",
         width: 1200,
         height: 630,
-        alt: "El's Dream Factory - Handmade Ceramics",
+        alt: "El's Dream Factory - El Yapımı Seramik Ürünler ve Hediyeler",
       },
     ],
   },
@@ -55,8 +74,8 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: "summary_large_image",
-    title: "El's Dream Factory | Handmade Ceramics",
-    description: "Beautiful handmade ceramic products and home décor.",
+    title: "El's Dream Factory | El Yapımı Seramik & Hediye",
+    description: "Sevimli seramik kedi figürleri, el yapımı kupalar ve dekoratif objeler. Sanatsal hediyeler keşfedin.",
     images: ["https://elsdreamfactory.com/twitter-image.png"],
   },
 
@@ -88,6 +107,7 @@ export const metadata: Metadata = {
 
   creator: "Elif Koçberber",
   publisher: "El's Dream Factory",
+  category: "El Yapımı Seramik & Hediye",
 };
 
 export default function RootLayout({
@@ -98,7 +118,7 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <head>
-        {/* JSON-LD Structured Data */}
+        {/* JSON-LD: Organization */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -106,24 +126,32 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "El's Dream Factory",
+              alternateName: "Els Dream Factory",
               url: "https://elsdreamfactory.com",
               logo: "https://elsdreamfactory.com/logo.png",
-              description: "Handmade ceramic products and home décor",
+              description: "El yapımı seramik ürünler, sevimli kedi figürleri, dekoratif objeler ve özel hediyeler. Kütahya'nın seramik geleneğiyle üretilen benzersiz sanat eserleri.",
+              foundingDate: "1994",
+              foundingLocation: {
+                "@type": "Place",
+                name: "Kütahya, Türkiye",
+              },
               sameAs: [
                 "https://www.instagram.com/elsdreamfactory",
                 "https://www.facebook.com/elsdreamfactory",
+                "https://www.pinterest.com/elsdreamfactory",
               ],
               contactPoint: {
                 "@type": "ContactPoint",
                 contactType: "Customer Service",
                 email: "info@elsdreamfactory.com",
                 telephone: "+90-555-123-4567",
+                availableLanguage: ["Turkish", "English"],
               },
             }),
           }}
         />
 
-        {/* Website Schema for Search Results */}
+        {/* JSON-LD: WebSite with Search */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -132,13 +160,64 @@ export default function RootLayout({
               "@type": "WebSite",
               name: "El's Dream Factory",
               url: "https://elsdreamfactory.com",
+              description: "El yapımı seramik ürünler ve hediyeler",
+              inLanguage: "tr",
               potentialAction: {
                 "@type": "SearchAction",
                 target: {
                   "@type": "EntryPoint",
                   urlTemplate: "https://elsdreamfactory.com/search?q={search_term_string}",
                 },
-                query_input: "required name=search_term_string",
+                "query-input": "required name=search_term_string",
+              },
+            }),
+          }}
+        />
+
+        {/* JSON-LD: LocalBusiness (Yerel SEO) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Store",
+              name: "El's Dream Factory",
+              image: "https://elsdreamfactory.com/og-image.png",
+              url: "https://elsdreamfactory.com",
+              description: "El yapımı seramik ürünler, kedi figürleri, dekoratif objeler ve özel hediye seçenekleri",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Kütahya",
+                addressCountry: "TR",
+              },
+              priceRange: "₺₺",
+              openingHoursSpecification: {
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                opens: "09:00",
+                closes: "18:00",
+              },
+              hasOfferCatalog: {
+                "@type": "OfferCatalog",
+                name: "El Yapımı Seramik Koleksiyonu",
+                itemListElement: [
+                  {
+                    "@type": "OfferCatalog",
+                    name: "Seramik Kedi Figürleri",
+                  },
+                  {
+                    "@type": "OfferCatalog",
+                    name: "El Yapımı Seramik Kupalar",
+                  },
+                  {
+                    "@type": "OfferCatalog",
+                    name: "Dekoratif Seramik Objeler",
+                  },
+                  {
+                    "@type": "OfferCatalog",
+                    name: "Seramik Hediye Setleri",
+                  },
+                ],
               },
             }),
           }}

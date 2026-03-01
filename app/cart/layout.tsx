@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Shopping Cart | El\'s Dream Factory',
-  description: 'Review your items and proceed to checkout.',
+  title: 'Sepetim',
+  description: 'Alışveriş sepetinizi görüntüleyin ve ödemeye geçin. El yapımı seramik ürünler güvenle kapınıza gelsin.',
   robots: {
     index: false,
   },
   openGraph: {
-    title: 'Shopping Cart',
-    description: 'Your shopping cart at El\'s Dream Factory',
+    title: 'Sepetim | El\'s Dream Factory',
+    description: 'El yapımı seramik ürünlerinizi sipariş edin.',
     type: 'website',
   },
 };
