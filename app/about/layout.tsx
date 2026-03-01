@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About Us | Ter-a Seramik',
-  description: 'Learn about Ter-a Seramik, our mission, and our commitment to handmade ceramic excellence.',
+  title: 'About Us | El\'s Dream Factory',
+  description: 'Learn about El\'s Dream Factory, our mission, and our commitment to handmade ceramic excellence.',
   keywords: 'about, company, ceramic artisan, handmade',
   openGraph: {
-    title: 'About Ter-a Seramik',
+    title: 'About El\'s Dream Factory',
     description: 'Learn our story and passion for ceramics',
     type: 'website',
   },

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAdmin } from '@/context/AdminContext';
 
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState('admin@ter-aseramik.com');
+  const [email, setEmail] = useState('admin@elsdreamfactory.com');
   const [password, setPassword] = useState('admin123');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -37,7 +37,7 @@ export default function AdminLoginPage() {
         {/* Logo/Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">🏛️ Admin Paneli</h1>
-          <p className="text-gray-600">ter-aseramik Yönetim Sistemi</p>
+          <p className="text-gray-600">El&apos;s Dream Factory Yönetim Sistemi</p>
         </div>
 
         {/* Login Card */}
@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
-                placeholder="admin@ter-aseramik.com"
+                placeholder="admin@elsdreamfactory.com"
                 required
               />
             </div>
@@ -94,7 +94,7 @@ export default function AdminLoginPage() {
           <div className="mt-8 pt-6 border-t border-gray-200">
             <p className="text-xs text-gray-600 mb-3 font-medium">Demo Kimlik Bilgileri:</p>
             <div className="bg-gray-50 p-3 rounded text-xs space-y-1">
-              <p><strong>E-posta:</strong> admin@ter-aseramik.com</p>
+              <p><strong>E-posta:</strong> admin@elsdreamfactory.com</p>
               <p><strong>Şifre:</strong> admin123</p>
             </div>
             <p className="text-xs text-gray-500 mt-3">

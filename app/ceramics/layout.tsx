@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Ceramics & Pottery | Ter-a Seramik',
+  title: 'Ceramics & Pottery | El\'s Dream Factory',
   description: 'Browse our collection of handmade ceramic products, pottery, and home décor items. Traditional and modern ceramic designs.',
   keywords: 'ceramics, pottery, ceramic products, handmade pottery, home décor',
   openGraph: {
-    title: 'Ceramics Collection | Ter-a Seramik',
+    title: 'Ceramics Collection | El\'s Dream Factory',
     description: 'Explore beautiful handmade ceramic products',
     type: 'website',
     images: [

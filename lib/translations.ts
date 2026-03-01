@@ -24,7 +24,7 @@ export const tr = {
     why_choose: 'Bizi Neden Seçmelisiniz?',
   },
   about: {
-    title: 'Ter-a Seramik',
+    title: 'El\'s Dream Factory',
     subtitle: '30 yıldan fazla, geleneksel seramik sanatını modern dünyada tutarlı bir şekilde sunuyoruz.',
     story_title: 'Hikayemiz',
     values_title: 'Değerlerimiz',

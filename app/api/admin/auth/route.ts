@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import * as bcrypt from 'bcrypt';
 import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
 
-const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@ter-aseramik.com';
+const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@elsdreamfactory.com';
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || '';
 
 // Simple session store (production'da database veya Redis kullan)

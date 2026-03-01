@@ -159,7 +159,7 @@ async function notifyAdmin(orderData: {
 }) {
   try {
     console.log('📧 Admin e-postası gönderiliyor:', {
-      to: 'admin@ter-aseramik.com',
+      to: 'admin@elsdreamfactory.com',
       subject: `Yeni Sipariş: ${orderData.orderId}`,
       amount: orderData.amount,
     });

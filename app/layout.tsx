@@ -25,7 +25,7 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   // Basic SEO
-  title: "Ter-a Seramik | Handmade Ceramic Products & Home Decor",
+  title: "El's Dream Factory | Handmade Ceramic Products & Home Decor",
   description: "Discover beautiful handmade ceramic products, pottery, and home décor items. High-quality Turkish ceramics crafted with care.",
   keywords: "ceramic, pottery, handmade, home decor, Turkish ceramics, seramik, el yapımı",
   
@@ -39,15 +39,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "tr_TR",
     url: "https://elsdreamfactory.com",
-    title: "Ter-a Seramik | Handmade Ceramic Products",
+    title: "El's Dream Factory | Handmade Ceramic Products",
     description: "Discover beautiful handmade ceramic products and home décor items.",
-    siteName: "Ter-a Seramik",
+    siteName: "El's Dream Factory",
     images: [
       {
         url: "https://elsdreamfactory.com/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Ter-a Seramik - Handmade Ceramics",
+        alt: "El's Dream Factory - Handmade Ceramics",
       },
     ],
   },
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: "summary_large_image",
-    title: "Ter-a Seramik | Handmade Ceramics",
+    title: "El's Dream Factory | Handmade Ceramics",
     description: "Beautiful handmade ceramic products and home décor.",
     images: ["https://elsdreamfactory.com/twitter-image.png"],
   },
@@ -81,13 +81,13 @@ export const metadata: Metadata = {
 
   authors: [
     {
-      name: "Ter-a Seramik",
+      name: "El's Dream Factory",
       url: "https://elsdreamfactory.com",
     },
   ],
 
   creator: "Elif Koçberber",
-  publisher: "Ter-a Seramik",
+  publisher: "El's Dream Factory",
 };
 
 export default function RootLayout({
@@ -105,18 +105,18 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              name: "Ter-a Seramik",
+              name: "El's Dream Factory",
               url: "https://elsdreamfactory.com",
               logo: "https://elsdreamfactory.com/logo.png",
               description: "Handmade ceramic products and home décor",
               sameAs: [
-                "https://www.instagram.com/teraseramik",
-                "https://www.facebook.com/teraseramik",
+                "https://www.instagram.com/elsdreamfactory",
+                "https://www.facebook.com/elsdreamfactory",
               ],
               contactPoint: {
                 "@type": "ContactPoint",
                 contactType: "Customer Service",
-                email: "info@ter-aseramik.com",
+                email: "info@elsdreamfactory.com",
                 telephone: "+90-555-123-4567",
               },
             }),
@@ -130,7 +130,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "Ter-a Seramik",
+              name: "El's Dream Factory",
               url: "https://elsdreamfactory.com",
               potentialAction: {
                 "@type": "SearchAction",
