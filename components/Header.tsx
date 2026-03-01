@@ -87,8 +87,8 @@ export const Header: React.FC = () => {
             <SearchBar />
           </div>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-10">
+        {/* Right: Nav + Cart + User */}
+        <div className="hidden md:flex items-center gap-8">
           <Link
             href="/"
             className="link-line text-[13px] tracking-[0.12em] uppercase text-earth hover:text-charcoal transition-colors"
@@ -107,10 +107,7 @@ export const Header: React.FC = () => {
           >
             Hakkımızda
           </Link>
-        </div>
 
-        {/* Right: Cart + User */}
-        <div className="hidden md:flex items-center gap-6">
           <Link
             href="/cart"
             className="relative flex items-center gap-2"
