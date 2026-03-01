@@ -116,8 +116,15 @@ export default function Home() {
       </section>
 
       {/* ═══════ ABOUT SECTION (dark) ═══════ */}
-      <section className="bg-charcoal py-24 md:py-32 overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+      <section className="relative py-24 md:py-32 overflow-hidden">
+        <Image
+          src="/images/arkaplan.JPG"
+          alt="Arka plan"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-charcoal/70" />
+        <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
           <ScrollReveal direction="left">
             <p className="text-xs tracking-[0.2em] uppercase text-clay mb-4">Hakkımızda</p>
             <h2 className="heading-display text-3xl md:text-4xl text-bone mb-6">
