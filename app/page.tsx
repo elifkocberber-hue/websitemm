@@ -10,15 +10,15 @@ export default function Home() {
   return (
     <>
       {/* ═══════ HERO ═══════ */}
-      <section className="relative h-[85vh] min-h-[550px] overflow-hidden">
+      <section className="relative h-screen min-h-[600px] overflow-hidden bg-charcoal">
         <Image
           src="/images/arkaplan.jpg"
           alt="El yapımı seramik ürünler - Dekoratif seramik koleksiyonu"
           fill
-          className="object-cover scale-[0.85] origin-center"
+          className="object-contain"
           priority
         />
-        <div className="absolute inset-0 bg-charcoal/50" />
+        <div className="absolute inset-0 bg-charcoal/40" />
 
         <div className="relative z-10 h-full flex items-end pb-16 md:pb-24">
           <div className="max-w-[1400px] mx-auto px-6 md:px-10 w-full">
@@ -116,14 +116,14 @@ export default function Home() {
       </section>
 
       {/* ═══════ ABOUT SECTION (dark) ═══════ */}
-      <section className="relative py-24 md:py-32 overflow-hidden">
+      <section className="relative py-24 md:py-32 overflow-hidden bg-charcoal">
         <Image
           src="/images/arkaplan.jpg"
           alt="Arka plan"
           fill
-          className="object-cover"
+          className="object-contain"
         />
-        <div className="absolute inset-0 bg-charcoal/70" />
+        <div className="absolute inset-0 bg-charcoal/60" />
         <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
           <ScrollReveal direction="left">
             <p className="text-xs tracking-[0.2em] uppercase text-clay mb-4">Hakkımızda</p>
