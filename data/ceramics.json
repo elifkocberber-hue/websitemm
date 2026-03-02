@@ -13,7 +13,7 @@
     "weight": 450,
     "dishwasherSafe": false,
     "microwave": true,
-    "images": ["/images/ürünler/IMG_4753.JPG"]
+    "images": ["/images/urunler/IMG_4753.JPG"]
   },
   {
     "id": 2,
@@ -29,7 +29,7 @@
     "weight": 200,
     "dishwasherSafe": false,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_4756.JPG"]
+    "images": ["/images/urunler/IMG_4756.JPG"]
   },
   {
     "id": 3,
@@ -45,7 +45,7 @@
     "weight": 650,
     "dishwasherSafe": false,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_4757.JPG"]
+    "images": ["/images/urunler/IMG_4757.JPG"]
   },
   {
     "id": 4,
@@ -61,7 +61,7 @@
     "weight": 1200,
     "dishwasherSafe": true,
     "microwave": true,
-    "images": ["/images/ürünler/IMG_4765.JPG"]
+    "images": ["/images/urunler/IMG_4765.JPG"]
   },
   {
     "id": 5,
@@ -77,7 +77,7 @@
     "weight": 500,
     "dishwasherSafe": false,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_4766.JPG"]
+    "images": ["/images/urunler/IMG_4766.JPG"]
   },
   {
     "id": 6,
@@ -93,7 +93,7 @@
     "weight": 250,
     "dishwasherSafe": false,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_4777.JPG"]
+    "images": ["/images/urunler/IMG_4777.JPG"]
   },
   {
     "id": 7,
@@ -109,7 +109,7 @@
     "weight": 350,
     "dishwasherSafe": true,
     "microwave": true,
-    "images": ["/images/ürünler/IMG_4779.JPG"]
+    "images": ["/images/urunler/IMG_4779.JPG"]
   },
   {
     "id": 8,
@@ -125,7 +125,7 @@
     "weight": 800,
     "dishwasherSafe": false,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_4787.JPG"]
+    "images": ["/images/urunler/IMG_4787.JPG"]
   },
   {
     "id": 9,
@@ -141,7 +141,7 @@
     "weight": 900,
     "dishwasherSafe": true,
     "microwave": true,
-    "images": ["/images/ürünler/IMG_4794.JPG"]
+    "images": ["/images/urunler/IMG_4794.JPG"]
   },
   {
     "id": 10,
@@ -157,7 +157,7 @@
     "weight": 1400,
     "dishwasherSafe": true,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_4824.JPG"]
+    "images": ["/images/urunler/IMG_4824.JPG"]
   },
   {
     "id": 11,
@@ -173,7 +173,7 @@
     "weight": 300,
     "dishwasherSafe": false,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_4848.JPG"]
+    "images": ["/images/urunler/IMG_4848.JPG"]
   },
   {
     "id": 12,
@@ -189,7 +189,7 @@
     "weight": 500,
     "dishwasherSafe": false,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_4865.JPG"]
+    "images": ["/images/urunler/IMG_4865.JPG"]
   },
   {
     "id": 13,
@@ -205,7 +205,7 @@
     "weight": 250,
     "dishwasherSafe": false,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_4916.JPG"]
+    "images": ["/images/urunler/IMG_4916.JPG"]
   },
   {
     "id": 14,
@@ -221,7 +221,7 @@
     "weight": 600,
     "dishwasherSafe": false,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_4932.JPG"]
+    "images": ["/images/urunler/IMG_4932.JPG"]
   },
   {
     "id": 15,
@@ -237,7 +237,7 @@
     "weight": 700,
     "dishwasherSafe": true,
     "microwave": true,
-    "images": ["/images/ürünler/IMG_4936.JPG"]
+    "images": ["/images/urunler/IMG_4936.JPG"]
   },
   {
     "id": 16,
@@ -253,7 +253,7 @@
     "weight": 320,
     "dishwasherSafe": true,
     "microwave": true,
-    "images": ["/images/ürünler/IMG_4986.JPG"]
+    "images": ["/images/urunler/IMG_4986.JPG"]
   },
   {
     "id": 17,
@@ -269,7 +269,7 @@
     "weight": 200,
     "dishwasherSafe": false,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_4998.JPG"]
+    "images": ["/images/urunler/IMG_4998.JPG"]
   },
   {
     "id": 18,
@@ -285,7 +285,7 @@
     "weight": 280,
     "dishwasherSafe": true,
     "microwave": true,
-    "images": ["/images/ürünler/IMG_0914.jpeg"]
+    "images": ["/images/urunler/IMG_0914.jpeg"]
   },
   {
     "id": 19,
@@ -301,7 +301,7 @@
     "weight": 300,
     "dishwasherSafe": true,
     "microwave": true,
-    "images": ["/images/ürünler/IMG_2236.jpeg"]
+    "images": ["/images/urunler/IMG_2236.jpeg"]
   },
   {
     "id": 20,
@@ -317,7 +317,7 @@
     "weight": 1100,
     "dishwasherSafe": false,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_4701.JPG"]
+    "images": ["/images/urunler/IMG_4701.JPG"]
   },
   {
     "id": 21,
@@ -333,7 +333,7 @@
     "weight": 550,
     "dishwasherSafe": false,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_4716.JPG"]
+    "images": ["/images/urunler/IMG_4716.JPG"]
   },
   {
     "id": 22,
@@ -349,7 +349,7 @@
     "weight": 800,
     "dishwasherSafe": true,
     "microwave": true,
-    "images": ["/images/ürünler/IMG_7844.jpeg"]
+    "images": ["/images/urunler/IMG_7844.jpeg"]
   },
   {
     "id": 23,
@@ -365,6 +365,6 @@
     "weight": 220,
     "dishwasherSafe": true,
     "microwave": false,
-    "images": ["/images/ürünler/IMG_7919.jpeg"]
+    "images": ["/images/urunler/IMG_7919.jpeg"]
   }
 ]
