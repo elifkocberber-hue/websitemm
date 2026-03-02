@@ -10,19 +10,18 @@ export default function Home() {
   return (
     <>
       {/* ═══════ HERO ═══════ */}
-      <section className="relative h-screen min-h-[600px] overflow-hidden bg-white">
-        {/* Görsel sağ tarafta */}
-        <div className="absolute inset-y-0 right-0 w-full md:w-[55%]">
-          <Image
-            src="/images/arkaplan.jpg"
-            alt="El yapımı seramik ürünler - Dekoratif seramik koleksiyonu"
-            fill
-            className="object-contain object-right"
-            priority
-          />
-        </div>
+      <section className="relative h-screen min-h-[600px] overflow-hidden">
+        {/* Arkaplan görseli tam kaplama */}
+        <Image
+          src="/images/arkaplan.jpg"
+          alt="El yapımı seramik ürünler - Dekoratif seramik koleksiyonu"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-white/40" />
 
-        {/* Sol beyaz alan üzerinde metin */}
+        {/* Metin */}
         <div className="relative z-10 h-full flex items-end pb-16 md:pb-24">
           <div className="max-w-[1400px] mx-auto px-6 md:px-10 w-full">
             <p className="text-earth/70 text-xs tracking-[0.3em] uppercase mb-6">
@@ -31,8 +30,8 @@ export default function Home() {
             <h1 className="heading-display text-charcoal text-5xl md:text-7xl lg:text-8xl mb-6">
               Fırından Yeni Çıkan<br />Mutluluklar
             </h1>
-            <p className="text-earth max-w-md text-lg mb-10 leading-relaxed">
-              Bu atölyede her şey <span className="text-accent font-semibold italic">çamur</span> ile başlar, <span className="text-clay font-semibold italic">renk</span> ile canlanır, <span className="text-charcoal font-semibold italic">pati izi</span> ile mühürlenir.
+            <p className="text-charcoal/80 max-w-md text-lg mb-10 leading-relaxed">
+              Bu atölyede her şey <span className="hero-word hero-word--camur text-accent font-semibold italic">çamur</span> ile başlar, <span className="hero-word hero-word--renk text-clay font-semibold italic">renk</span> ile canlanır, <span className="hero-word hero-word--pati text-charcoal font-semibold italic">pati izi</span> ile mühürlenir.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
