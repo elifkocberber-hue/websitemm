@@ -27,11 +27,11 @@ export default function Home() {
             <p className="text-earth/70 text-xs tracking-[0.3em] uppercase mb-6">
               El Yapımı Seramik Ürünler & Hediyeler
             </p>
-            <h1 className="heading-display text-charcoal text-5xl md:text-7xl lg:text-8xl mb-6">
+            <h1 className="heading-display text-charcoal text-2xl md:text-3xl lg:text-4xl mb-6">
               Fırından Yeni Çıkan<br />Mutluluklar
             </h1>
             <p className="text-charcoal/80 max-w-md text-lg mb-10 leading-relaxed">
-              Bu atölyede her şey <span className="hero-word hero-word--camur text-[#C2410C] font-semibold">çamur</span> ile başlar, <span className="hero-word hero-word--renk text-[#E85D9A] font-semibold">renk</span> ile canlanır, <span className="hero-word hero-word--pati text-[#2D8C5A] font-semibold">pati izi</span> ile mühürlenir.
+              Bu atölyede her şey <span className="hero-word hero-word--camur text-[#6E2720] font-semibold">çamur</span> ile başlar, <span className="hero-word hero-word--renk text-[#6E2720] font-semibold">renk</span> ile canlanır, <span className="hero-word hero-word--pati text-[#6E2720] font-semibold">pati izi</span> ile mühürlenir.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
