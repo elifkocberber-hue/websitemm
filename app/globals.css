@@ -255,9 +255,11 @@ body {
   50% { transform: translateY(-4px); }
 }
 
-@keyframes wordGlow {
-  0%, 100% { opacity: 0.85; filter: brightness(1); }
-  50% { opacity: 1; filter: brightness(1.2); }
+@keyframes wordColorShift {
+  0%, 100% { color: #5C0A1A; transform: scale(1); }
+  25% { color: #DD6B56; transform: scale(1.05); }
+  50% { color: #D57C68; transform: scale(1); }
+  75% { color: #C45540; transform: scale(1.05); }
 }
 
 @keyframes wordWiggle {
@@ -276,7 +278,7 @@ body {
 }
 
 .hero-word--renk {
-  animation: wordGlow 2.5s ease-in-out infinite;
+  animation: wordColorShift 4s ease-in-out infinite;
 }
 
 .hero-word--pati {
