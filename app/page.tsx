@@ -10,37 +10,40 @@ export default function Home() {
   return (
     <>
       {/* ═══════ HERO ═══════ */}
-      <section className="relative h-screen min-h-[600px] overflow-hidden bg-charcoal">
-        <Image
-          src="/images/arkaplan.jpg"
-          alt="El yapımı seramik ürünler - Dekoratif seramik koleksiyonu"
-          fill
-          className="object-contain"
-          priority
-        />
-        <div className="absolute inset-0 bg-charcoal/40" />
+      <section className="relative h-screen min-h-[600px] overflow-hidden bg-white">
+        {/* Görsel sağ tarafta */}
+        <div className="absolute inset-y-0 right-0 w-full md:w-[55%]">
+          <Image
+            src="/images/arkaplan.jpg"
+            alt="El yapımı seramik ürünler - Dekoratif seramik koleksiyonu"
+            fill
+            className="object-contain object-right"
+            priority
+          />
+        </div>
 
+        {/* Sol beyaz alan üzerinde metin */}
         <div className="relative z-10 h-full flex items-end pb-16 md:pb-24">
           <div className="max-w-[1400px] mx-auto px-6 md:px-10 w-full">
-            <p className="text-bone/50 text-xs tracking-[0.3em] uppercase mb-6">
+            <p className="text-earth/70 text-xs tracking-[0.3em] uppercase mb-6">
               El Yapımı Seramik Ürünler & Hediyeler
             </p>
-            <h1 className="heading-display text-bone text-5xl md:text-7xl lg:text-8xl mb-6">
+            <h1 className="heading-display text-charcoal text-5xl md:text-7xl lg:text-8xl mb-6">
               Topraktan<br />Sanata
             </h1>
-            <p className="text-bone/70 max-w-md text-lg mb-10 leading-relaxed">
+            <p className="text-earth max-w-md text-lg mb-10 leading-relaxed">
               Üç kuşaklık seramik geleneğini modern tasarımla buluşturuyoruz. Sevimli kedi figürlerinden el yapımı kupalara, özel hediye seçenekleri keşfedin.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/ceramics"
-                className="inline-block bg-bone text-charcoal px-8 py-4 text-sm tracking-wider uppercase hover:bg-accent hover:text-bone transition-colors duration-300"
+                className="inline-block bg-charcoal text-bone px-8 py-4 text-sm tracking-wider uppercase hover:bg-accent hover:text-bone transition-colors duration-300"
               >
                 Koleksiyonu Keşfet
               </Link>
               <Link
                 href="/about"
-                className="inline-block border border-bone/30 text-bone px-8 py-4 text-sm tracking-wider uppercase hover:border-bone hover:bg-bone/10 transition-all duration-300"
+                className="inline-block border border-charcoal/30 text-charcoal px-8 py-4 text-sm tracking-wider uppercase hover:border-charcoal hover:bg-charcoal/5 transition-all duration-300"
               >
                 Hikayemiz
               </Link>
@@ -50,7 +53,7 @@ export default function Home() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
-          <div className="w-[1px] h-12 bg-bone/30 animate-pulse" />
+          <div className="w-[1px] h-12 bg-charcoal/30 animate-pulse" />
         </div>
       </section>
 
@@ -117,12 +120,14 @@ export default function Home() {
 
       {/* ═══════ ABOUT SECTION (dark) ═══════ */}
       <section className="relative py-24 md:py-32 overflow-hidden bg-charcoal">
-        <Image
-          src="/images/arkaplan.jpg"
-          alt="Arka plan"
-          fill
-          className="object-contain"
-        />
+        <div className="absolute inset-y-0 right-0 w-full md:w-[55%]">
+          <Image
+            src="/images/arkaplan.jpg"
+            alt="Arka plan"
+            fill
+            className="object-contain object-right opacity-20"
+          />
+        </div>
         <div className="absolute inset-0 bg-charcoal/60" />
         <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
           <ScrollReveal direction="left">
