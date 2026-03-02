@@ -16,8 +16,10 @@ export const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [loginMenuOpen, setLoginMenuOpen] = useState(false);
   const logoRef = useRef<HTMLAnchorElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const loginMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -31,11 +33,14 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close user menu on click outside
+  // Close menus on click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
         setUserMenuOpen(false);
+      }
+      if (loginMenuRef.current && !loginMenuRef.current.contains(e.target as Node)) {
+        setLoginMenuOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -171,16 +176,48 @@ export const Header: React.FC = () => {
               )}
             </div>
           ) : (
-            <Link
-              href="/login"
-              className="flex items-center gap-2 text-earth hover:text-charcoal transition-colors"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-              <span className="text-[13px] tracking-[0.12em] uppercase">Giriş</span>
-            </Link>
+            <div ref={loginMenuRef} className="relative">
+              <button
+                onClick={() => setLoginMenuOpen(!loginMenuOpen)}
+                className="flex items-center gap-2 text-earth hover:text-charcoal transition-colors"
+                aria-label="Giriş seçenekleri"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                <span className="text-[13px] tracking-[0.12em] uppercase">Giriş</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-200 ${loginMenuOpen ? 'rotate-180' : ''}`}>
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {loginMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-warm-gray overflow-hidden z-[100]">
+                  <Link
+                    href="/login"
+                    onClick={() => setLoginMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-sm text-earth hover:bg-bone hover:text-charcoal transition-colors"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    Müşteri Girişi
+                  </Link>
+                  <div className="border-t border-warm-gray" />
+                  <Link
+                    href="/admin/login"
+                    onClick={() => setLoginMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-sm text-earth hover:bg-bone hover:text-charcoal transition-colors"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Admin Girişi
+                  </Link>
+                </div>
+              )}
+            </div>
           )}
         </div>
 
@@ -231,9 +268,14 @@ export const Header: React.FC = () => {
               </button>
             </>
           ) : (
-            <Link href="/login" onClick={() => setMenuOpen(false)} className="heading-serif text-3xl text-charcoal hover:text-accent transition-colors">
-              Giriş Yap
-            </Link>
+            <>
+              <Link href="/login" onClick={() => setMenuOpen(false)} className="heading-serif text-3xl text-charcoal hover:text-accent transition-colors">
+                Müşteri Girişi
+              </Link>
+              <Link href="/admin/login" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-earth hover:text-accent transition-colors">
+                🔒 Admin Girişi
+              </Link>
+            </>
           )}
         </div>
       )}
