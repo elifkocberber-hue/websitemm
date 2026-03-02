@@ -32,7 +32,7 @@ export default function Home() {
               Fırından Yeni Çıkan<br />Mutluluklar
             </h1>
             <p className="text-earth max-w-md text-lg mb-10 leading-relaxed">
-              Üç kuşaklık seramik geleneğini modern tasarımla buluşturuyoruz. Sevimli kedi figürlerinden el yapımı kupalara, özel hediye seçenekleri keşfedin.
+              Bu atölyede her şey <span className="text-accent font-semibold italic">çamur</span> ile başlar, <span className="text-clay font-semibold italic">renk</span> ile canlanır, <span className="text-charcoal font-semibold italic">pati izi</span> ile mühürlenir.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
