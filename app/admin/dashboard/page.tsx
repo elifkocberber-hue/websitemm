@@ -144,6 +144,16 @@ export default function AdminDashboardPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Quick Links */}
+        <div className="mb-8">
+          <Link
+            href="/admin/analytics"
+            className="inline-flex items-center gap-2 bg-[#5C0A1A] hover:bg-[#DD6B56] text-white font-medium py-2 px-5 rounded-lg transition"
+          >
+            📊 Ziyaretçi Analizi
+          </Link>
+        </div>
+
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-12">
           <div className="bg-white rounded-lg shadow p-6">

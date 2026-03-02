@@ -65,3 +65,34 @@ CREATE POLICY "Users can view their order items" ON order_items
       AND orders.user_id::text = auth.uid()::text
     )
   );
+
+-- Visitors table (analytics)
+CREATE TABLE IF NOT EXISTS visitors (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  page VARCHAR(500) NOT NULL,
+  referrer VARCHAR(500),
+  user_agent TEXT,
+  country VARCHAR(100),
+  city VARCHAR(100),
+  device VARCHAR(50),
+  browser VARCHAR(100),
+  os VARCHAR(100),
+  screen_width INTEGER,
+  screen_height INTEGER,
+  language VARCHAR(20),
+  session_id VARCHAR(100),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_visitors_created_at ON visitors(created_at);
+CREATE INDEX IF NOT EXISTS idx_visitors_page ON visitors(page);
+CREATE INDEX IF NOT EXISTS idx_visitors_session_id ON visitors(session_id);
+
+-- Allow anonymous inserts for visitor tracking
+ALTER TABLE visitors ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can insert visitor data" ON visitors
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Admins can view visitor data" ON visitors
+  FOR SELECT USING (true);

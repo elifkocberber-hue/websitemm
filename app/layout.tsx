@@ -8,6 +8,7 @@ import { UserProvider } from "@/context/UserContext";
 import { Header, Footer } from "@/components";
 import { CustomCursor } from "@/components/CustomCursor";
 import { CookieConsent } from "@/components/CookieConsent";
+import { VisitorTracker } from "@/components/VisitorTracker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -237,6 +238,7 @@ export default function RootLayout({
           <CartProvider>
             <CustomCursor />
             <CookieConsent />
+            <VisitorTracker />
             <div className="flex flex-col min-h-screen">
               <Header />
               <main className="grow">
