@@ -36,7 +36,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
   };
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-12">
+    <div className="max-w-350 mx-auto px-6 md:px-10 py-12">
       {/* Breadcrumb */}
       <div className="mb-8 text-sm text-earth">
         <Link href="/" className="hover:text-amber-600">Ana Sayfa</Link>
@@ -99,6 +99,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
               <button
                 key={idx}
                 onClick={() => setCurrentImageIndex(idx)}
+                title={`Görüntü ${idx + 1}`}
                 className={`relative w-24 h-24 shrink-0 rounded-lg overflow-hidden border-3 transition-all hover:border-amber-400 ${
                   idx === currentImageIndex ? 'border-amber-600 scale-105' : 'border-gray-300'
                 }`}
@@ -223,6 +224,8 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
                   setQuantity(Math.min(product.stock, Math.max(1, val)));
                 }}
                 className="w-16 text-center border-l border-r border-gray-300 py-2 focus:outline-none"
+                title="Ürün adedi"
+                aria-label="Ürün adedi"
               />
               <button
                 onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}

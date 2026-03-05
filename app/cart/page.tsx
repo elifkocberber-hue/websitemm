@@ -116,6 +116,7 @@ export default function CartPage() {
                           updateQuantity(item.id, Math.max(1, Math.min(item.stock, newQty)));
                         }}
                         className="w-12 text-center border border-gray-300 rounded"
+                        title="Ürün adedi"
                       />
                       <button
                         onClick={() => updateQuantity(item.id, Math.min(item.stock, item.quantity + 1))}

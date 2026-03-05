@@ -129,7 +129,7 @@ export const SearchBar: React.FC = () => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Ürün veya kategori ara..."
-              className="w-[200px] lg:w-[260px] pl-9 pr-3 py-2 text-sm bg-white border border-warm-gray rounded-full text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-all"
+              className="w-50 lg:w-65 pl-9 pr-3 py-2 text-sm bg-white border border-warm-gray rounded-full text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-all"
               onKeyDown={(e) => {
                 if (e.key === 'Escape') {
                   setShowInput(false);
@@ -154,14 +154,14 @@ export const SearchBar: React.FC = () => {
 
       {/* Dropdown Results */}
       {isOpen && results.length > 0 && (
-        <div className="absolute top-full left-0 mt-2 w-[320px] bg-white rounded-xl shadow-lg border border-warm-gray overflow-hidden z-[100]">
+        <div className="absolute top-full left-0 mt-2 w-[320px] bg-white rounded-xl shadow-lg border border-warm-gray overflow-hidden z-100">
           {results.map((item) => (
             <button
               key={item.id}
               onClick={() => handleSelect(item.id)}
               className="w-full flex items-center gap-3 px-4 py-3 hover:bg-bone transition-colors text-left"
             >
-              <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-warm-gray">
+              <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-warm-gray">
                 <Image
                   src={item.image}
                   alt={item.name}
@@ -197,7 +197,7 @@ export const SearchBar: React.FC = () => {
 
       {/* No results */}
       {showInput && query.trim().length >= 2 && results.length === 0 && (
-        <div className="absolute top-full left-0 mt-2 w-[280px] bg-white rounded-xl shadow-lg border border-warm-gray p-4 z-[100]">
+        <div className="absolute top-full left-0 mt-2 w-70 bg-white rounded-xl shadow-lg border border-warm-gray p-4 z-100">
           <p className="text-sm text-earth text-center">Sonuç bulunamadı</p>
         </div>
       )}

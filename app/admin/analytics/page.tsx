@@ -208,7 +208,7 @@ export default function AnalyticsPage() {
                           <div key={d.date} className="flex-1 relative group h-full flex items-end">
                             {/* Ziyaret barı */}
                             <div
-                              className="w-full bg-[#DD6B56]/80 rounded-t hover:bg-[#DD6B56] transition-colors min-h-[2px]"
+                              className="w-full bg-[#DD6B56]/80 rounded-t hover:bg-[#DD6B56] transition-colors min-h-0.5"
                               style={{ height: `${barHeight}%` }}
                             />
                             {/* Süre noktası */}
@@ -226,7 +226,7 @@ export default function AnalyticsPage() {
                               const length = Math.sqrt(1 + Math.pow((rise * 2.24) / 100, 2)) * 100;
                               return (
                                 <div
-                                  className="absolute z-[5] h-[2px] bg-[#5C0A1A]/50 origin-left"
+                                  className="absolute z-5 h-0.5 bg-[#5C0A1A]/50 origin-left"
                                   style={{
                                     bottom: `${currentDot}%`,
                                     left: '50%',
@@ -269,11 +269,11 @@ export default function AnalyticsPage() {
               {/* Saatlik Dağılım */}
               <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-lg font-bold text-gray-900 mb-4">Saatlik Dağılım</h2>
-                <div className="flex items-end gap-[2px] h-32">
+                <div className="flex items-end gap-0.5 h-32">
                   {Array.from({ length: 24 }, (_, i) => (
                     <div key={i} className="flex-1 flex flex-col items-center group relative">
                       <div
-                        className="w-full bg-[#D57C68] rounded-t min-h-[1px]"
+                        className="w-full bg-[#D57C68] rounded-t min-h-px"
                         style={{ height: `${((data.hourlyStats[i] || 0) / maxHourly) * 100}%` }}
                       />
                       {i % 4 === 0 && (

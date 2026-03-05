@@ -12,7 +12,7 @@ export default async function Home() {
   return (
     <>
       {/* ═══════ HERO ═══════ */}
-      <section className="relative h-screen min-h-[600px] overflow-hidden">
+      <section className="relative h-screen min-h-150 overflow-hidden">
         {/* Arkaplan görseli tam kaplama */}
         <Image
           src="/images/arkaplan.jpg"
@@ -25,7 +25,7 @@ export default async function Home() {
 
         {/* Metin */}
         <div className="relative z-10 h-full flex items-end pb-16 md:pb-24">
-          <div className="max-w-[1400px] mx-auto px-6 md:px-10 w-full">
+          <div className="max-w-350 mx-auto px-6 md:px-10 w-full">
             <p className="text-earth/70 text-xs tracking-[0.3em] uppercase mb-6">
               El Yapımı Seramik Ürünler & Hediyeler
             </p>
@@ -54,7 +54,7 @@ export default async function Home() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
-          <div className="w-[1px] h-12 bg-charcoal/30 animate-pulse" />
+          <div className="w-px h-12 bg-charcoal/30 animate-pulse" />
         </div>
       </section>
 
@@ -75,7 +75,7 @@ export default async function Home() {
       </div>
 
       {/* ═══════ FEATURED PRODUCTS ═══════ */}
-      <section className="max-w-[1400px] mx-auto px-6 md:px-10 py-20 md:py-32">
+      <section className="max-w-350 mx-auto px-6 md:px-10 py-20 md:py-32">
         <ScrollReveal>
           <div className="flex justify-between items-end mb-12 md:mb-16">
             <div>
@@ -130,7 +130,7 @@ export default async function Home() {
           />
         </div>
         <div className="absolute inset-0 bg-charcoal/60" />
-        <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+        <div className="relative z-10 max-w-350 mx-auto px-6 md:px-10 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
           <ScrollReveal direction="left">
             <p className="text-xs tracking-[0.2em] uppercase text-clay mb-4">Hakkımızda</p>
             <h2 className="heading-display text-3xl md:text-4xl text-bone mb-6">
@@ -149,7 +149,7 @@ export default async function Home() {
             </Link>
           </ScrollReveal>
           <ScrollReveal direction="right">
-            <div className="relative h-[400px] md:h-[520px]">
+            <div className="relative h-100 md:h-130">
               <Image
                 src="https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?w=800&q=80"
               alt="El yapımı seramik atölyesi - seramik üretim süreci"
@@ -162,7 +162,7 @@ export default async function Home() {
       </section>
 
       {/* ═══════ PHILOSOPHY ═══════ */}
-      <section className="max-w-[1400px] mx-auto px-6 md:px-10 py-20 md:py-32">
+      <section className="max-w-350 mx-auto px-6 md:px-10 py-20 md:py-32">
         <ScrollReveal>
           <div className="max-w-3xl mx-auto text-center mb-16">
             <p className="text-xs tracking-[0.2em] uppercase text-earth mb-3">Felsefemiz</p>
@@ -193,7 +193,7 @@ export default async function Home() {
 
       {/* ═══════ PARALLAX CTA ═══════ */}
       <section
-        className="relative h-[50vh] min-h-[400px] parallax-section"
+        className="relative h-[50vh] min-h-100 parallax-section"
         style={{ backgroundImage: "url('https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=1920&q=80')" }}
       >
         <div className="absolute inset-0 bg-charcoal/60" />
@@ -213,7 +213,7 @@ export default async function Home() {
       </section>
 
       {/* ═══════ NEWSLETTER ═══════ */}
-      <section className="max-w-[1400px] mx-auto px-6 md:px-10 py-20 md:py-28">
+      <section className="max-w-350 mx-auto px-6 md:px-10 py-20 md:py-28">
         <ScrollReveal>
           <div className="max-w-xl mx-auto text-center">
             <h2 className="heading-serif text-2xl text-charcoal mb-3">Haberdar Olun</h2>

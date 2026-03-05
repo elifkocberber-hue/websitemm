@@ -43,7 +43,7 @@ export default function CeramicsPage() {
   const imageClasses = ['aspect-[4/5]', 'aspect-[3/4]', 'aspect-square', 'aspect-[5/6]', 'aspect-[4/5]'];
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-12 md:py-20">
+    <div className="max-w-350 mx-auto px-6 md:px-10 py-12 md:py-20">
       {/* Header */}
       <ScrollReveal>
         <div className="mb-12 md:mb-16">
@@ -61,7 +61,7 @@ export default function CeramicsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10 md:gap-14">
         {/* Sidebar Filters */}
-        <aside className="lg:sticky lg:top-[92px] lg:self-start">
+        <aside className="lg:sticky lg:top-23 lg:self-start">
           <div className="space-y-8">
             {/* Handmade toggle */}
             <label className="flex items-center gap-3 cursor-pointer group">

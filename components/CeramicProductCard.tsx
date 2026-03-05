@@ -67,7 +67,7 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
           <p className="text-[11px] tracking-[0.15em] uppercase text-earth">
             {product.category}
           </p>
-          <p className="text-[11px] tracking-[0.1em] uppercase text-clay">
+          <p className="text-[11px] tracking-widest uppercase text-clay">
             {clayTypeLabels[product.clayType]}
           </p>
         </div>
@@ -92,7 +92,7 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
         <button
           onClick={handleAddToCart}
           disabled={product.stock === 0}
-          className={`w-full mt-4 py-3.5 text-sm tracking-[0.1em] uppercase transition-all duration-300 ${
+          className={`w-full mt-4 py-3.5 text-sm tracking-widest uppercase transition-all duration-300 ${
             addedToCart
               ? 'bg-accent text-bone'
               : product.stock === 0

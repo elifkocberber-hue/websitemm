@@ -3,7 +3,7 @@ import Link from 'next/link';
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-charcoal text-bone mt-0">
-      <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16 md:py-20">
+      <div className="max-w-350 mx-auto px-6 md:px-10 py-16 md:py-20">
         {/* Top — Large serif statement */}
         <div className="mb-16">
           <p className="heading-display text-4xl md:text-5xl lg:text-6xl max-w-2xl leading-tight">

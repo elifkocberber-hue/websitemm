@@ -19,6 +19,11 @@ export default function PaymentPage() {
     address: '',
     city: '',
     postalCode: '',
+    cardHolderName: '',
+    cardNumber: '',
+    expireMonth: '',
+    expireYear: '',
+    cvc: '',
   });
 
   useEffect(() => {
@@ -207,6 +212,106 @@ export default function PaymentPage() {
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                       placeholder="34000"
                     />
+                  </div>
+                </div>
+
+                {/* ═══════ KART BİLGİLERİ ═══════ */}
+                <div className="border-t border-gray-200 pt-6 mt-2">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">💳 Kart Bilgileri</h2>
+
+                  {/* Kart Üzerindeki İsim */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Kart Üzerindeki İsim</label>
+                    <input
+                      type="text"
+                      name="cardHolderName"
+                      value={formData.cardHolderName}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      placeholder="ADINIZ SOYADINIZ"
+                      autoComplete="cc-name"
+                    />
+                  </div>
+
+                  {/* Kart Numarası */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Kart Numarası</label>
+                    <input
+                      type="text"
+                      name="cardNumber"
+                      value={formData.cardNumber}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '').slice(0, 16);
+                        const formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+                        setFormData(prev => ({ ...prev, cardNumber: formatted }));
+                      }}
+                      required
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent font-mono tracking-wider"
+                      placeholder="0000 0000 0000 0000"
+                      maxLength={19}
+                      autoComplete="cc-number"
+                    />
+                  </div>
+
+                  {/* Son Kullanma & CVC */}
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Ay</label>
+                      <select
+                        name="expireMonth"
+                        value={formData.expireMonth}
+                        onChange={(e) => setFormData(prev => ({ ...prev, expireMonth: e.target.value }))}
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                        title="Son kullanma ayı"
+                      >
+                        <option value="">Ay</option>
+                        {Array.from({ length: 12 }, (_, i) => (
+                          <option key={i + 1} value={String(i + 1).padStart(2, '0')}>
+                            {String(i + 1).padStart(2, '0')}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Yıl</label>
+                      <select
+                        name="expireYear"
+                        value={formData.expireYear}
+                        onChange={(e) => setFormData(prev => ({ ...prev, expireYear: e.target.value }))}
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                        title="Son kullanma yılı"
+                      >
+                        <option value="">Yıl</option>
+                        {Array.from({ length: 10 }, (_, i) => {
+                          const year = new Date().getFullYear() + i;
+                          return (
+                            <option key={year} value={String(year)}>
+                              {year}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">CVC</label>
+                      <input
+                        type="text"
+                        name="cvc"
+                        value={formData.cvc}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                          setFormData(prev => ({ ...prev, cvc: value }));
+                        }}
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent font-mono tracking-wider"
+                        placeholder="000"
+                        maxLength={4}
+                        autoComplete="cc-csc"
+                      />
+                    </div>
                   </div>
                 </div>
 

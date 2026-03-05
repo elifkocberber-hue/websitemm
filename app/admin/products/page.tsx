@@ -478,6 +478,7 @@ export default function ProductsAdminPage() {
                       value={formData.category}
                       onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#DD6B56] focus:border-transparent outline-none"
+                      title="Kategori seçin"
                     >
                       <option value="">Seçiniz</option>
                       {CATEGORIES.map(cat => (
@@ -491,6 +492,7 @@ export default function ProductsAdminPage() {
                       value={formData.clayType}
                       onChange={(e) => setFormData(prev => ({ ...prev, clayType: e.target.value }))}
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#DD6B56] focus:border-transparent outline-none"
+                      title="Malzeme seçin"
                     >
                       {CLAY_TYPES.map(ct => (
                         <option key={ct.value} value={ct.value}>{ct.label}</option>
@@ -539,6 +541,7 @@ export default function ProductsAdminPage() {
                             }));
                           }}
                           className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#DD6B56] focus:border-transparent outline-none"
+                          title={dim === 'diameter' ? 'Çap' : dim === 'height' ? 'Yükseklik' : dim === 'width' ? 'Genişlik' : 'Derinlik'}
                         />
                       </div>
                     ))}

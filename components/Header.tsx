@@ -59,7 +59,7 @@ export const Header: React.FC = () => {
       <Link
         ref={logoRef}
         href="/"
-        className="fixed z-[60] transition-none"
+        className="fixed z-60 transition-none"
         style={{
           left: `calc(50% - ${scrollProgress * 50}% + ${scrollProgress * (24 + logoSize / 2)}px)`,
           top: `${logoTop}px`,
@@ -88,7 +88,7 @@ export const Header: React.FC = () => {
             : 'bg-[#FAF5EE]/60 backdrop-blur-sm'
         }`}
       >
-        <nav className="max-w-[1400px] mx-auto px-6 md:px-10 flex items-center justify-between h-[72px] overflow-visible">
+        <nav className="max-w-350 mx-auto px-6 md:px-10 flex items-center justify-between h-18 overflow-visible">
           {/* Left: Search */}
           <div className="hidden md:flex items-center w-36">
             <SearchBar />
@@ -158,10 +158,10 @@ export const Header: React.FC = () => {
                   <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
-                <span className="text-[13px] tracking-wide max-w-[100px] truncate">{user.firstName}</span>
+                <span className="text-[13px] tracking-wide max-w-25 truncate">{user.firstName}</span>
               </button>
               {userMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-warm-gray overflow-hidden z-[100]">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-warm-gray overflow-hidden z-100">
                   <div className="px-4 py-3 border-b border-warm-gray">
                     <p className="text-sm font-medium text-charcoal">{user.firstName} {user.lastName}</p>
                     <p className="text-xs text-earth truncate">{user.email}</p>
@@ -192,7 +192,7 @@ export const Header: React.FC = () => {
                 </svg>
               </button>
               {loginMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-warm-gray overflow-hidden z-[100]">
+                <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-warm-gray overflow-hidden z-100">
                   <Link
                     href="/login"
                     onClick={() => setLoginMenuOpen(false)}
@@ -226,7 +226,7 @@ export const Header: React.FC = () => {
           onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden w-8 h-8 flex flex-col justify-center items-center gap-1.5"
           aria-label="Menü"
-          aria-expanded={menuOpen}
+          aria-expanded={menuOpen ? "true" : "false"}
         >
           <span className={`block w-6 h-[1.5px] bg-charcoal transition-all duration-300 origin-center ${menuOpen ? 'rotate-45 translate-y-[4.5px]' : ''}`} />
           <span className={`block w-6 h-[1.5px] bg-charcoal transition-all duration-300 origin-center ${menuOpen ? '-rotate-45 -translate-y-[4.5px]' : ''}`} />
@@ -235,7 +235,7 @@ export const Header: React.FC = () => {
 
       {/* Mobile Menu — Full-screen overlay */}
       {menuOpen && (
-        <div className="md:hidden fixed inset-0 top-[72px] bg-bone z-40 flex flex-col items-center justify-center gap-8 px-6">
+        <div className="md:hidden fixed inset-0 top-18 bg-bone z-40 flex flex-col items-center justify-center gap-8 px-6">
           {/* Mobile Search */}
           <div className="w-full max-w-sm">
             <SearchBar />

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function CookiePolicyPage() {
   return (
-    <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-12">
+    <div className="max-w-350 mx-auto px-6 md:px-10 py-12">
       {/* Breadcrumb */}
       <div className="mb-8 text-sm text-earth">
         <Link href="/" className="hover:text-amber-600 transition-colors">Ana Sayfa</Link>

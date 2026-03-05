@@ -105,6 +105,8 @@ export const CookieConsent: React.FC = () => {
                   className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${
                     preferences.analytics ? 'bg-amber-700' : 'bg-gray-300'
                   }`}
+                  title="Analitik çerezleri aç/kapat"
+                  aria-label={`Analitik çerezler ${preferences.analytics ? 'açık' : 'kapalı'}`}
                 >
                   <span
                     className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 ${
