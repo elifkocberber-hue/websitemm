@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import { fetchProducts } from '@/data/ceramicProducts';
 import CeramicsClient from './CeramicsClient';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'El Yapımı Seramik Koleksiyonu | El\'s Dream Factory',
   description: 'El yapımı seramik kupalar, kedi figürleri, dekoratif objeler ve hediye seçenekleri. Benzersiz, sanatsal seramik ürünler keşfedin.',
