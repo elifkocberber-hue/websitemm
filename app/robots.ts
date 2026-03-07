@@ -6,12 +6,12 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/private/', '/search', '/checkout/', '/cart', '/payment', '/payment-failed', '/thank-you'],
+        disallow: ['/admin/', '/sergenim/', '/api/', '/private/', '/search', '/checkout/', '/cart', '/payment', '/payment-failed', '/thank-you'],
       },
       {
         userAgent: 'Googlebot',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/private/', '/cart', '/payment', '/payment-failed', '/thank-you'],
+        disallow: ['/admin/', '/sergenim/', '/api/', '/private/', '/cart', '/payment', '/payment-failed', '/thank-you'],
       },
     ],
     sitemap: 'https://elsdreamfactory.com/sitemap.xml',

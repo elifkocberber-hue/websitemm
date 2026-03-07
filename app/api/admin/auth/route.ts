@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
 import { adminSessions } from '@/lib/adminAuth';
 
-const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@elsdreamfactory.com';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || '';
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || '';
 
 function generateSessionToken(): string {
