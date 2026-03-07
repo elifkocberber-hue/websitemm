@@ -47,7 +47,7 @@ export default function OrderDetailPage() {
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      router.push('/admin/login');
+      router.push('/sergenim/login');
     }
   }, [isAuthenticated, authLoading, router]);
 
