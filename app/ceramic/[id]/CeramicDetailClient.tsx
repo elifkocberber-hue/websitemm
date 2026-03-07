@@ -68,24 +68,30 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
               onMouseLeave={() => setIsHovered(false)}
               className="relative w-full h-96 bg-gray-100 rounded-lg overflow-hidden cursor-zoom-in"
             >
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  transform: isHovered ? 'scale(2)' : 'scale(1)',
-                  transformOrigin: `${mousePos.x}% ${mousePos.y}%`,
-                  transition: isHovered ? 'none' : 'transform 0.3s ease',
-                  position: 'relative',
-                }}
-              >
-                <Image
-                  src={product.images[currentImageIndex]}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
+              {product.images.length > 0 ? (
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    transform: isHovered ? 'scale(2)' : 'scale(1)',
+                    transformOrigin: `${mousePos.x}% ${mousePos.y}%`,
+                    transition: isHovered ? 'none' : 'transform 0.3s ease',
+                    position: 'relative',
+                  }}
+                >
+                  <Image
+                    src={product.images[currentImageIndex]}
+                    alt={product.name}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                  <span className="text-sm">Görsel bulunmuyor</span>
+                </div>
+              )}
               {product.handmade && (
                 <div className="absolute top-3 right-3 bg-amber-500 text-white px-3 py-1 rounded-full text-sm font-bold z-10">
                   El Yapımı

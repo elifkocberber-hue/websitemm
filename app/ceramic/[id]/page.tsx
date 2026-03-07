@@ -43,7 +43,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-// Statik sayfa oluşturma — build zamanında tüm ürün sayfaları oluşturulur
+// Admin panelinden eklenen UUID'li ürünler dinamik render edilsin
+export const dynamicParams = true;
+
+// Statik sayfa oluşturma — build zamanında yerel ürün sayfaları oluşturulur
 export async function generateStaticParams() {
   return ceramicProducts.map((product) => ({
     id: String(product.id),
