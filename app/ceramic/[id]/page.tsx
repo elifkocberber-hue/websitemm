@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { fetchProducts, getCeramicProductById, ceramicProducts } from '@/data/ceramicProducts';
+import { fetchProducts, fetchProductById, getCeramicProductById, ceramicProducts } from '@/data/ceramicProducts';
 import CeramicDetailClient from './CeramicDetailClient';
 
 interface PageProps {
@@ -56,9 +56,11 @@ export async function generateStaticParams() {
 export default async function CeramicDetailPage({ params }: PageProps) {
   const { id } = await params;
 
-  // Sunucuda ürünleri çek
+  // Önce ID'ye göre direkt çek (cache yok), bulamazsa yerel veriye bak
+  const product = await fetchProductById(id) ?? getCeramicProductById(id);
+
+  // İlgili ürünler için tüm listeyi çek
   const allProducts = await fetchProducts();
-  const product = allProducts.find((p) => String(p.id) === String(id)) || getCeramicProductById(id);
 
   if (!product) {
     notFound();

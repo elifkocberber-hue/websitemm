@@ -27,6 +27,25 @@ export const getCeramicProductById = (id: number | string): CeramicProduct | und
   return ceramicProducts.find(product => String(product.id) === String(id));
 };
 
+// Supabase'den tek ürün çek — cache yok, her zaman taze veri
+export async function fetchProductById(id: string): Promise<CeramicProduct | undefined> {
+  try {
+    const baseUrl = typeof window !== 'undefined'
+      ? ''
+      : (process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'));
+    const res = await fetch(`${baseUrl}/api/products?id=${encodeURIComponent(id)}`, {
+      cache: 'no-store',
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data) return data as CeramicProduct;
+    }
+  } catch {
+    // Supabase erişilemezse yerel veriye düş
+  }
+  return getCeramicProductById(id);
+}
+
 export const getCeramicProductsByCategory = (category: string): CeramicProduct[] => {
   return ceramicProducts.filter(product => product.category === category);
 };
