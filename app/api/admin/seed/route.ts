@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     .from('products')
     .select('*', { count: 'exact', head: true });
 
-  const products = ceramicData as Array<{
+  const products = (ceramicData as unknown) as Array<{
     name: string;
     description: string;
     price: number;
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     category: string;
     handmade: boolean;
     glaze?: string;
-    dimensions?: Record<string, number>;
+    dimensions?: Record<string, number | undefined>;
     weight?: number;
     dishwasherSafe: boolean;
     microwave: boolean;
@@ -39,7 +39,9 @@ export async function POST(request: NextRequest) {
     category: p.category,
     handmade: p.handmade,
     glaze: p.glaze || '',
-    dimensions: p.dimensions || {},
+    dimensions: Object.fromEntries(
+      Object.entries(p.dimensions || {}).filter(([, v]) => v !== undefined)
+    ) as Record<string, number>,
     weight: p.weight || null,
     dishwasher_safe: p.dishwasherSafe,
     microwave: p.microwave,
