@@ -14,23 +14,35 @@ export default function OGImage() {
           width: '100%',
           height: '100%',
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
+          gap: '60px',
           fontFamily: 'serif',
+          padding: '60px',
         }}
       >
+        {/* Logo */}
+        <img
+          src="https://elsdreamfactory.com/images/logo.png"
+          alt="El's Dream Factory Logo"
+          width={220}
+          height={220}
+          style={{ borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+        />
+
+        {/* Metin */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
-            gap: '20px',
+            alignItems: 'flex-start',
+            gap: '16px',
           }}
         >
           <div
             style={{
-              fontSize: '28px',
+              fontSize: '22px',
               color: '#8B7355',
               letterSpacing: '0.3em',
               textTransform: 'uppercase',
@@ -40,40 +52,34 @@ export default function OGImage() {
           </div>
           <div
             style={{
-              fontSize: '72px',
+              fontSize: '64px',
               color: '#2C2C2C',
               fontWeight: 'bold',
-              textAlign: 'center',
               lineHeight: 1.1,
             }}
           >
-            {"El's Dream Factory"}
+            {"El's Dream\nFactory"}
           </div>
           <div
             style={{
-              width: '80px',
+              width: '60px',
               height: '2px',
               backgroundColor: '#B8860B',
-              marginTop: '10px',
-              marginBottom: '10px',
             }}
           />
           <div
             style={{
-              fontSize: '24px',
+              fontSize: '22px',
               color: '#5C5C5C',
-              textAlign: 'center',
-              maxWidth: '600px',
             }}
           >
-            Seramik Kupalar · Dekoratif Objeler · Hediye Seçenekleri
+            Seramik Kupalar · Dekoratif Objeler · Hediyeler
           </div>
           <div
             style={{
               fontSize: '18px',
               color: '#8B7355',
               letterSpacing: '0.15em',
-              marginTop: '20px',
             }}
           >
             elsdreamfactory.com
