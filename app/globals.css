@@ -206,6 +206,28 @@ body {
   transform-origin: top;
 }
 
+/* ── Page Load Enter ── */
+
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-page-enter {
+  animation: pageEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Cart Button Pop ── */
+
+@keyframes cartPop {
+  0%   { transform: scale(1); }
+  28%  { transform: scale(0.91); }
+  62%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.animate-cart-pop {
+  animation: cartPop 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* ── Cookie Consent Slide Up ── */
 
 @keyframes slideUp {

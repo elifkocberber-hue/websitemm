@@ -236,7 +236,7 @@ export default function RootLayout({
             <VisitorTracker />
             <div className="flex flex-col min-h-screen">
               <Header />
-              <main className="grow">
+              <main className="grow animate-page-enter">
                 {children}
               </main>
               <Footer />

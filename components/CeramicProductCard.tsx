@@ -19,6 +19,7 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
   const { addToCart } = useCart();
   const { toggleFavorite, isFavorited } = useFavorites();
   const [addedToCart, setAddedToCart] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
   const favorited = isFavorited(product.id);
 
   const clayTypeLabels: Record<string, string> = {
@@ -32,6 +33,7 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
   const handleAddToCart = () => {
     addToCart(product, 1);
     setAddedToCart(true);
+    setAnimKey(k => k + 1);
     setTimeout(() => setAddedToCart(false), 2000);
   };
 
@@ -103,17 +105,25 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
         </div>
 
         <button
+          key={animKey}
           onClick={handleAddToCart}
           disabled={product.stock === 0}
-          className={`w-full mt-4 py-3.5 text-sm tracking-widest uppercase transition-all duration-300 ${
+          className={`w-full mt-4 py-3.5 text-sm tracking-widest uppercase transition-colors duration-300 flex items-center justify-center gap-2 active:scale-95 ${
             addedToCart
-              ? 'bg-accent text-bone'
+              ? 'bg-accent text-bone animate-cart-pop'
               : product.stock === 0
               ? 'bg-warm-gray text-clay cursor-not-allowed'
               : 'bg-charcoal text-bone hover:bg-accent'
           }`}
         >
-          {addedToCart ? 'Sepete Eklendi' : product.stock === 0 ? 'Tükendi' : 'Sepete Ekle'}
+          {addedToCart ? (
+            <>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Sepete Eklendi
+            </>
+          ) : product.stock === 0 ? 'Tükendi' : 'Sepete Ekle'}
         </button>
       </div>
     </div>
