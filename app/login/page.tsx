@@ -72,6 +72,12 @@ export default function LoginPage() {
             />
           </div>
 
+          <div className="flex justify-end -mt-2">
+            <Link href="/forgot-password" className="text-xs text-earth hover:text-charcoal transition-colors">
+              Şifremi unuttum
+            </Link>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
