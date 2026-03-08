@@ -4,12 +4,34 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 export default function ForgotPasswordPage() {
-  const [submitted, setSubmitted] = useState(false);
   const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/user/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        const data = await res.json();
+        setError(data.error || 'Bir hata oluştu');
+      }
+    } catch {
+      setError('Bağlantı hatası. Lütfen tekrar deneyin.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -25,6 +47,12 @@ export default function ForgotPasswordPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
+
               <div>
                 <label htmlFor="email" className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">
                   E-posta
@@ -42,9 +70,10 @@ export default function ForgotPasswordPage() {
 
               <button
                 type="submit"
-                className="w-full bg-charcoal text-bone py-3.5 text-sm tracking-wider uppercase hover:bg-accent transition-colors duration-300 rounded-lg"
+                disabled={loading}
+                className="w-full bg-charcoal text-bone py-3.5 text-sm tracking-wider uppercase hover:bg-accent transition-colors duration-300 disabled:opacity-50 rounded-lg"
               >
-                Bağlantı Gönder
+                {loading ? 'Gönderiliyor...' : 'Bağlantı Gönder'}
               </button>
             </form>
           </>
@@ -55,19 +84,12 @@ export default function ForgotPasswordPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="heading-serif text-2xl text-charcoal mb-3">Talebiniz Alındı</h2>
+            <h2 className="heading-serif text-2xl text-charcoal mb-3">E-posta Gönderildi</h2>
             <p className="text-earth text-sm mb-2">
               <span className="font-medium text-charcoal">{email}</span> adresine şifre sıfırlama bağlantısı gönderildi.
             </p>
             <p className="text-earth text-sm mb-8">
-              E-postanız birkaç dakika içinde gelmezse spam klasörünü kontrol edin ya da{' '}
-              <a
-                href="mailto:elsdreamfactory@gmail.com"
-                className="text-charcoal hover:text-accent transition-colors font-medium"
-              >
-                elsdreamfactory@gmail.com
-              </a>{' '}
-              adresine yazın.
+              Bağlantı <strong>30 dakika</strong> geçerlidir. Spam klasörünü kontrol etmeyi unutmayın.
             </p>
           </div>
         )}
