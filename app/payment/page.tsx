@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { generateEventId } from '@/lib/pixel';
 
 export default function PaymentPage() {
   const { items, totalPrice, clearCart } = useCart();
@@ -78,10 +79,18 @@ export default function PaymentPage() {
       const data = await response.json();
 
       if (data.success) {
-        clearCart();
-        // Sipariş numarası ve tarihi URL parametrelerine ekle
         const orderId = data.orderId || 'ORD-' + Date.now();
         const date = new Date().toLocaleDateString('tr-TR');
+
+        // Purchase event'i için snapshot sakla (thank-you sayfasında tetiklenir)
+        sessionStorage.setItem('last_purchase', JSON.stringify({
+          orderId,
+          items: items.map(i => ({ id: i.id, quantity: i.quantity })),
+          totalPrice,
+          eventId: generateEventId(),
+        }));
+
+        clearCart();
         router.push(`/thank-you?orderId=${orderId}&date=${encodeURIComponent(date)}`);
       } else {
         // Hata nedenini belirle ve başarısız sayfasına yönlendir

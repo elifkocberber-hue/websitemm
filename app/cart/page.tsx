@@ -4,6 +4,7 @@ import { useCart } from '@/context/CeramicCartContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { trackInitiateCheckout } from '@/lib/pixel';
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, totalPrice, clearCart } = useCart();
@@ -171,6 +172,7 @@ export default function CartPage() {
 
               <Link
                 href="/payment"
+                onClick={() => trackInitiateCheckout(items, totalPrice)}
                 className="w-full block text-center bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-4 rounded-lg transition-colors mb-3"
               >
                 Ödemeye Geç

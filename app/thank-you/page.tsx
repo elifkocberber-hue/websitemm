@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
+import { trackPurchase } from '@/lib/pixel';
 
 function ThankYouContent() {
   const searchParams = useSearchParams();
@@ -12,6 +13,15 @@ function ThankYouContent() {
 
   useEffect(() => {
     setIsMounted(true);
+    // Ödeme sayfasından bırakılan purchase snapshot'ı oku ve tetikle
+    try {
+      const raw = sessionStorage.getItem('last_purchase');
+      if (raw) {
+        const { orderId: pId, items: pItems, totalPrice: pTotal, eventId } = JSON.parse(raw);
+        sessionStorage.removeItem('last_purchase');
+        trackPurchase(pId, pItems, pTotal, eventId);
+      }
+    } catch { /* ignore */ }
   }, []);
 
   if (!isMounted) return null;

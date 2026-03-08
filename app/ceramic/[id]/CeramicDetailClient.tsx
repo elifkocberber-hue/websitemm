@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { CeramicProduct } from '@/types/ceramic';
 import { CeramicProductCard } from '@/components/CeramicProductCard';
 import { useCart } from '@/context/CeramicCartContext';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { trackViewContent } from '@/lib/pixel';
 
 interface CeramicDetailClientProps {
   product: CeramicProduct;
@@ -22,6 +23,12 @@ const clayTypeLabels: Record<string, string> = {
 
 export default function CeramicDetailClient({ product, relatedProducts }: CeramicDetailClientProps) {
   const { addToCart } = useCart();
+
+  useEffect(() => {
+    trackViewContent(product);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.id]);
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
