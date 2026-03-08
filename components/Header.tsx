@@ -56,7 +56,7 @@ export const Header: React.FC = () => {
       <Link
         ref={logoRef}
         href="/"
-        className="fixed z-60 transition-none"
+        className={`fixed z-60 transition-none${menuOpen ? ' hidden' : ''}`}
         style={{
           left: `calc(50% - ${scrollProgress * 50}% + ${scrollProgress * (24 + logoSize / 2)}px)`,
           top: `${logoTop}px`,
@@ -206,7 +206,7 @@ export const Header: React.FC = () => {
         {/* Mobile Toggle */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden w-8 h-8 flex flex-col justify-center items-center gap-1.5"
+          className="md:hidden ml-auto w-8 h-8 flex flex-col justify-center items-center gap-1.5"
           aria-label="Menü"
           aria-expanded={menuOpen ? "true" : "false"}
         >
@@ -217,7 +217,7 @@ export const Header: React.FC = () => {
 
       {/* Mobile Menu — Full-screen overlay */}
       {menuOpen && (
-        <div className="md:hidden fixed inset-0 top-18 bg-bone z-40 flex flex-col items-center justify-center gap-8 px-6">
+        <div className="md:hidden fixed inset-0 top-18 bg-bone z-[70] flex flex-col items-center justify-center gap-8 px-6">
           {/* Mobile Search */}
           <div className="w-full max-w-sm">
             <SearchBar />
