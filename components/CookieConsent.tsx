@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 
 export const CookieConsent: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
   const [preferences, setPreferences] = useState({
-    necessary: true,    // Her zaman aktif
+    necessary: true,
     analytics: false,
     marketing: false,
   });
@@ -50,6 +50,94 @@ export const CookieConsent: React.FC = () => {
 
   return (
     <>
+      {/* KVKK Aydınlatma Metni Modal */}
+      {showPrivacy && (
+        <div className="fixed inset-0 z-[10001] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"
+            onClick={() => setShowPrivacy(false)}
+          />
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col z-10">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
+              <h2 className="text-base font-bold text-gray-900 leading-snug">
+                Çerez ve Diğer Tanımlama Teknolojilerine Yönelik Aydınlatma Metni
+              </h2>
+              <button
+                onClick={() => setShowPrivacy(false)}
+                className="ml-4 shrink-0 text-gray-400 hover:text-gray-700 transition-colors"
+                aria-label="Kapat"
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              </button>
+            </div>
+            <div className="overflow-y-auto px-6 py-5 text-sm text-gray-600 leading-relaxed space-y-5">
+              <p>
+                El&apos;s Dream Factory (&quot;Şirket&quot;) olarak, 6698 sayılı Kişisel Verilerin Korunması Kanunu (&quot;KVKK&quot;)
+                kapsamında veri sorumlusu sıfatıyla, kişisel verilerinizin hukuka uygun olarak işlenmesine büyük önem vermekteyiz.
+                İşbu aydınlatma metni, KVKK&apos;nın 10. maddesi ile Aydınlatma Yükümlülüğünün Yerine Getirilmesinde
+                Uyulacak Usul ve Esaslar Hakkında Tebliğ çerçevesinde hazırlanmıştır.
+              </p>
+
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">1. Veri Sorumlusu</h3>
+                <p><strong>Unvan:</strong> El&apos;s Dream Factory<br /><strong>E-posta:</strong> elsdreamfactory@gmail.com<br /><strong>Web:</strong> elsdreamfactory.com</p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">2. İşlenen Kişisel Veriler</h3>
+                <p>Kimlik bilgileri (ad, soyad), iletişim bilgileri (e-posta, telefon, adres), işlem güvenliği bilgileri (IP adresi, çerez verileri, oturum bilgileri), alışveriş bilgileri (sipariş geçmişi, sepet bilgileri).</p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">3. İşlenme Amaçları</h3>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>Sipariş süreçlerinin yönetilmesi ve ürün teslimatının gerçekleştirilmesi</li>
+                  <li>Ödeme işlemlerinin güvenli şekilde tamamlanması</li>
+                  <li>Yasal yükümlülüklerin yerine getirilmesi</li>
+                  <li>Müşteri ilişkilerinin yönetimi</li>
+                  <li>Hizmet kalitesinin artırılmasına yönelik analiz çalışmaları</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">4. Hukuki Sebepler</h3>
+                <p>Verileriniz; sözleşmenin ifası (md. 5/2-c), hukuki yükümlülük (md. 5/2-ç), meşru menfaat (md. 5/2-f) ve açık rıza (md. 5/1) kapsamında işlenmektedir.</p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">5. Çerez Türleri</h3>
+                <p><strong>Zorunlu Çerezler:</strong> Sitenin düzgün çalışması için gereklidir (oturum, sepet).<br /><strong>Analitik Çerezler:</strong> Ziyaretçi istatistiklerini anlamak amacıyla kullanılır.<br /><strong>Pazarlama Çerezleri:</strong> Kişiselleştirilmiş içerik ve reklamlar için kullanılır.</p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">6. Saklama Süreleri</h3>
+                <p>Çerez verileri oturum süresi veya en fazla 1 yıl süreyle saklanmaktadır. Sipariş ve fatura bilgileri vergi mevzuatı gereği 10 yıl saklanır.</p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">7. KVKK Kapsamındaki Haklarınız</h3>
+                <p>KVKK&apos;nın 11. maddesi gereğince; verilerinizin işlenip işlenmediğini öğrenme, bilgi talep etme, düzeltme, silme, aktarımı öğrenme ve itiraz etme haklarına sahipsiniz.</p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">8. Başvuru</h3>
+                <p>Haklarınızı kullanmak için <a href="mailto:elsdreamfactory@gmail.com" className="text-amber-700 underline">elsdreamfactory@gmail.com</a> adresine başvurabilirsiniz. Başvurular en geç 30 gün içinde ücretsiz sonuçlandırılır.</p>
+              </div>
+            </div>
+            <div className="px-6 py-4 border-t border-gray-100 shrink-0">
+              <button
+                onClick={() => setShowPrivacy(false)}
+                className="w-full bg-charcoal hover:bg-charcoal/90 text-bone px-6 py-2.5 rounded-lg text-sm font-semibold tracking-wide uppercase transition-colors duration-200"
+              >
+                Kapat
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Overlay */}
       <div className="fixed inset-0 bg-black/30 backdrop-blur-[2px] z-[9998] transition-opacity duration-500" />
 
@@ -59,24 +147,21 @@ export const CookieConsent: React.FC = () => {
           {/* Başlık */}
           <div className="flex items-center gap-3 mb-4">
             <span className="text-2xl">🍪</span>
-            <h3 className="text-lg font-bold text-gray-900">Çerez Kullanımı</h3>
+            <h3 className="text-lg font-bold text-gray-900">Çerez Politikası</h3>
           </div>
 
           {/* Metin */}
           <p className="text-sm text-gray-600 leading-relaxed mb-5">
-            İnternet sitemizden en verimli şekilde faydalanabilmeniz ve kullanıcı deneyiminizi 
-            geliştirebilmek için çerezler (cookie) kullanmaktayız. Çerezlere ilişkin ayarları internet 
-            sitemizde yer alan &quot;Çerez Ayarları&quot; seçeneğinden değiştirebileceğiniz gibi ayrıca çerez 
-            kullanılmasını tercih etmezseniz tarayıcınızın ayarlarından çerezleri silebilir ya da 
-            engelleyebilirsiniz. Ancak bunun internet sitemizi kullanımınızı etkileme ihtimali 
-            bulunduğunu hatırlatmak isteriz. Çerezlere ilişkin daha detaylı bilgiye{' '}
-            <Link
-              href="/cookie-policy"
+            İnternet sitemizde çerezler vasıtasıyla kişisel verileriniz işlenmektedir. Kişiselleştir
+            butonu ile erişebileceğiniz Çerez Yönetim Paneli üzerinden her zaman tercihlerinizi
+            belirleyebilirsiniz. Daha detaylı bilgi için{' '}
+            <button
+              onClick={() => setShowPrivacy(true)}
               className="text-amber-700 hover:text-amber-800 underline underline-offset-2 font-medium"
             >
-              Çerez Aydınlatma Metni
-            </Link>
-            {' '}adlı dokümandan ulaşabilirsiniz.
+              Çerez ve Diğer Tanımlama Teknolojilerine Yönelik Aydınlatma Metni
+            </button>
+            &apos;ni inceleyiniz.
           </p>
 
           {/* Ayarlar Paneli */}
@@ -105,7 +190,6 @@ export const CookieConsent: React.FC = () => {
                   className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${
                     preferences.analytics ? 'bg-amber-700' : 'bg-gray-300'
                   }`}
-                  title="Analitik çerezleri aç/kapat"
                   aria-label={`Analitik çerezler ${preferences.analytics ? 'açık' : 'kapalı'}`}
                 >
                   <span
@@ -127,6 +211,7 @@ export const CookieConsent: React.FC = () => {
                   className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${
                     preferences.marketing ? 'bg-amber-700' : 'bg-gray-300'
                   }`}
+                  aria-label={`Pazarlama çerezleri ${preferences.marketing ? 'açık' : 'kapalı'}`}
                 >
                   <span
                     className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 ${
@@ -152,7 +237,7 @@ export const CookieConsent: React.FC = () => {
                 onClick={() => setShowSettings(true)}
                 className="flex-1 border border-gray-300 hover:border-gray-400 text-gray-700 px-6 py-3 rounded-lg text-sm font-semibold tracking-wide uppercase transition-colors duration-200"
               >
-                Ayarlar
+                Kişiselleştir
               </button>
             )}
             <button
