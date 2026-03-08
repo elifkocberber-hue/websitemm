@@ -38,11 +38,21 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
           <div>
-            <h4 className="text-[11px] tracking-[0.2em] uppercase text-clay mb-5">Takip Et</h4>
-            <ul className="space-y-3">
-              <li><a href="https://instagram.com/elsdreamfactory" target="_blank" rel="noopener noreferrer" className="text-sm text-bone/60 hover:text-bone transition-colors">Instagram</a></li>
-              <li><a href="https://pinterest.com/elsdreamfactory" target="_blank" rel="noopener noreferrer" className="text-sm text-bone/60 hover:text-bone transition-colors">Pinterest</a></li>
-            </ul>
+            <p className="text-[11px] tracking-[0.2em] uppercase text-bone/40 mb-1">El&apos;s Dream Factory</p>
+            <h4 className="text-[11px] tracking-[0.2em] uppercase text-clay mb-5">Bizi Takip Edin</h4>
+            <a
+              href="https://instagram.com/elsdreamfactory"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-bone/20 text-bone/60 hover:text-bone hover:border-bone/60 transition-colors duration-200"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
+              </svg>
+            </a>
           </div>
         </div>
 
