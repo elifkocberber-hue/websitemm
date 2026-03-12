@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { fetchProducts, fetchProductById, getCeramicProductById, ceramicProducts } from '@/data/ceramicProducts';
 import CeramicDetailClient from './CeramicDetailClient';
 
+export const revalidate = 3600; // 1 saatte bir yeniden render — fiyat güncellemeleri yansısın
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }
@@ -10,7 +12,7 @@ interface PageProps {
 // Dinamik meta etiketleri — Google ürün bilgilerini görsün
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const product = getCeramicProductById(id);
+  const product = await fetchProductById(id) ?? getCeramicProductById(id);
 
   if (!product) {
     return { title: 'Ürün Bulunamadı' };
