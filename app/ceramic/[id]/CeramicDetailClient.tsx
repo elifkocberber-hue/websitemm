@@ -79,20 +79,11 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
               {product.images.length > 0 ? (
                 /\.(mp4|webm|mov)$/i.test(product.images[currentImageIndex]) ? (
                   <video
+                    src={`/api/video?url=${encodeURIComponent(product.images[currentImageIndex])}`}
                     className="w-full h-full object-cover"
                     controls
                     playsInline
-                    preload="metadata"
-                  >
-                    <source
-                      src={product.images[currentImageIndex]}
-                      type={
-                        /\.webm$/i.test(product.images[currentImageIndex]) ? 'video/webm'
-                        : /\.mov$/i.test(product.images[currentImageIndex]) ? 'video/mp4'
-                        : 'video/mp4'
-                      }
-                    />
-                  </video>
+                  />
                 ) : (
                 <div
                   style={{
@@ -139,7 +130,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
               >
                 {/\.(mp4|webm|mov)$/i.test(image) ? (
                   <>
-                    <video src={image} className="w-full h-full object-cover" muted playsInline />
+                    <video src={`/api/video?url=${encodeURIComponent(image)}`} className="w-full h-full object-cover" muted playsInline />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                       <span className="text-white text-xl">▶</span>
                     </div>
