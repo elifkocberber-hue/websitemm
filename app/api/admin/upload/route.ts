@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { isAdminAuthenticated } from '@/lib/adminAuth';
 
+const IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
+const ALLOWED_TYPES = [...IMAGE_TYPES, ...VIDEO_TYPES];
+
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;   // 5 MB
+const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100 MB
+
 export async function POST(request: NextRequest) {
   try {
     if (!isAdminAuthenticated(request)) {
@@ -15,23 +22,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Dosya bulunamadı' }, { status: 400 });
     }
 
-    // Dosya boyutu kontrolü (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      return NextResponse.json({ error: 'Dosya 5MB\'dan küçük olmalıdır' }, { status: 400 });
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return NextResponse.json(
+        { error: 'Desteklenen formatlar: JPEG, PNG, WebP, MP4, WebM, MOV' },
+        { status: 400 }
+      );
     }
 
-    // İzin verilen formatlar
-    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
-    if (!allowed.includes(file.type)) {
-      return NextResponse.json({ error: 'Sadece JPEG, PNG ve WebP formatları desteklenir' }, { status: 400 });
+    const isVideo = VIDEO_TYPES.includes(file.type);
+    const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
+
+    if (file.size > maxSize) {
+      return NextResponse.json(
+        { error: isVideo ? 'Video 100MB\'dan küçük olmalıdır' : 'Resim 5MB\'dan küçük olmalıdır' },
+        { status: 400 }
+      );
     }
 
-    // Benzersiz dosya adı
-    const ext = file.name.split('.').pop() || 'jpg';
+    const ext = file.name.split('.').pop() || (isVideo ? 'mp4' : 'jpg');
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
     const filePath = `products/${fileName}`;
 
-    // Supabase Storage'a yükle
     const arrayBuffer = await file.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
 
@@ -43,18 +54,14 @@ export async function POST(request: NextRequest) {
       });
 
     if (uploadError) {
-      return NextResponse.json({ error: 'Resim yüklenemedi: ' + uploadError.message }, { status: 500 });
+      return NextResponse.json({ error: 'Yüklenemedi: ' + uploadError.message }, { status: 500 });
     }
 
-    // Public URL'yi al
     const { data: urlData } = supabase.storage
       .from('product-images')
       .getPublicUrl(filePath);
 
-    return NextResponse.json({ 
-      url: urlData.publicUrl,
-      path: filePath,
-    });
+    return NextResponse.json({ url: urlData.publicUrl, path: filePath });
   } catch {
     return NextResponse.json({ error: 'Bir hata oluştu' }, { status: 500 });
   }

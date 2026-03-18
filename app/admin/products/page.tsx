@@ -180,7 +180,8 @@ export default function ProductsAdminPage() {
     const newImages = [...formData.images];
 
     for (const file of Array.from(files)) {
-      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) continue;
+      const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg', 'video/mp4', 'video/webm', 'video/quicktime'];
+      if (!allowed.includes(file.type)) continue;
       const fd = new FormData();
       fd.append('file', file);
       try {
@@ -528,7 +529,14 @@ export default function ProductsAdminPage() {
                           dragImageIndex === i ? 'opacity-50 ring-2 ring-[#DD6B56]' : ''
                         }`}
                       >
-                        <Image src={img} alt={`Ürün resmi ${i + 1}`} fill className="object-cover pointer-events-none" sizes="200px" />
+                        {/\.(mp4|webm|mov)$/i.test(img) ? (
+                          <video src={img} className="w-full h-full object-cover pointer-events-none" muted playsInline />
+                        ) : (
+                          <Image src={img} alt={`Ürün resmi ${i + 1}`} fill className="object-cover pointer-events-none" sizes="200px" />
+                        )}
+                        {/\.(mp4|webm|mov)$/i.test(img) && (
+                          <div className="absolute top-1 right-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">▶ Video</div>
+                        )}
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                           <button
                             type="button"
@@ -563,7 +571,7 @@ export default function ProductsAdminPage() {
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept="image/jpeg,image/png,image/webp"
+                    accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime"
                     multiple
                     onChange={handleImageUpload}
                     className="hidden"
@@ -578,7 +586,7 @@ export default function ProductsAdminPage() {
                         <p className="text-gray-600 font-medium">
                           {isDragging ? 'Bırakın, yüklensin!' : 'Sürükle bırak veya tıklayarak seçin'}
                         </p>
-                        <p className="text-gray-400 text-sm mt-1">JPEG, PNG, WebP — Maks. 5MB</p>
+                        <p className="text-gray-400 text-sm mt-1">Resim: JPEG, PNG, WebP (maks. 5MB) · Video: MP4, WebM, MOV (maks. 100MB)</p>
                       </>
                     )}
                   </label>

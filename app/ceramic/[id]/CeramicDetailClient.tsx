@@ -77,6 +77,14 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
               className="relative w-full h-96 bg-gray-100 rounded-lg overflow-hidden cursor-zoom-in"
             >
               {product.images.length > 0 ? (
+                /\.(mp4|webm|mov)$/i.test(product.images[currentImageIndex]) ? (
+                  <video
+                    src={product.images[currentImageIndex]}
+                    className="w-full h-full object-cover"
+                    controls
+                    playsInline
+                  />
+                ) : (
                 <div
                   style={{
                     width: '100%',
@@ -95,6 +103,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
                     priority
                   />
                 </div>
+                )
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-gray-400">
                   <span className="text-sm">Görsel bulunmuyor</span>
@@ -119,12 +128,21 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
                   idx === currentImageIndex ? 'border-amber-600 scale-105' : 'border-gray-300'
                 }`}
               >
-                <Image
-                  src={image}
-                  alt={`${product.name} - Görüntü ${idx + 1}`}
-                  fill
-                  className="object-cover"
-                />
+                {/\.(mp4|webm|mov)$/i.test(image) ? (
+                  <>
+                    <video src={image} className="w-full h-full object-cover" muted playsInline />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                      <span className="text-white text-xl">▶</span>
+                    </div>
+                  </>
+                ) : (
+                  <Image
+                    src={image}
+                    alt={`${product.name} - Görüntü ${idx + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                )}
               </button>
             ))}
           </div>
