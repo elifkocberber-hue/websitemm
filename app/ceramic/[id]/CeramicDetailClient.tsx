@@ -74,7 +74,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
               onMouseMove={handleMouseMove}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
-              className="relative w-full h-96 bg-gray-100 rounded-lg overflow-hidden cursor-zoom-in"
+              className="relative w-full h-[520px] bg-gray-100 rounded-lg overflow-hidden cursor-zoom-in"
             >
               {product.images.length > 0 ? (
                 /\.(mp4|webm|mov)$/i.test(product.images[currentImageIndex]) ? (
@@ -133,7 +133,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
                 key={idx}
                 onClick={() => setCurrentImageIndex(idx)}
                 title={`Görüntü ${idx + 1}`}
-                className={`relative w-24 h-24 shrink-0 rounded-lg overflow-hidden border-3 transition-all hover:border-accent ${
+                className={`relative w-16 h-16 shrink-0 rounded-lg overflow-hidden border-2 transition-all hover:border-accent ${
                   idx === currentImageIndex ? 'border-charcoal scale-105' : 'border-gray-300'
                 }`}
               >
@@ -149,7 +149,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
                     src={image}
                     alt={`${product.name} - Görüntü ${idx + 1}`}
                     fill
-                    className="object-cover"
+                    className="object-contain"
                   />
                 )}
               </button>

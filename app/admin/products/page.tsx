@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useAdmin } from '@/context/AdminContext';
 import Link from 'next/link';
 import Image from 'next/image';
-import { supabase } from '@/lib/supabase';
 
 interface ProductVariations {
   typeName: string;
@@ -181,33 +180,45 @@ export default function ProductsAdminPage() {
     const newImages = [...formData.images];
 
     for (const file of Array.from(files)) {
-      const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg', 'video/mp4', 'video/webm', 'video/quicktime'];
-      if (!allowed.includes(file.type)) continue;
+      const name = file.name.toLowerCase();
+      const isVideo = /\.(mp4|webm|mov)$/.test(name);
+      const isImage = /\.(jpg|jpeg|png|webp)$/.test(name);
+
+      if (!isVideo && !isImage) {
+        showMessage('error', `"${file.name}" desteklenmiyor. Kabul edilenler: JPG, PNG, WebP, MP4, WebM, MOV`);
+        continue;
+      }
+
+      // Dosya uzantısından content-type belirle (tarayıcının verdiğine güvenme)
+      const contentType = isVideo
+        ? (/\.webm$/.test(name) ? 'video/webm' : 'video/mp4')
+        : (file.type || 'image/jpeg');
+
       try {
-        // 1. Sunucudan imzalı yükleme URL'i al
         const signRes = await fetch('/api/admin/upload/signed-url', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fileName: file.name, contentType: file.type }),
+          body: JSON.stringify({ fileName: file.name, contentType }),
         });
         if (!signRes.ok) {
           const err = await signRes.json().catch(() => ({}));
           showMessage('error', err.error || 'URL alınamadı');
           continue;
         }
-        const { token, path, publicUrl } = await signRes.json();
+        const { signedUrl, publicUrl } = await signRes.json();
 
-        // 2. Supabase client ile yükle — content-type doğru kaydedilir
-        const { error: uploadError } = await supabase.storage
-          .from('product-images')
-          .uploadToSignedUrl(path, token, file, { contentType: file.type });
-        if (uploadError) {
-          showMessage('error', 'Dosya yüklenemedi: ' + uploadError.message);
+        const uploadRes = await fetch(signedUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': contentType },
+          body: file,
+        });
+        if (!uploadRes.ok) {
+          showMessage('error', `"${file.name}" yüklenemedi (${uploadRes.status})`);
           continue;
         }
         newImages.push(publicUrl);
-      } catch {
-        showMessage('error', 'Yükleme sırasında hata oluştu');
+      } catch (err) {
+        showMessage('error', 'Yükleme hatası: ' + (err instanceof Error ? err.message : String(err)));
       }
     }
 
