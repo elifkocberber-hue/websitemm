@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
         images: body.images || [],
         featured: body.featured ?? false,
         variations: body.variations ?? null,
+        categories: body.categories || [],
         active: true,
       })
       .select()

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdmin } from '@/context/AdminContext';
 import Link from 'next/link';
@@ -22,6 +22,7 @@ export default function CategoriesAdminPage() {
   const [newName, setNewName] = useState('');
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const dragIndex = useRef<number | null>(null);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -121,6 +122,34 @@ export default function CategoriesAdminPage() {
     }
   };
 
+  // Drag-to-reorder
+  const handleDragStart = (index: number) => {
+    dragIndex.current = index;
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (dragIndex.current === null || dragIndex.current === index) return;
+    const newList = [...categories];
+    const dragged = newList.splice(dragIndex.current, 1)[0];
+    newList.splice(index, 0, dragged);
+    dragIndex.current = index;
+    setCategories(newList);
+  };
+
+  const handleDragEnd = async () => {
+    dragIndex.current = null;
+    try {
+      await fetch('/api/admin/categories/reorder', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: categories.map(c => c.id) }),
+      });
+    } catch {
+      showMessage('error', 'Sıralama kaydedilemedi');
+    }
+  };
+
   const handleLogout = async () => {
     await logout();
     router.push('/');
@@ -185,8 +214,9 @@ export default function CategoriesAdminPage() {
 
         {/* Mevcut kategoriler */}
         <div className="bg-white rounded-lg shadow">
-          <div className="p-6 border-b">
+          <div className="p-6 border-b flex items-center justify-between">
             <h2 className="text-lg font-bold text-gray-900">Mevcut Kategoriler ({categories.length})</h2>
+            <span className="text-sm text-gray-400">Sıralamak için sürükleyin</span>
           </div>
 
           {loading ? (
@@ -195,13 +225,24 @@ export default function CategoriesAdminPage() {
             <div className="p-8 text-center text-gray-400">Henüz kategori eklenmemiş.</div>
           ) : (
             <ul className="divide-y divide-gray-100">
-              {categories.map((cat) => (
-                <li key={cat.id} className="flex items-center gap-4 px-6 py-4">
+              {categories.map((cat, index) => (
+                <li
+                  key={cat.id}
+                  draggable={editingId !== cat.id}
+                  onDragStart={() => handleDragStart(index)}
+                  onDragOver={(e) => handleDragOver(e, index)}
+                  onDragEnd={handleDragEnd}
+                  className="flex items-center gap-3 px-6 py-4 cursor-grab active:cursor-grabbing hover:bg-gray-50 transition-colors"
+                >
+                  {/* Sürükleme tutacağı */}
+                  <span className="text-gray-300 select-none text-lg" title="Sürükle">⠿</span>
+
                   {editingId === cat.id ? (
                     <>
                       <input
                         type="text"
                         value={editingName}
+                        placeholder="Kategori adı"
                         onChange={(e) => setEditingName(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') handleSaveEdit(cat.id);

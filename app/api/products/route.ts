@@ -64,5 +64,6 @@ function mapProduct(p: Record<string, unknown>) {
     images: p.images || [],
     featured: p.featured,
     variations: p.variations || null,
+    categories: p.categories || [],
   };
 }

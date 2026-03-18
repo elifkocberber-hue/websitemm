@@ -132,10 +132,15 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
 
         {/* Product Info */}
         <div>
-          <div className="mb-4">
-            <span className="inline-block bg-amber-600 text-white px-4 py-1 rounded-full text-sm font-medium">
-              {product.category}
-            </span>
+          <div className="mb-4 flex flex-wrap gap-2">
+            {(product.categories && product.categories.length > 0
+              ? product.categories
+              : product.category ? [product.category] : []
+            ).map(cat => (
+              <span key={cat} className="inline-block bg-amber-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+                {cat}
+              </span>
+            ))}
           </div>
 
           <h1 className="text-4xl font-bold text-gray-900 mb-3">{product.name}</h1>

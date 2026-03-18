@@ -54,6 +54,7 @@ export async function PUT(
     if (body.featured !== undefined) updateData.featured = body.featured;
     if (body.active !== undefined) updateData.active = body.active;
     if ('variations' in body) updateData.variations = body.variations;
+    if ('categories' in body) updateData.categories = body.categories;
     updateData.updated_at = new Date().toISOString();
 
     const { data, error } = await supabase

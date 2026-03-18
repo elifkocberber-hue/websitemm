@@ -25,6 +25,7 @@ export interface CeramicProduct {
   microwave?: boolean;
   featured?: boolean;
   variations?: ProductVariations | null;
+  categories?: string[];
 }
 
 export interface CeramicImage {

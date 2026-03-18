@@ -19,6 +19,7 @@ interface Product {
   stock: number;
   clay_type: string;
   category: string;
+  categories: string[];
   handmade: boolean;
   glaze: string;
   dimensions: Record<string, number>;
@@ -39,11 +40,9 @@ const EMPTY_PRODUCT = {
   price: 0,
   stock: 0,
   clayType: '',
-  category: '',
+  categories: [] as string[],
   handmade: true,
-  glaze: '',
   dimensions: {} as Record<string, number>,
-  weight: null as number | null,
   dishwasherSafe: false,
   microwave: false,
   images: [] as string[],
@@ -123,11 +122,9 @@ export default function ProductsAdminPage() {
       price: product.price,
       stock: product.stock,
       clayType: product.clay_type,
-      category: product.category,
+      categories: product.categories || (product.category ? [product.category] : []),
       handmade: product.handmade,
-      glaze: product.glaze || '',
       dimensions: product.dimensions || {},
-      weight: product.weight,
       dishwasherSafe: product.dishwasher_safe,
       microwave: product.microwave,
       images: product.images || [],
@@ -630,20 +627,6 @@ export default function ProductsAdminPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-                    <select
-                      value={formData.category}
-                      onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#DD6B56] focus:border-transparent outline-none"
-                      title="Kategori seçin"
-                    >
-                      <option value="">Seçiniz</option>
-                      {categories.map(cat => (
-                        <option key={cat} value={cat}>{cat}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Malzeme</label>
                     <input
                       type="text"
@@ -653,26 +636,37 @@ export default function ProductsAdminPage() {
                       placeholder="Örn: Stoneware, Porselen, Terracotta..."
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Sır (Glaze)</label>
-                    <input
-                      type="text"
-                      value={formData.glaze}
-                      onChange={(e) => setFormData(prev => ({ ...prev, glaze: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#DD6B56] focus:border-transparent outline-none"
-                      placeholder="Örn: Mat beyaz"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Ağırlık (gr)</label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={formData.weight || ''}
-                      onChange={(e) => setFormData(prev => ({ ...prev, weight: parseInt(e.target.value) || null }))}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#DD6B56] focus:border-transparent outline-none"
-                      placeholder="Gram cinsinden"
-                    />
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Kategoriler</label>
+                    {categories.length === 0 ? (
+                      <p className="text-sm text-gray-400">
+                        Henüz kategori eklenmemiş.{' '}
+                        <a href="/admin/categories" className="text-[#DD6B56] underline">Kategori ekle →</a>
+                      </p>
+                    ) : (
+                      <div className="flex flex-wrap gap-2">
+                        {categories.map(cat => (
+                          <label key={cat} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 cursor-pointer transition-colors ${
+                            formData.categories.includes(cat)
+                              ? 'border-[#DD6B56] bg-[#DD6B56]/10 text-[#DD6B56]'
+                              : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                          }`}>
+                            <input
+                              type="checkbox"
+                              className="sr-only"
+                              checked={formData.categories.includes(cat)}
+                              onChange={(e) => setFormData(prev => ({
+                                ...prev,
+                                categories: e.target.checked
+                                  ? [...prev.categories, cat]
+                                  : prev.categories.filter(c => c !== cat),
+                              }))}
+                            />
+                            <span className="text-sm font-medium">{cat}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
