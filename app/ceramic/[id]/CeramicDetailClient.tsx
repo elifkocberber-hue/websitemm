@@ -79,11 +79,20 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
               {product.images.length > 0 ? (
                 /\.(mp4|webm|mov)$/i.test(product.images[currentImageIndex]) ? (
                   <video
-                    src={product.images[currentImageIndex]}
                     className="w-full h-full object-cover"
                     controls
                     playsInline
-                  />
+                    preload="metadata"
+                  >
+                    <source
+                      src={product.images[currentImageIndex]}
+                      type={
+                        /\.webm$/i.test(product.images[currentImageIndex]) ? 'video/webm'
+                        : /\.mov$/i.test(product.images[currentImageIndex]) ? 'video/mp4'
+                        : 'video/mp4'
+                      }
+                    />
+                  </video>
                 ) : (
                 <div
                   style={{

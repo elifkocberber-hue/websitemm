@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAdmin } from '@/context/AdminContext';
 import Link from 'next/link';
 import Image from 'next/image';
+import { supabase } from '@/lib/supabase';
 
 interface ProductVariations {
   typeName: string;
@@ -194,16 +195,14 @@ export default function ProductsAdminPage() {
           showMessage('error', err.error || 'URL alınamadı');
           continue;
         }
-        const { signedUrl, publicUrl } = await signRes.json();
+        const { token, path, publicUrl } = await signRes.json();
 
-        // 2. Dosyayı doğrudan Supabase'e yükle (Vercel limit yok)
-        const uploadRes = await fetch(signedUrl, {
-          method: 'PUT',
-          headers: { 'Content-Type': file.type },
-          body: file,
-        });
-        if (!uploadRes.ok) {
-          showMessage('error', 'Dosya yüklenemedi');
+        // 2. Supabase client ile yükle — content-type doğru kaydedilir
+        const { error: uploadError } = await supabase.storage
+          .from('product-images')
+          .uploadToSignedUrl(path, token, file, { contentType: file.type });
+        if (uploadError) {
+          showMessage('error', 'Dosya yüklenemedi: ' + uploadError.message);
           continue;
         }
         newImages.push(publicUrl);
