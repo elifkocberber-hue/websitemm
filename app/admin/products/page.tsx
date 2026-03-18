@@ -191,7 +191,7 @@ export default function ProductsAdminPage() {
 
       // Dosya uzantısından content-type belirle (tarayıcının verdiğine güvenme)
       const contentType = isVideo
-        ? (/\.webm$/.test(name) ? 'video/webm' : 'video/mp4')
+        ? (/\.webm$/.test(name) ? 'video/webm' : /\.mov$/.test(name) ? 'video/quicktime' : 'video/mp4')
         : (file.type || 'image/jpeg');
 
       try {
