@@ -10,6 +10,7 @@ import { Header, Footer, ScrollToTop, MetaPixel } from "@/components";
 
 import { CookieConsent } from "@/components/CookieConsent";
 import { VisitorTracker } from "@/components/VisitorTracker";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -248,6 +249,7 @@ export default function RootLayout({
               <Footer />
               <ScrollToTop />
             </div>
+            <Analytics />
           </CartProvider>
           </FavoritesProvider>
           </UserProvider>
