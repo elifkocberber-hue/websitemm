@@ -9,19 +9,22 @@ interface LanguageContextType {
   t: typeof tr;
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+const defaultValue: LanguageContextType = {
+  language: 'tr',
+  setLanguage: () => {},
+  t: tr,
+};
+
+const LanguageContext = createContext<LanguageContextType>(defaultValue);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<LanguageType>('tr');
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Load saved language preference from localStorage
     const savedLanguage = localStorage.getItem('language') as LanguageType | null;
-    if (savedLanguage && (savedLanguage === 'tr' || savedLanguage === 'en')) {
+    if (savedLanguage === 'tr' || savedLanguage === 'en') {
       setLanguageState(savedLanguage);
     }
-    setMounted(true);
   }, []);
 
   const setLanguage = (lang: LanguageType) => {
@@ -31,10 +34,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const translations = language === 'tr' ? tr : en;
 
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t: translations }}>
       {children}
@@ -42,10 +41,4 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   );
 };
 
-export const useLanguage = () => {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within LanguageProvider');
-  }
-  return context;
-};
+export const useLanguage = () => useContext(LanguageContext);
