@@ -15,12 +15,19 @@ interface BannerData {
   hero_image: string;
 }
 
+interface AboutData {
+  story_title: string;
+  story_p1: string;
+  story_p2: string;
+}
+
 interface HomeClientProps {
   featured: CeramicProduct[];
   banner: BannerData;
+  about: AboutData;
 }
 
-export default function HomeClient({ featured, banner }: HomeClientProps) {
+export default function HomeClient({ featured, banner, about }: HomeClientProps) {
   const { t, language } = useLanguage();
 
   const marqueeItems: string[] = banner.items ?? ['Ceramic', 'Illustration', 'Gift', 'Handmade', 'Unique'];
@@ -243,14 +250,14 @@ export default function HomeClient({ featured, banner }: HomeClientProps) {
         <div className="relative z-10 max-w-350 mx-auto px-6 md:px-10 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
           <ScrollReveal direction="left">
             <p className="text-xs tracking-[0.2em] uppercase text-clay mb-4">{t.home.about_label}</p>
-            <h2 className="heading-display text-3xl md:text-4xl text-bone mb-6">
-              {t.home.about_title}
+            <h2 className="heading-display text-3xl md:text-4xl text-bone mb-6 whitespace-pre-line">
+              {about.story_title}
             </h2>
             <p className="text-bone/60 leading-relaxed mb-4">
-              {t.home.about_p1}
+              {about.story_p1}
             </p>
             <p className="text-bone/60 leading-relaxed mb-8">
-              {t.home.about_p2}
+              {about.story_p2}
             </p>
             <Link href="/about" className="link-line text-sm tracking-wider uppercase text-accent hover:text-bone transition-colors">
               {t.home.about_link}

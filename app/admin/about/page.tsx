@@ -56,6 +56,47 @@ const DEFAULT: AboutSettings = {
   val4_desc: 'Doğaya saygılı üretim süreçleriyle geleceğe yatırım yapıyoruz.',
 };
 
+// Field bileşeni dışarıda tanımlı — her render'da yeniden oluşturulmaz, focus kaybı olmaz
+function Field({
+  label,
+  value,
+  onChange,
+  multiline = false,
+  hint,
+  id,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  multiline?: boolean;
+  hint?: string;
+  id: string;
+}) {
+  return (
+    <div>
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      {hint && <p className="text-xs text-gray-400 mb-1">{hint}</p>}
+      {multiline ? (
+        <textarea
+          id={id}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          rows={3}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56] resize-y"
+        />
+      ) : (
+        <input
+          id={id}
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56]"
+        />
+      )}
+    </div>
+  );
+}
+
 export default function AdminAboutPage() {
   const { isAuthenticated, loading: authLoading } = useAdmin();
   const router = useRouter();
@@ -87,7 +128,7 @@ export default function AdminAboutPage() {
     }
   };
 
-  const set = (key: keyof AboutSettings, value: string) =>
+  const set = (key: keyof AboutSettings) => (value: string) =>
     setSettings((prev) => ({ ...prev, [key]: value }));
 
   const handleSave = async () => {
@@ -119,38 +160,6 @@ export default function AdminAboutPage() {
       </div>
     );
   }
-
-  const Field = ({
-    label,
-    fieldKey,
-    multiline = false,
-    hint,
-  }: {
-    label: string;
-    fieldKey: keyof AboutSettings;
-    multiline?: boolean;
-    hint?: string;
-  }) => (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-      {hint && <p className="text-xs text-gray-400 mb-1">{hint}</p>}
-      {multiline ? (
-        <textarea
-          value={settings[fieldKey]}
-          onChange={(e) => set(fieldKey, e.target.value)}
-          rows={3}
-          className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56] resize-y"
-        />
-      ) : (
-        <input
-          type="text"
-          value={settings[fieldKey]}
-          onChange={(e) => set(fieldKey, e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56]"
-        />
-      )}
-    </div>
-  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -184,22 +193,17 @@ export default function AdminAboutPage() {
                   unoptimized={settings.hero_image.startsWith('http')}
                 />
               </div>
-              <Field label="Görsel URL'si" fieldKey="hero_image" />
+              <Field id="hero_image" label="Görsel URL'si" value={settings.hero_image} onChange={set('hero_image')} />
             </div>
 
             {/* ── Hikaye Metni ── */}
             <div className="bg-white rounded-lg shadow p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-800">Hikaye Bölümü</h2>
-              <Field label="Kuruluş etiketi" fieldKey="founded" hint='Örn: "Kuruluş · 1994"' />
-              <Field
-                label="Başlık"
-                fieldKey="story_title"
-                multiline
-                hint='Satır kesmek için Enter kullanın. Örn: "Topraktan\nDünyaya"'
-              />
-              <Field label="1. Paragraf" fieldKey="story_p1" multiline />
-              <Field label="2. Paragraf" fieldKey="story_p2" multiline />
-              <Field label="3. Paragraf" fieldKey="story_p3" multiline />
+              <Field id="founded" label="Kuruluş etiketi" value={settings.founded} onChange={set('founded')} hint='Örn: "Kuruluş · 1994"' />
+              <Field id="story_title" label="Başlık" value={settings.story_title} onChange={set('story_title')} multiline hint='Satır kesmek için Enter kullanın.' />
+              <Field id="story_p1" label="1. Paragraf" value={settings.story_p1} onChange={set('story_p1')} multiline />
+              <Field id="story_p2" label="2. Paragraf" value={settings.story_p2} onChange={set('story_p2')} multiline />
+              <Field id="story_p3" label="3. Paragraf" value={settings.story_p3} onChange={set('story_p3')} multiline />
             </div>
 
             {/* ── İstatistikler ── */}
@@ -208,13 +212,17 @@ export default function AdminAboutPage() {
               {([1, 2, 3, 4] as const).map((n) => (
                 <div key={n} className="grid grid-cols-2 gap-4">
                   <Field
+                    id={`stat${n}_value`}
                     label={`${n}. Değer`}
-                    fieldKey={`stat${n}_value` as keyof AboutSettings}
+                    value={settings[`stat${n}_value`]}
+                    onChange={set(`stat${n}_value`)}
                     hint='Örn: "30+", "%98"'
                   />
                   <Field
+                    id={`stat${n}_label`}
                     label={`${n}. Etiket`}
-                    fieldKey={`stat${n}_label` as keyof AboutSettings}
+                    value={settings[`stat${n}_label`]}
+                    onChange={set(`stat${n}_label`)}
                     hint='Örn: "Yıl Deneyim"'
                   />
                 </div>
@@ -227,8 +235,8 @@ export default function AdminAboutPage() {
               {([1, 2, 3, 4] as const).map((n) => (
                 <div key={n} className="space-y-2 pb-4 border-b border-gray-100 last:border-0 last:pb-0">
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{n}. Değer</p>
-                  <Field label="Başlık" fieldKey={`val${n}_title` as keyof AboutSettings} />
-                  <Field label="Açıklama" fieldKey={`val${n}_desc` as keyof AboutSettings} multiline />
+                  <Field id={`val${n}_title`} label="Başlık" value={settings[`val${n}_title`]} onChange={set(`val${n}_title`)} />
+                  <Field id={`val${n}_desc`} label="Açıklama" value={settings[`val${n}_desc`]} onChange={set(`val${n}_desc`)} multiline />
                 </div>
               ))}
             </div>

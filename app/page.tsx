@@ -10,6 +10,12 @@ const DEFAULT_BANNER = {
   hero_image: '/images/arkaplan.jpg',
 };
 
+const DEFAULT_ABOUT = {
+  story_title: 'Topraktan\nDünyaya',
+  story_p1: '1994\'ten bu yana seramik geleneğini yaşatıyoruz. Her ürünümüz, ustalarımızın ellerinde şekillenen benzersiz bir sanat eseri.',
+  story_p2: 'Doğal topraklar, geleneksel teknikler ve modern tasarım anlayışımız ile yaşam alanlarınıza sanat katıyoruz.',
+};
+
 async function fetchBannerSettings() {
   noStore();
   try {
@@ -24,9 +30,27 @@ async function fetchBannerSettings() {
   }
 }
 
+async function fetchAboutSettings() {
+  noStore();
+  try {
+    const { data } = await supabase
+      .from('about_settings')
+      .select('story_title, story_p1, story_p2')
+      .eq('id', 1)
+      .single();
+    return { ...DEFAULT_ABOUT, ...(data ?? {}) };
+  } catch {
+    return DEFAULT_ABOUT;
+  }
+}
+
 export default async function Home() {
-  const [allProducts, banner] = await Promise.all([fetchProducts(), fetchBannerSettings()]);
+  const [allProducts, banner, about] = await Promise.all([
+    fetchProducts(),
+    fetchBannerSettings(),
+    fetchAboutSettings(),
+  ]);
   const featured = allProducts.slice(0, 4);
 
-  return <HomeClient featured={featured} banner={banner} />;
+  return <HomeClient featured={featured} banner={banner} about={about} />;
 }
