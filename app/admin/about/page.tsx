@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useAdmin } from '@/context/AdminContext';
 import Link from 'next/link';
 import Image from 'next/image';
+import Cropper from 'react-easy-crop';
+import type { Area } from 'react-easy-crop';
 
 interface AboutSettings {
   hero_image: string;
@@ -56,42 +58,45 @@ const DEFAULT: AboutSettings = {
   val4_desc: 'Doğaya saygılı üretim süreçleriyle geleceğe yatırım yapıyoruz.',
 };
 
-// Field bileşeni dışarıda tanımlı — her render'da yeniden oluşturulmaz, focus kaybı olmaz
+// Canvas ile kırpılmış görseli Blob olarak üretir
+async function getCroppedBlob(imageSrc: string, pixelCrop: Area): Promise<Blob> {
+  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new window.Image();
+    image.crossOrigin = 'anonymous';
+    image.onload = () => resolve(image);
+    image.onerror = reject;
+    image.src = imageSrc;
+  });
+
+  const canvas = document.createElement('canvas');
+  canvas.width = pixelCrop.width;
+  canvas.height = pixelCrop.height;
+  const ctx = canvas.getContext('2d')!;
+  ctx.drawImage(img, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, pixelCrop.width, pixelCrop.height);
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob);
+      else reject(new Error('Canvas toBlob failed'));
+    }, 'image/jpeg', 0.92);
+  });
+}
+
 function Field({
-  label,
-  value,
-  onChange,
-  multiline = false,
-  hint,
-  id,
+  id, label, value, onChange, multiline = false, hint,
 }: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  multiline?: boolean;
-  hint?: string;
-  id: string;
+  id: string; label: string; value: string; onChange: (v: string) => void; multiline?: boolean; hint?: string;
 }) {
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      {label && <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>}
       {hint && <p className="text-xs text-gray-400 mb-1">{hint}</p>}
       {multiline ? (
-        <textarea
-          id={id}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          rows={3}
-          className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56] resize-y"
-        />
+        <textarea id={id} value={value} onChange={(e) => onChange(e.target.value)} rows={3}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56] resize-y" />
       ) : (
-        <input
-          id={id}
-          type="text"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56]"
-        />
+        <input id={id} type="text" value={value} onChange={(e) => onChange(e.target.value)}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56]" />
       )}
     </div>
   );
@@ -109,51 +114,64 @@ export default function AdminAboutPage() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Kırpma modal state
+  const [cropSrc, setCropSrc] = useState<string | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+
   useEffect(() => {
     if (!authLoading && !isAuthenticated) router.push('/sergenim/login');
   }, [isAuthenticated, authLoading, router]);
 
   useEffect(() => {
-    if (isAuthenticated) fetchSettings();
-  }, [isAuthenticated]);
-
-  const fetchSettings = async () => {
-    try {
-      const res = await fetch('/api/admin/about');
-      if (res.ok) {
-        const data = await res.json();
-        setSettings({ ...DEFAULT, ...data });
-      }
-    } catch {
-      // varsayılan değerler kalır
-    } finally {
-      setLoading(false);
+    if (isAuthenticated) {
+      fetch('/api/admin/about')
+        .then((r) => r.json())
+        .then((d) => setSettings({ ...DEFAULT, ...d }))
+        .catch(() => {})
+        .finally(() => setLoading(false));
     }
-  };
+  }, [isAuthenticated]);
 
   const set = (key: keyof AboutSettings) => (value: string) =>
     setSettings((prev) => ({ ...prev, [key]: value }));
 
-  const uploadImage = useCallback(async (file: File) => {
+  // Dosya seçildiğinde direkt yüklemek yerine kırpma modalını aç
+  const openCropper = useCallback((file: File) => {
     const ACCEPTED = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     if (!ACCEPTED.includes(file.type)) {
       setMessage({ type: 'error', text: 'Desteklenen formatlar: JPEG, PNG, WebP' });
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      setMessage({ type: 'error', text: 'Dosya 5 MB\'dan küçük olmalıdır' });
+    if (file.size > 10 * 1024 * 1024) {
+      setMessage({ type: 'error', text: 'Dosya 10 MB\'dan küçük olmalıdır' });
       return;
     }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setCropSrc(reader.result as string);
+      setCrop({ x: 0, y: 0 });
+      setZoom(1);
+    };
+    reader.readAsDataURL(file);
+  }, []);
+
+  // Kırpma onaylandığında canvas ile kes, yükle
+  const handleCropConfirm = async () => {
+    if (!cropSrc || !croppedAreaPixels) return;
     setUploading(true);
     setMessage(null);
     try {
+      const blob = await getCroppedBlob(cropSrc, croppedAreaPixels);
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', blob, 'hero.jpg');
       const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
       const data = await res.json();
       if (res.ok && data.url) {
         setSettings((prev) => ({ ...prev, hero_image: data.url }));
         setMessage({ type: 'success', text: 'Görsel yüklendi! Kaydetmeyi unutmayın.' });
+        setCropSrc(null);
       } else {
         setMessage({ type: 'error', text: data.error || 'Yükleme başarısız' });
       }
@@ -163,7 +181,7 @@ export default function AdminAboutPage() {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
-  }, []);
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -223,7 +241,7 @@ export default function AdminAboutPage() {
 
               {/* Sürükle-bırak yükleme alanı */}
               <div
-                onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files?.[0]; if (f) uploadImage(f); }}
+                onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files?.[0]; if (f) openCropper(f); }}
                 onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                 onDragLeave={(e) => { e.preventDefault(); setDragOver(false); }}
                 onClick={() => !uploading && fileInputRef.current?.click()}
@@ -242,15 +260,7 @@ export default function AdminAboutPage() {
                   <div className={`absolute inset-0 flex flex-col items-center justify-center gap-3 transition-colors rounded-lg
                     ${dragOver ? 'bg-[#DD6B56]/60' : 'bg-black/40 hover:bg-black/50'}`}
                   >
-                    {uploading ? (
-                      <>
-                        <svg className="animate-spin w-8 h-8 text-white" viewBox="0 0 24 24" fill="none">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-                        </svg>
-                        <p className="text-white text-sm font-medium">Yükleniyor...</p>
-                      </>
-                    ) : dragOver ? (
+                    {dragOver ? (
                       <>
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /><path d="M20 21H4" />
@@ -266,7 +276,7 @@ export default function AdminAboutPage() {
                           <p className="text-white text-sm font-semibold">Görseli buraya sürükle</p>
                           <p className="text-white/70 text-xs mt-0.5">veya tıkla ve seç</p>
                         </div>
-                        <span className="text-white/50 text-xs">JPEG · PNG · WebP · Maks. 5 MB</span>
+                        <span className="text-white/50 text-xs">JPEG · PNG · WebP · Maks. 10 MB</span>
                       </>
                     )}
                   </div>
@@ -275,7 +285,7 @@ export default function AdminAboutPage() {
                   ref={fileInputRef}
                   type="file"
                   accept="image/jpeg,image/jpg,image/png,image/webp"
-                  onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadImage(f); }}
+                  onChange={(e) => { const f = e.target.files?.[0]; if (f) openCropper(f); }}
                   className="hidden"
                   aria-label="Hero görseli yükle"
                 />
@@ -303,20 +313,8 @@ export default function AdminAboutPage() {
               <h2 className="text-lg font-semibold text-gray-800">İstatistikler</h2>
               {([1, 2, 3, 4] as const).map((n) => (
                 <div key={n} className="grid grid-cols-2 gap-4">
-                  <Field
-                    id={`stat${n}_value`}
-                    label={`${n}. Değer`}
-                    value={settings[`stat${n}_value`]}
-                    onChange={set(`stat${n}_value`)}
-                    hint='Örn: "30+", "%98"'
-                  />
-                  <Field
-                    id={`stat${n}_label`}
-                    label={`${n}. Etiket`}
-                    value={settings[`stat${n}_label`]}
-                    onChange={set(`stat${n}_label`)}
-                    hint='Örn: "Yıl Deneyim"'
-                  />
+                  <Field id={`stat${n}_value`} label={`${n}. Değer`} value={settings[`stat${n}_value`]} onChange={set(`stat${n}_value`)} hint='Örn: "30+", "%98"' />
+                  <Field id={`stat${n}_label`} label={`${n}. Etiket`} value={settings[`stat${n}_label`]} onChange={set(`stat${n}_label`)} hint='Örn: "Yıl Deneyim"' />
                 </div>
               ))}
             </div>
@@ -335,12 +333,8 @@ export default function AdminAboutPage() {
 
             {/* ── Kaydet ── */}
             <div className="flex items-center gap-4 pb-8">
-              <button
-                type="button"
-                onClick={handleSave}
-                disabled={saving}
-                className="bg-[#DD6B56] hover:bg-[#C45540] disabled:opacity-50 text-white font-semibold px-8 py-3 rounded-lg transition"
-              >
+              <button type="button" onClick={handleSave} disabled={saving}
+                className="bg-[#DD6B56] hover:bg-[#C45540] disabled:opacity-50 text-white font-semibold px-8 py-3 rounded-lg transition">
                 {saving ? 'Kaydediliyor...' : 'Kaydet'}
               </button>
               {message && (
@@ -352,6 +346,66 @@ export default function AdminAboutPage() {
           </>
         )}
       </main>
+
+      {/* ── Kırpma Modalı ── */}
+      {cropSrc && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-black">
+          {/* Cropper alanı */}
+          <div className="relative flex-1">
+            <Cropper
+              image={cropSrc}
+              crop={crop}
+              zoom={zoom}
+              aspect={16 / 6}
+              onCropChange={setCrop}
+              onZoomChange={setZoom}
+              onCropComplete={(_, pixels) => setCroppedAreaPixels(pixels)}
+              showGrid={false}
+            />
+          </div>
+
+          {/* Kontroller */}
+          <div className="bg-gray-900 px-6 py-5 space-y-4">
+            {/* Zoom slider */}
+            <div className="flex items-center gap-4">
+              <button type="button" onClick={() => setZoom((z) => Math.max(1, z - 0.1))}
+                className="w-8 h-8 flex items-center justify-center text-white bg-white/10 rounded-full hover:bg-white/20 text-lg font-bold">−</button>
+              <input
+                type="range" min={1} max={3} step={0.01}
+                value={zoom}
+                onChange={(e) => setZoom(Number(e.target.value))}
+                className="flex-1 accent-[#DD6B56]"
+                aria-label="Yakınlaştırma"
+              />
+              <button type="button" onClick={() => setZoom((z) => Math.min(3, z + 0.1))}
+                className="w-8 h-8 flex items-center justify-center text-white bg-white/10 rounded-full hover:bg-white/20 text-lg font-bold">+</button>
+              <span className="text-white/60 text-sm w-12 text-right">{Math.round(zoom * 100)}%</span>
+            </div>
+
+            <p className="text-white/40 text-xs text-center">Görseli sürükleyerek konumlandırın · Kaydırarak yakınlaştırın</p>
+
+            {/* Butonlar */}
+            <div className="flex gap-3 justify-end">
+              <button type="button" onClick={() => { setCropSrc(null); if (fileInputRef.current) fileInputRef.current.value = ''; }}
+                className="px-6 py-2.5 rounded-lg border border-white/20 text-white text-sm hover:bg-white/10 transition">
+                İptal
+              </button>
+              <button type="button" onClick={handleCropConfirm} disabled={uploading}
+                className="px-6 py-2.5 rounded-lg bg-[#DD6B56] hover:bg-[#C45540] disabled:opacity-50 text-white text-sm font-semibold transition flex items-center gap-2">
+                {uploading ? (
+                  <>
+                    <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                    </svg>
+                    Yükleniyor...
+                  </>
+                ) : 'Uygula'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
