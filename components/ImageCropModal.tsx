@@ -61,9 +61,9 @@ export function ImageCropModal({ src, aspect, onConfirm, onClose, uploading = fa
   const busy = processing || uploading;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-black">
-      {/* Cropper alanı — min-h-0 flex çocuğunun yüksekliği doğru hesaplaması için gerekli */}
-      <div className="relative flex-1 min-h-0">
+    <div className="fixed inset-0 z-[9999] bg-black">
+      {/* Cropper — absolute konumlandırma, react-easy-crop için zorunlu */}
+      <div className="absolute inset-x-0 top-0 bottom-[152px]">
         <Cropper
           image={src}
           crop={crop}
@@ -76,8 +76,8 @@ export function ImageCropModal({ src, aspect, onConfirm, onClose, uploading = fa
         />
       </div>
 
-      {/* Kontroller */}
-      <div className="bg-gray-900 px-6 py-5 space-y-4">
+      {/* Kontrol paneli — sabit alta yapışık */}
+      <div className="absolute inset-x-0 bottom-0 h-[152px] bg-gray-900 px-6 py-5 space-y-4">
         {/* Zoom slider */}
         <div className="flex items-center gap-4">
           <button
@@ -109,7 +109,6 @@ export function ImageCropModal({ src, aspect, onConfirm, onClose, uploading = fa
           Görseli sürükleyerek konumlandırın · Kaydırarak veya slider ile yakınlaştırın
         </p>
 
-        {/* Butonlar */}
         <div className="flex gap-3 justify-end">
           <button
             type="button"
