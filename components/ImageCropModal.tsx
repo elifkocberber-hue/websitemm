@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Cropper from 'react-easy-crop';
 import type { Area } from 'react-easy-crop';
 
@@ -44,6 +45,12 @@ export function ImageCropModal({ src, aspect, onConfirm, onClose, uploading = fa
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [processing, setProcessing] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   const handleConfirm = useCallback(async () => {
     if (!croppedAreaPixels) return;
@@ -60,7 +67,9 @@ export function ImageCropModal({ src, aspect, onConfirm, onClose, uploading = fa
 
   const busy = processing || uploading;
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <div className="fixed inset-0 z-[9999] bg-black">
       {/* Cropper — absolute konumlandırma, react-easy-crop için zorunlu */}
       <div className="absolute inset-x-0 top-0 bottom-[152px]">
@@ -136,6 +145,7 @@ export function ImageCropModal({ src, aspect, onConfirm, onClose, uploading = fa
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

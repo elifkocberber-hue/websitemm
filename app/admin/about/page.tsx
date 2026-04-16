@@ -110,8 +110,7 @@ export default function AdminAboutPage() {
   const set = (key: keyof AboutSettings) => (value: string) =>
     setSettings((prev) => ({ ...prev, [key]: value }));
 
-  // Dosya seçildiğinde direkt yüklemek yerine kırpma modalını aç
-  const openCropper = useCallback((file: File) => {
+  const uploadFile = useCallback((file: File) => {
     const ACCEPTED = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     if (!ACCEPTED.includes(file.type)) {
       setMessage({ type: 'error', text: 'Desteklenen formatlar: JPEG, PNG, WebP' });
@@ -126,7 +125,6 @@ export default function AdminAboutPage() {
     reader.readAsDataURL(file);
   }, []);
 
-  // Kırpma onaylandığında yükle
   const handleCropConfirm = useCallback(async (blob: Blob) => {
     setUploading(true);
     setMessage(null);
@@ -149,6 +147,28 @@ export default function AdminAboutPage() {
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   }, []);
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) uploadFile(file);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) uploadFile(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -208,9 +228,9 @@ export default function AdminAboutPage() {
 
               {/* Sürükle-bırak yükleme alanı */}
               <div
-                onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files?.[0]; if (f) openCropper(f); }}
-                onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-                onDragLeave={(e) => { e.preventDefault(); setDragOver(false); }}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
                 onClick={() => !uploading && fileInputRef.current?.click()}
                 className={`relative w-full rounded-xl border-2 border-dashed transition-all cursor-pointer overflow-hidden
                   ${dragOver ? 'border-[#DD6B56] bg-[#DD6B56]/5 scale-[1.01]' : 'border-gray-300 hover:border-[#DD6B56] hover:bg-gray-50'}
@@ -252,7 +272,7 @@ export default function AdminAboutPage() {
                   ref={fileInputRef}
                   type="file"
                   accept="image/jpeg,image/jpg,image/png,image/webp"
-                  onChange={(e) => { const f = e.target.files?.[0]; if (f) openCropper(f); }}
+                  onChange={handleFileInput}
                   className="hidden"
                   aria-label="Hero görseli yükle"
                 />
