@@ -81,14 +81,39 @@ async function fetchHomepageSettings() {
   }
 }
 
+async function fetchFeaturedIds(): Promise<(number | string)[]> {
+  noStore();
+  try {
+    const { data } = await supabase
+      .from('homepage_settings')
+      .select('featured_product_ids')
+      .eq('id', 1)
+      .single();
+    return data?.featured_product_ids ?? [];
+  } catch {
+    return [];
+  }
+}
+
 export default async function Home() {
-  const [allProducts, banner, about, homepage] = await Promise.all([
+  const [allProducts, banner, about, homepage, featuredIds] = await Promise.all([
     fetchProducts(),
     fetchBannerSettings(),
     fetchAboutSettings(),
     fetchHomepageSettings(),
+    fetchFeaturedIds(),
   ]);
-  const featured = allProducts.slice(0, 4);
+
+  let featured = allProducts.slice(0, 4);
+  if (featuredIds.length > 0) {
+    const picked = featuredIds
+      .map((id) => allProducts.find((p) => String(p.id) === String(id)))
+      .filter(Boolean) as typeof allProducts;
+    if (picked.length > 0) {
+      const rest = allProducts.filter((p) => !featuredIds.some((id) => String(id) === String(p.id)));
+      featured = [...picked, ...rest].slice(0, 4);
+    }
+  }
 
   return <HomeClient featured={featured} banner={banner} about={about} homepage={homepage} />;
 }

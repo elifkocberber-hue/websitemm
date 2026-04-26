@@ -188,6 +188,12 @@ export default function AdminDashboardPage() {
           >
             🏠 Anasayfa Metinleri
           </Link>
+          <Link
+            href="/admin/featured"
+            className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-5 rounded-lg transition"
+          >
+            ⭐ Öne Çıkan Eserler
+          </Link>
         </div>
 
         {/* Stats Cards */}
