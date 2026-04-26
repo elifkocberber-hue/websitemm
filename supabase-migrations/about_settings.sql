@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS about_settings (
   id INTEGER PRIMARY KEY DEFAULT 1,
   hero_image TEXT NOT NULL DEFAULT 'https://images.unsplash.com/photo-1604424321003-50b9174b28e3?w=1920&q=80',
+  story_image TEXT NOT NULL DEFAULT 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80',
   founded TEXT NOT NULL DEFAULT 'Kuruluş · 1994',
   story_title TEXT NOT NULL DEFAULT 'Topraktan\nDünyaya',
   story_p1 TEXT NOT NULL DEFAULT 'Üç kuşaklık seramik geleneğini taşıyan atölyemiz, 1994 yılında kuruldu. Babamızın başlattığı bu yolculuk, bugün aynı tutku ve titizlikle devam etmektedir.',
