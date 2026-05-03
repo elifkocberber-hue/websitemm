@@ -89,14 +89,14 @@ export default function CookiePolicyPage() {
               {/* Zorunlu */}
               <div className="bg-white border border-gray-100 rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">Zorunlu</span>
+                  <span className="bg-orange-100 text-orange-800 text-xs font-semibold px-2.5 py-0.5 rounded">Zorunlu</span>
                   <h4 className="font-semibold text-gray-900">Zorunlu Çerezler (Kesinlikle Gerekli)</h4>
                 </div>
                 <div className="space-y-2 text-sm text-gray-600">
                   <p><span className="font-medium text-gray-700">Amaç:</span> Bu çerezler, web sitemizin doğru ve güvenli bir şekilde çalışabilmesi için teknik olarak zorunludur. Site üzerinde gezinmenizi, güvenlik duvarımızın çalışmasını ve üyelik girişi, alışveriş sepeti gibi talep ettiğiniz hizmetlerin sağlanmasını mümkün kılar.</p>
                   <p><span className="font-medium text-gray-700">Kullanım Örneklerimiz:</span> Oturum açma bilgilerinin doğrulanması, sunucu yükünün dengelenmesi, alışveriş sepetindeki ürünlerin hatırlanması.</p>
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-3 mt-2">
-                    <p><span className="font-medium text-green-800">Onay Durumu:</span> Zorunlu çerezler herhangi bir kişisel veri toplamadığı veya hizmetin sunulması için zorunlu olduğu için, bu çerezler için ayrıca açık rızanız alınmaz. Siteyi kullanmanızla otomatik olarak devreye girerler.</p>
+                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mt-2">
+                    <p><span className="font-medium text-orange-800">Onay Durumu:</span> Zorunlu çerezler herhangi bir kişisel veri toplamadığı veya hizmetin sunulması için zorunlu olduğu için, bu çerezler için ayrıca açık rızanız alınmaz. Siteyi kullanmanızla otomatik olarak devreye girerler.</p>
                   </div>
                 </div>
               </div>
@@ -104,14 +104,14 @@ export default function CookiePolicyPage() {
               {/* İşlevsellik */}
               <div className="bg-white border border-gray-100 rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">İşlevsel</span>
+                  <span className="bg-orange-100 text-orange-800 text-xs font-semibold px-2.5 py-0.5 rounded">İşlevsel</span>
                   <h4 className="font-semibold text-gray-900">İşlevsellik Çerezleri (İşlevsel / Tercih Çerezleri)</h4>
                 </div>
                 <div className="space-y-2 text-sm text-gray-600">
                   <p><span className="font-medium text-gray-700">Amaç:</span> Sitemizi daha kullanışlı ve kişiselleştirilmiş hale getirmek için tercihlerinizi (örneğin dil seçimi, bölge tercihi, ürün listeleme şekli) hatırlamak amacıyla kullanılır.</p>
                   <p><span className="font-medium text-gray-700">Kullanım Örneklerimiz:</span> Ziyaret ettiğiniz ülkeye göre fiyatlandırmanın ve dilin otomatik ayarlanması, &quot;karşılaştırma&quot; listenizin saklanması.</p>
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-2">
-                    <p><span className="font-medium text-blue-800">Onay Durumu:</span> İşlevsellik çerezleri açık rızanıza tabidir. Bu çerezleri kabul etmezseniz, sitenin bazı özellikleri (örneğin dil tercihinin hatırlanması) çalışmayabilir.</p>
+                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mt-2">
+                    <p><span className="font-medium text-orange-800">Onay Durumu:</span> İşlevsellik çerezleri açık rızanıza tabidir. Bu çerezleri kabul etmezseniz, sitenin bazı özellikleri (örneğin dil tercihinin hatırlanması) çalışmayabilir.</p>
                   </div>
                 </div>
               </div>
@@ -119,14 +119,14 @@ export default function CookiePolicyPage() {
               {/* Performans ve Analitik */}
               <div className="bg-white border border-gray-100 rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded">Analitik</span>
+                  <span className="bg-orange-100 text-orange-800 text-xs font-semibold px-2.5 py-0.5 rounded">Analitik</span>
                   <h4 className="font-semibold text-gray-900">Performans ve Analitik Çerezleri</h4>
                 </div>
                 <div className="space-y-2 text-sm text-gray-600">
                   <p><span className="font-medium text-gray-700">Amaç:</span> Siteyi nasıl kullandığınıza dair anonim istatistiksel veriler toplayarak sitenin performansını ölçmek, hataları tespit etmek ve kullanıcı deneyimini iyileştirmek için kullanılır. Bu çerezler sayesinde hangi sayfaların daha çok ziyaret edildiğini veya hangi seramik ürünlerine daha fazla ilgi gösterildiğini anonim olarak analiz ederiz.</p>
                   <p><span className="font-medium text-gray-700">Kullanım Örneklerimiz:</span> Google Analytics, Hotjar gibi araçlar aracılığıyla sayfa görüntülenme sayısı, ziyaret süresi gibi metriklerin izlenmesi.</p>
-                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 mt-2">
-                    <p><span className="font-medium text-purple-800">Onay Durumu:</span> Performans ve analitik çerezleri açık rızanıza tabidir. Onay vermediğiniz takdirde hangi ürünlerimizin daha popüler olduğunu analiz etme imkânımız kısıtlanır, ancak Site&apos;yi sorunsuz kullanabilirsiniz.</p>
+                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mt-2">
+                    <p><span className="font-medium text-orange-800">Onay Durumu:</span> Performans ve analitik çerezleri açık rızanıza tabidir. Onay vermediğiniz takdirde hangi ürünlerimizin daha popüler olduğunu analiz etme imkânımız kısıtlanır, ancak Site&apos;yi sorunsuz kullanabilirsiniz.</p>
                   </div>
                 </div>
               </div>
@@ -299,8 +299,8 @@ export default function CookiePolicyPage() {
             <p className="font-semibold text-gray-900 mb-2">Veri Sorumlusu: El&apos;s Dream Factory</p>
             <p className="text-gray-600 text-sm">
               E-Posta:{' '}
-              <a href="mailto:bilgi@elsdreamfactory.com" className="text-amber-600 hover:text-amber-700 underline">
-                bilgi@elsdreamfactory.com
+              <a href="mailto:elsdreamfactory@gmail.com" className="text-amber-600 hover:text-amber-700 underline">
+                elsdreamfactory@gmail.com
               </a>
             </p>
             <p className="text-gray-600 text-sm">
@@ -327,10 +327,10 @@ export default function CookiePolicyPage() {
             bizimle iletişime geçebilirsiniz.
           </p>
           <a
-            href="mailto:bilgi@elsdreamfactory.com"
+            href="mailto:elsdreamfactory@gmail.com"
             className="inline-block bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
           >
-            bilgi@elsdreamfactory.com
+            elsdreamfactory@gmail.com
           </a>
         </section>
       </div>

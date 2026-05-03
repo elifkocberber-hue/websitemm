@@ -166,6 +166,13 @@ export const Header: React.FC = () => {
                       <p className="text-sm font-medium text-charcoal">{user.firstName} {user.lastName}</p>
                       <p className="text-xs text-earth truncate">{user.email}</p>
                     </div>
+                    <Link
+                      href="/orders"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="block px-4 py-3 text-sm text-earth hover:bg-bone hover:text-charcoal transition-colors"
+                    >
+                      Siparişlerim
+                    </Link>
                     <button
                       type="button"
                       onClick={() => { logout(); setUserMenuOpen(false); }}
@@ -232,6 +239,9 @@ export const Header: React.FC = () => {
             {user ? (
               <>
                 <p className="text-earth text-sm">{t.nav.hello}, {user.firstName}</p>
+                <Link href="/orders" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
+                  Siparişlerim
+                </Link>
                 <button
                   type="button"
                   onClick={() => { logout(); setMenuOpen(false); }}
@@ -251,7 +261,7 @@ export const Header: React.FC = () => {
               onClick={() => { setLanguage(language === 'tr' ? 'en' : 'tr'); setMenuOpen(false); }}
               className="mt-4 text-sm tracking-widest font-medium text-earth hover:text-charcoal transition-colors border border-earth/30 rounded px-4 py-2"
             >
-              {language === 'tr' ? '🌐 English' : '🌐 Türkçe'}
+              {language === 'tr' ? 'English' : 'Türkçe'}
             </button>
           </div>
         )}

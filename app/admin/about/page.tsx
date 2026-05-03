@@ -242,8 +242,8 @@ export default function AdminAboutPage() {
       <header className="bg-white shadow">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">📖 Hikayemiz Yönetimi</h1>
-            <p className="text-gray-500 text-sm mt-1">Hakkımızda sayfasındaki içerikleri düzenleyin</p>
+            <h1 className="text-2xl font-bold text-gray-900">Hikayemiz Yönetimi</h1>
+            <p className="text-gray-500 text-sm mt-1">Hikayemiz sayfasındaki içerikleri düzenleyin</p>
           </div>
           <Link href="/admin/dashboard" className="text-sm text-gray-600 hover:text-gray-900 underline">
             ← Dashboard
@@ -260,7 +260,7 @@ export default function AdminAboutPage() {
             <div className="bg-white rounded-lg shadow p-6 space-y-5">
               <div>
                 <h2 className="text-lg font-semibold text-gray-800">Hero Görseli</h2>
-                <p className="text-sm text-gray-500 mt-1">Hakkımızda sayfasının üst arka plan görseli.</p>
+                <p className="text-sm text-gray-500 mt-1">Hikayemiz sayfasının üst arka plan görseli.</p>
               </div>
 
               <div
@@ -418,7 +418,7 @@ export default function AdminAboutPage() {
             <div className="bg-white rounded-lg shadow p-6 space-y-5">
               <div>
                 <h2 className="text-lg font-semibold text-gray-800">Zanaat Görseli</h2>
-                <p className="text-sm text-gray-500 mt-1">Anasayfadaki &quot;Hakkımızda&quot; bölümünde ve Hikayemiz sayfasındaki parallax bantında görünen görsel.</p>
+                <p className="text-sm text-gray-500 mt-1">Anasayfadaki &quot;Hikayemiz&quot; bölümünde ve Hikayemiz sayfasındaki parallax bantında görünen görsel.</p>
               </div>
 
               <div

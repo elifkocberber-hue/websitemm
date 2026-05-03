@@ -106,7 +106,7 @@ export const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt }) => {
 
       {/* Info Text */}
       <div className="text-xs text-gray-600 text-center">
-        <p>💡 Dokusunu görmek için zooma yapabilirsiniz. Fare tekerleği ile zoom kontrol edin veya +/- butonlarını kullanın.</p>
+        <p>Dokusunu görmek için zooma yapabilirsiniz. Fare tekerleği ile zoom kontrol edin veya +/- butonlarını kullanın.</p>
       </div>
     </div>
   );

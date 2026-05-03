@@ -131,12 +131,12 @@ export default function AdminDashboardPage() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">🏛️ Admin Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
             <p className="text-gray-600 mt-1">Hoşgeldiniz, {adminEmail}</p>
           </div>
           <button
             onClick={handleLogout}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition"
+            className="bg-[#5C0A1A] hover:bg-[#7a1025] text-white font-bold py-2 px-4 rounded-lg transition"
           >
             Çıkış Yap
           </button>
@@ -150,49 +150,55 @@ export default function AdminDashboardPage() {
             href="/admin/products"
             className="inline-flex items-center gap-2 bg-[#DD6B56] hover:bg-[#C45540] text-white font-medium py-2 px-5 rounded-lg transition"
           >
-            🛍️ Ürün Yönetimi
+            Ürün Yönetimi
           </Link>
           <Link
             href="/admin/categories"
-            className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-5 rounded-lg transition"
+            className="inline-flex items-center gap-2 bg-[#DD6B56] hover:bg-[#C45540] text-white font-medium py-2 px-5 rounded-lg transition"
           >
-            🏷️ Kategori Yönetimi
+            Kategori Yönetimi
           </Link>
           <Link
             href="/admin/analytics"
-            className="inline-flex items-center gap-2 bg-[#5C0A1A] hover:bg-[#DD6B56] text-white font-medium py-2 px-5 rounded-lg transition"
+            className="inline-flex items-center gap-2 bg-[#DD6B56] hover:bg-[#C45540] text-white font-medium py-2 px-5 rounded-lg transition"
           >
-            📊 Ziyaretçi Analizi
+            Ziyaretçi Analizi
           </Link>
           <Link
             href="/admin/banner"
-            className="inline-flex items-center gap-2 bg-teal-700 hover:bg-teal-800 text-white font-medium py-2 px-5 rounded-lg transition"
+            className="inline-flex items-center gap-2 bg-[#DD6B56] hover:bg-[#C45540] text-white font-medium py-2 px-5 rounded-lg transition"
           >
-            📢 Bant & Kampanya
+            Bant & Kampanya
           </Link>
           <Link
             href="/admin/faq"
-            className="inline-flex items-center gap-2 bg-indigo-700 hover:bg-indigo-800 text-white font-medium py-2 px-5 rounded-lg transition"
+            className="inline-flex items-center gap-2 bg-[#DD6B56] hover:bg-[#C45540] text-white font-medium py-2 px-5 rounded-lg transition"
           >
-            💬 SSS Yönetimi
+            SSS Yönetimi
           </Link>
           <Link
             href="/admin/about"
-            className="inline-flex items-center gap-2 bg-stone-600 hover:bg-stone-700 text-white font-medium py-2 px-5 rounded-lg transition"
+            className="inline-flex items-center gap-2 bg-[#DD6B56] hover:bg-[#C45540] text-white font-medium py-2 px-5 rounded-lg transition"
           >
-            📖 Hikayemiz
+            Hikayemiz
           </Link>
           <Link
             href="/admin/homepage"
-            className="inline-flex items-center gap-2 bg-sky-700 hover:bg-sky-800 text-white font-medium py-2 px-5 rounded-lg transition"
+            className="inline-flex items-center gap-2 bg-[#DD6B56] hover:bg-[#C45540] text-white font-medium py-2 px-5 rounded-lg transition"
           >
-            🏠 Anasayfa Metinleri
+            Anasayfa Metinleri
           </Link>
           <Link
             href="/admin/featured"
-            className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-5 rounded-lg transition"
+            className="inline-flex items-center gap-2 bg-[#DD6B56] hover:bg-[#C45540] text-white font-medium py-2 px-5 rounded-lg transition"
           >
-            ⭐ Öne Çıkan Eserler
+            Öne Çıkan Eserler
+          </Link>
+          <Link
+            href="/admin/terms"
+            className="inline-flex items-center gap-2 bg-[#DD6B56] hover:bg-[#C45540] text-white font-medium py-2 px-5 rounded-lg transition"
+          >
+            Kullanım Şartları
           </Link>
         </div>
 

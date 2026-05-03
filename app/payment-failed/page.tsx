@@ -189,9 +189,9 @@ function PaymentFailedContent() {
               <div className="bg-gray-50 p-6 rounded-lg">
                 <h3 className="font-bold text-gray-900 mb-3">Hesap Bilgileri</h3>
                 <ul className="space-y-2 text-sm text-gray-700">
-                  <li>✓ Sepetiniz kaydedilmiş</li>
-                  <li>✓ Hiçbir ücret alınmadı</li>
-                  <li>✓ İstediğiniz zaman deneyin</li>
+                  <li>Sepetiniz kaydedilmiş</li>
+                  <li>Hiçbir ücret alınmadı</li>
+                  <li>İstediğiniz zaman deneyin</li>
                 </ul>
               </div>
             </div>

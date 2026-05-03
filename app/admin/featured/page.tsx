@@ -226,7 +226,7 @@ export default function AdminFeaturedPage() {
                         {product.image ? (
                           <Image src={product.image} alt={product.name} fill className="object-cover" unoptimized={product.image.startsWith('http')} />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-300 text-2xl">📷</div>
+                          <div className="w-full h-full flex items-center justify-center text-gray-300 text-2xl">[ ]</div>
                         )}
                         <div className="absolute inset-0 bg-amber-500/0 group-hover:bg-amber-500/20 transition flex items-center justify-center">
                           <span className="opacity-0 group-hover:opacity-100 transition bg-amber-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold shadow">+</span>

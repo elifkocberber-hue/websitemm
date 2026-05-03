@@ -194,19 +194,19 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
             <ul className="space-y-3">
               {product.dishwasherSafe && (
                 <li className="flex items-start">
-                  <span className="text-charcoal font-bold mr-3">✓</span>
+                  <span className="text-charcoal font-bold mr-3"></span>
                   <span className="text-gray-700">{t.product.dishwasher_safe}</span>
                 </li>
               )}
               {product.microwave && (
                 <li className="flex items-start">
-                  <span className="text-charcoal font-bold mr-3">✓</span>
+                  <span className="text-charcoal font-bold mr-3"></span>
                   <span className="text-gray-700">{t.product.microwave_safe}</span>
                 </li>
               )}
               {product.handmade && (
                 <li className="flex items-start">
-                  <span className="text-charcoal font-bold mr-3">✓</span>
+                  <span className="text-charcoal font-bold mr-3"></span>
                   <span className="text-gray-700">{t.product.handmade_unique}</span>
                 </li>
               )}
@@ -216,9 +216,9 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
           {/* Stock Status */}
           <div className="mb-8">
             {availableStock > 0 ? (
-              <p className="text-green-600 font-semibold text-lg">✓ {t.product.in_stock} ({availableStock})</p>
+              <p className="text-green-600 font-semibold text-lg">{t.product.in_stock} ({availableStock})</p>
             ) : (
-              <p className="text-red-600 font-semibold text-lg">✗ {t.product.out_of_stock}</p>
+              <p className="text-red-600 font-semibold text-lg">{t.product.out_of_stock}</p>
             )}
           </div>
 
@@ -265,7 +265,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
                   : 'bg-charcoal hover:bg-accent'
               }`}
             >
-              {addedToCart ? `✓ ${t.product.added_to_cart}` : t.product.add_to_cart}
+              {addedToCart ? `${t.product.added_to_cart}` : t.product.add_to_cart}
             </button>
           </div>
 

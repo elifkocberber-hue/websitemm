@@ -187,9 +187,9 @@ export default function CartPage() {
 
               <div className="mt-6 p-4 bg-amber-50 rounded-lg">
                 <p className="text-sm text-amber-900">
-                  ✓ Türkiye geneline ücretsiz kargo<br />
-                  ✓ 30 gün iade garantisi<br />
-                  ✓ Güvenli ödeme sistemi
+                  Türkiye geneline ücretsiz kargo<br />
+                  30 gün iade garantisi<br />
+                  Güvenli ödeme sistemi
                 </p>
               </div>
             </div>

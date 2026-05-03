@@ -128,10 +128,10 @@ function ThankYouContent() {
               <div className="bg-gray-50 p-6 rounded-lg">
                 <h3 className="font-bold text-gray-900 mb-3">İletişim Seçenekleri</h3>
                 <ul className="space-y-2 text-sm text-gray-700">
-                  <li>✓ Sipariş takibi</li>
-                  <li>✓ İade ve değişim işlemleri</li>
-                  <li>✓ Ürün önerileri</li>
-                  <li>✓ Hızlı yanıt (24 saat içinde)</li>
+                  <li>Sipariş takibi</li>
+                  <li>İade ve değişim işlemleri</li>
+                  <li>Ürün önerileri</li>
+                  <li>Hızlı yanıt (24 saat içinde)</li>
                 </ul>
               </div>
             </div>

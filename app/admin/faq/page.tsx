@@ -133,7 +133,7 @@ export default function AdminFaqPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              💬 SSS Yönetimi
+              SSS Yönetimi
               {pendingCount > 0 && (
                 <span className="ml-3 inline-flex items-center justify-center bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6">
                   {pendingCount}

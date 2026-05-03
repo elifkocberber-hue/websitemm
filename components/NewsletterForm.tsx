@@ -48,7 +48,7 @@ export const NewsletterForm: React.FC = () => {
         disabled={status === 'loading'}
         className="bg-charcoal text-bone px-6 py-3 text-sm tracking-wider uppercase hover:bg-accent transition-colors duration-300 disabled:opacity-50"
       >
-        {status === 'loading' ? '...' : status === 'success' ? '✓' : t.newsletter.subscribe}
+        {status === 'loading' ? '...' : status === 'success' ? '' : t.newsletter.subscribe}
       </button>
       {status === 'success' && (
         <p className="absolute mt-14 text-xs text-green-600">{t.newsletter.success}</p>

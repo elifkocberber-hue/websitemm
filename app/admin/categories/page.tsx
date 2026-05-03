@@ -168,14 +168,14 @@ export default function CategoriesAdminPage() {
       <header className="bg-white shadow">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">🏷️ Kategori Yönetimi</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Kategori Yönetimi</h1>
             <p className="text-gray-600 mt-1">{adminEmail}</p>
           </div>
           <div className="flex gap-3">
             <Link href="/admin/products" className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition">
               ← Ürünler
             </Link>
-            <button type="button" onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">
+            <button type="button" onClick={handleLogout} className="bg-[#5C0A1A] hover:bg-[#7a1025] text-white font-bold py-2 px-4 rounded-lg transition">
               Çıkış Yap
             </button>
           </div>
@@ -275,14 +275,14 @@ export default function CategoriesAdminPage() {
                         onClick={() => handleEdit(cat)}
                         className="text-[#5C0A1A] hover:text-[#7a1025] text-sm font-medium py-1.5 px-3 rounded-lg hover:bg-gray-100 transition"
                       >
-                        ✏️ Düzenle
+                        Düzenle
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDelete(cat.id)}
                         className="text-red-600 hover:text-red-800 text-sm font-medium py-1.5 px-3 rounded-lg hover:bg-red-50 transition"
                       >
-                        🗑️ Sil
+                        Sil
                       </button>
                     </>
                   )}

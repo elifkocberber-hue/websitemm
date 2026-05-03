@@ -320,7 +320,7 @@ export default function AnalyticsPage() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">📊 Ziyaretçi Analizi</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Ziyaretçi Analizi</h1>
             <p className="text-gray-600 mt-1">{adminEmail}</p>
           </div>
           <div className="flex gap-3">
@@ -332,7 +332,7 @@ export default function AnalyticsPage() {
             </Link>
             <button
               onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition"
+              className="bg-[#5C0A1A] hover:bg-[#7a1025] text-white font-bold py-2 px-4 rounded-lg transition"
             >
               Çıkış Yap
             </button>
@@ -464,11 +464,10 @@ export default function AnalyticsPage() {
                   {Object.entries(data.deviceStats)
                     .sort((a, b) => b[1] - a[1])
                     .map(([device, count]) => {
-                      const icon = device === 'Mobile' ? '📱' : device === 'Tablet' ? '📋' : '🖥️';
                       const pct = Math.round((count / data.totalVisits) * 100);
                       return (
                         <div key={device} className="flex items-center justify-between">
-                          <span className="text-sm text-gray-700">{icon} {device}</span>
+                          <span className="text-sm text-gray-700">{device}</span>
                           <span className="text-sm font-medium text-gray-900">{count} ({pct}%)</span>
                         </div>
                       );

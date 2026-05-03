@@ -122,8 +122,8 @@ export default function FaqPage() {
 
         {/* Sağ: Soru gönderme formu */}
         <div className="lg:sticky lg:top-28 lg:self-start">
-          <div className="bg-bone border border-warm-gray p-8">
-            <h2 className="heading-serif text-xl text-charcoal mb-6">{copy.ask_title}</h2>
+          <div className="bg-[#5C0A1A] p-8">
+            <h2 className="heading-serif text-xl text-bone mb-6">{copy.ask_title}</h2>
             {submitStatus === 'success' ? (
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <p className="text-green-700 text-sm leading-relaxed">{submitMsg}</p>
@@ -144,14 +144,14 @@ export default function FaqPage() {
                   rows={5}
                   maxLength={500}
                   required
-                  className="w-full px-4 py-3 bg-white border border-charcoal/15 text-sm text-charcoal placeholder:text-clay focus:outline-none focus:border-accent resize-none"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 text-sm text-bone placeholder:text-bone/50 focus:outline-none focus:border-white resize-none"
                 />
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-earth">{question.length}/500</span>
+                  <span className="text-xs text-bone/60">{question.length}/500</span>
                   <button
                     type="submit"
                     disabled={submitStatus === 'loading' || !question.trim()}
-                    className="bg-charcoal text-bone px-6 py-2.5 text-sm tracking-wider uppercase hover:bg-accent transition-colors duration-300 disabled:opacity-50"
+                    className="bg-white text-[#5C0A1A] px-6 py-2.5 text-sm tracking-wider uppercase hover:bg-bone transition-colors duration-300 disabled:opacity-50"
                   >
                     {submitStatus === 'loading' ? copy.sending : copy.send}
                   </button>

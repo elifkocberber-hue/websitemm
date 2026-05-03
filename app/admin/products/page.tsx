@@ -393,17 +393,17 @@ export default function ProductsAdminPage() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">🛍️ Ürün Yönetimi</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Ürün Yönetimi</h1>
             <p className="text-gray-600 mt-1">{adminEmail}</p>
           </div>
           <div className="flex gap-3">
             <Link href="/admin/categories" className="bg-amber-100 hover:bg-amber-200 text-amber-800 font-medium py-2 px-4 rounded-lg transition">
-              🏷️ Kategoriler
+              Kategoriler
             </Link>
             <Link href="/admin/dashboard" className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition">
               ← Dashboard
             </Link>
-            <button type="button" onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">
+            <button type="button" onClick={handleLogout} className="bg-[#5C0A1A] hover:bg-[#7a1025] text-white font-bold py-2 px-4 rounded-lg transition">
               Çıkış Yap
             </button>
           </div>
@@ -431,7 +431,7 @@ export default function ProductsAdminPage() {
                     disabled={seeding}
                     className="bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-bold py-3 px-6 rounded-lg transition flex items-center gap-2"
                   >
-                    {seeding ? 'Aktarılıyor...' : '📥 Koleksiyonu İçe Aktar'}
+                    {seeding ? 'Aktarılıyor...' : 'Koleksiyonu İçe Aktar'}
                   </button>
                 )}
                 <button
@@ -500,7 +500,7 @@ export default function ProductsAdminPage() {
                           onClick={() => handleEdit(product)}
                           className="flex-1 bg-[#5C0A1A] hover:bg-[#7a1025] text-white py-2 rounded-lg text-sm font-medium transition"
                         >
-                          ✏️ Düzenle
+                          Düzenle
                         </button>
                         {deleteConfirm === product.id ? (
                           <div className="flex gap-1">
@@ -509,7 +509,7 @@ export default function ProductsAdminPage() {
                           </div>
                         ) : (
                           <button type="button" onClick={() => setDeleteConfirm(product.id)} className="bg-red-100 hover:bg-red-200 text-red-700 py-2 px-4 rounded-lg text-sm font-medium transition">
-                            🗑️
+                            Sil
                           </button>
                         )}
                       </div>
@@ -524,17 +524,17 @@ export default function ProductsAdminPage() {
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-bold text-gray-900">
-                {isCreating ? '➕ Yeni Ürün Ekle' : `✏️ ${editingProduct?.name}`}
+                {isCreating ? 'Yeni Ürün Ekle' : editingProduct?.name}
               </h2>
               <button type="button" onClick={handleCancel} className="text-gray-500 hover:text-gray-800 transition">
-                ✕ Kapat
+                Kapat
               </button>
             </div>
 
             <div className="space-y-8">
               {/* Resimler */}
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-1">📷 Ürün Resimleri</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">Ürün Resimleri</h3>
                 <p className="text-sm text-gray-500 mb-4">Görselleri sürükleyerek sıralarını değiştirebilirsiniz. İlk görsel ana resim olarak kullanılır.</p>
 
                 {/* Resim grid - sürükle & bırak ile sıralama */}
@@ -565,9 +565,7 @@ export default function ProductsAdminPage() {
                             onClick={() => handleRemoveImage(i)}
                             className="bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm hover:bg-red-700"
                             title="Sil"
-                          >
-                            ✕
-                          </button>
+                          >x</button>
                         </div>
                         {i === 0 && (
                           <span className="absolute bottom-1 left-1 bg-[#5C0A1A] text-white text-[10px] px-2 py-0.5 rounded">Ana Resim</span>
@@ -604,7 +602,7 @@ export default function ProductsAdminPage() {
                       <div className="text-[#DD6B56] font-medium">Yükleniyor...</div>
                     ) : (
                       <>
-                        <div className="text-4xl mb-2">{isDragging ? '📂' : '📤'}</div>
+                        <div className="text-4xl mb-2">{isDragging ? '↓' : '↑'}</div>
                         <p className="text-gray-600 font-medium">
                           {isDragging ? 'Bırakın, yüklensin!' : 'Sürükle bırak veya tıklayarak seçin'}
                         </p>
@@ -617,7 +615,7 @@ export default function ProductsAdminPage() {
 
               {/* Temel Bilgiler */}
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">📝 Temel Bilgiler</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Temel Bilgiler</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Adı *</label>
@@ -760,7 +758,7 @@ export default function ProductsAdminPage() {
               {/* Varyasyonlar */}
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold text-gray-900">🎨 Varyasyonlar</h3>
+                  <h3 className="text-lg font-bold text-gray-900">Varyasyonlar</h3>
                   {!formData.variations ? (
                     <button
                       type="button"
@@ -824,9 +822,7 @@ export default function ProductsAdminPage() {
                                 onClick={() => removeVariationOption(i)}
                                 className="text-red-500 hover:text-red-700 w-7 h-7 flex items-center justify-center rounded-full hover:bg-red-50 transition flex-shrink-0"
                                 title="Seçeneği sil"
-                              >
-                                ✕
-                              </button>
+                              >x</button>
                             )}
                           </div>
                         ))}

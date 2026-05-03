@@ -226,7 +226,7 @@ export default function PaymentPage() {
 
                 {/* ═══════ KART BİLGİLERİ ═══════ */}
                 <div className="border-t border-gray-200 pt-6 mt-2">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">💳 Kart Bilgileri</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Kart Bilgileri</h2>
 
                   {/* Kart Üzerindeki İsim */}
                   <div className="mb-4">
@@ -327,7 +327,7 @@ export default function PaymentPage() {
                 {/* Iyzico Badge */}
                 <div className="flex items-center justify-center p-4 bg-blue-50 rounded-lg">
                   <p className="text-sm text-gray-700">
-                    🔒 Ödemeniz Iyzico tarafından güvenli şekilde işlenir
+                    Ödemeniz Iyzico tarafından güvenli şekilde işlenir
                   </p>
                 </div>
 
@@ -337,7 +337,7 @@ export default function PaymentPage() {
                   disabled={loading}
                   className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 text-white font-bold py-3 px-4 rounded-lg transition-colors"
                 >
-                  {loading ? 'İşleniyor...' : `💳 ${totalPrice.toFixed(2)} ₺ Ödeme Yap`}
+                  {loading ? 'İşleniyor...' : `${totalPrice.toFixed(2)} ₺ Ödeme Yap`}
                 </button>
               </form>
             </div>

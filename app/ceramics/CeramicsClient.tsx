@@ -53,7 +53,6 @@ export default function CeramicsClient({ products, definedCategories }: Ceramics
             <span className="text-charcoal">{t.ceramics.breadcrumb_collection}</span>
           </div>
           <h1 className="heading-display text-4xl md:text-5xl text-charcoal">{t.ceramics.title}</h1>
-          <p className="text-earth mt-4 max-w-xl leading-relaxed">{t.ceramics.subtitle}</p>
         </div>
       </ScrollReveal>
 
@@ -85,30 +84,6 @@ export default function CeramicsClient({ products, definedCategories }: Ceramics
               </div>
             </div>
 
-            {/* Clay Type */}
-            <div>
-              <h3 className="text-[11px] tracking-[0.15em] uppercase text-earth mb-4">{t.ceramics.material_label}</h3>
-              <div className="space-y-2">
-                <button
-                  type="button"
-                  onClick={() => setSelectedClayType(null)}
-                  className={`block text-sm transition-colors ${!selectedClayType ? 'text-charcoal font-medium' : 'text-earth hover:text-charcoal'}`}
-                >
-                  {t.ceramics.all}
-                </button>
-                {clayTypes.map(ct => (
-                  <button
-                    type="button"
-                    key={ct}
-                    onClick={() => setSelectedClayType(ct)}
-                    className={`block text-sm transition-colors ${selectedClayType === ct ? 'text-charcoal font-medium' : 'text-earth hover:text-charcoal'}`}
-                  >
-                    {getClayLabel(ct)}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             {/* Clear filters */}
             {hasActiveFilters && (
               <button
@@ -127,17 +102,14 @@ export default function CeramicsClient({ products, definedCategories }: Ceramics
           <p className="text-sm text-earth mb-8">{filteredProducts.length} {t.ceramics.product_count}</p>
 
           {filteredProducts.length > 0 ? (
-            <div className="columns-1 md:columns-2 gap-x-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
               {filteredProducts.map((product, i) => (
-                <div key={product.id} className="mb-8 break-inside-avoid">
-                  <ScrollReveal delay={Math.min(i * 60, 400)}>
-                    <CeramicProductCard
-                      product={product}
-                      imageClass={imageClasses[i % imageClasses.length]}
-                      objectFit="contain"
-                    />
-                  </ScrollReveal>
-                </div>
+                <ScrollReveal key={product.id} delay={Math.min(i * 60, 400)}>
+                  <CeramicProductCard
+                    product={product}
+                    imageClass="aspect-[3/4]"
+                  />
+                </ScrollReveal>
               ))}
             </div>
           ) : (
