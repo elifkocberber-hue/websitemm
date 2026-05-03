@@ -72,6 +72,7 @@ export async function PUT(request: NextRequest) {
       cta_btn: s('cta_btn', DEFAULT.cta_btn),
       newsletter_title: s('newsletter_title', DEFAULT.newsletter_title),
       newsletter_desc: s('newsletter_desc', DEFAULT.newsletter_desc),
+      text_colors: typeof body.text_colors === 'object' && body.text_colors !== null ? body.text_colors : {},
       updated_at: new Date().toISOString(),
     };
 

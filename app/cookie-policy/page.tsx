@@ -320,15 +320,15 @@ export default function CookiePolicyPage() {
         </section>
 
         {/* CTA */}
-        <section className="bg-stone-900 rounded-2xl p-8 text-center">
-          <h2 className="text-xl font-bold text-white mb-3">Sorularınız mı var?</h2>
-          <p className="text-stone-400 mb-6">
+        <section className="bg-[#5C0A1A] p-8 text-center">
+          <h2 className="heading-serif text-xl text-bone mb-3">Sorularınız mı var?</h2>
+          <p className="text-bone/60 mb-6">
             Çerez politikamız veya kişisel verilerinizin korunması hakkında her türlü sorunuz için
             bizimle iletişime geçebilirsiniz.
           </p>
           <a
             href="mailto:elsdreamfactory@gmail.com"
-            className="inline-block bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+            className="inline-block bg-white text-[#5C0A1A] px-8 py-3 text-sm tracking-wider uppercase hover:bg-bone transition-colors duration-300"
           >
             elsdreamfactory@gmail.com
           </a>

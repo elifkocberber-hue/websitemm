@@ -63,19 +63,39 @@ const DEFAULT: AboutSettings = {
 
 
 function Field({
-  id, label, value, onChange, multiline = false, hint,
+  id, label, value, onChange, multiline = false, hint, color, onColorChange,
 }: {
   id: string; label: string; value: string; onChange: (v: string) => void; multiline?: boolean; hint?: string;
+  color?: string; onColorChange?: (c: string) => void;
 }) {
   return (
     <div>
-      {label && <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>}
+      <div className="flex items-center justify-between mb-1">
+        {label && <label htmlFor={id} className="block text-sm font-medium text-gray-700">{label}</label>}
+        {onColorChange && (
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs text-gray-400">Renk</span>
+            <input
+              type="color"
+              value={color || '#000000'}
+              onChange={(e) => onColorChange(e.target.value)}
+              className="w-7 h-7 rounded border border-gray-300 cursor-pointer p-0.5 bg-white"
+              title="Metin rengi seç"
+            />
+            {color && color !== '#000000' && (
+              <button type="button" onClick={() => onColorChange('')} className="text-xs text-gray-400 hover:text-gray-700" title="Rengi sıfırla">✕</button>
+            )}
+          </div>
+        )}
+      </div>
       {hint && <p className="text-xs text-gray-400 mb-1">{hint}</p>}
       {multiline ? (
         <textarea id={id} value={value} onChange={(e) => onChange(e.target.value)} rows={3}
+          style={color ? { color } : undefined}
           className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56] resize-y" />
       ) : (
         <input id={id} type="text" value={value} onChange={(e) => onChange(e.target.value)}
+          style={color ? { color } : undefined}
           className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56]" />
       )}
     </div>
@@ -87,6 +107,7 @@ export default function AdminAboutPage() {
   const router = useRouter();
 
   const [settings, setSettings] = useState<AboutSettings>(DEFAULT);
+  const [textColors, setTextColors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -109,7 +130,10 @@ export default function AdminAboutPage() {
     if (isAuthenticated) {
       fetch('/api/admin/about')
         .then((r) => r.json())
-        .then((d) => setSettings({ ...DEFAULT, ...d }))
+        .then((d) => {
+          setSettings({ ...DEFAULT, ...d });
+          setTextColors(d.text_colors || {});
+        })
         .catch(() => {})
         .finally(() => setLoading(false));
     }
@@ -117,6 +141,11 @@ export default function AdminAboutPage() {
 
   const set = (key: keyof AboutSettings) => (value: string) =>
     setSettings((prev) => ({ ...prev, [key]: value }));
+
+  const setColor = (key: string) => (c: string) =>
+    setTextColors((prev) =>
+      c ? { ...prev, [key]: c } : Object.fromEntries(Object.entries(prev).filter(([k]) => k !== key))
+    );
 
   const loadForCrop = useCallback(async (imageUrl: string, field: 'hero_image' | 'story_image' | 'craft_image') => {
     setLoadingCrop(true);
@@ -214,7 +243,7 @@ export default function AdminAboutPage() {
       const res = await fetch('/api/admin/about', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settings),
+        body: JSON.stringify({ ...settings, text_colors: textColors }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -496,11 +525,11 @@ export default function AdminAboutPage() {
             {/* ── Hikaye Metni ── */}
             <div className="bg-white rounded-lg shadow p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-800">Hikaye Bölümü</h2>
-              <Field id="founded" label="Kuruluş etiketi" value={settings.founded} onChange={set('founded')} hint='Örn: "Kuruluş · 1994"' />
-              <Field id="story_title" label="Başlık" value={settings.story_title} onChange={set('story_title')} multiline hint='Satır kesmek için Enter kullanın.' />
-              <Field id="story_p1" label="1. Paragraf" value={settings.story_p1} onChange={set('story_p1')} multiline />
-              <Field id="story_p2" label="2. Paragraf" value={settings.story_p2} onChange={set('story_p2')} multiline />
-              <Field id="story_p3" label="3. Paragraf" value={settings.story_p3} onChange={set('story_p3')} multiline />
+              <Field id="founded" label="Kuruluş etiketi" value={settings.founded} onChange={set('founded')} hint='Örn: "Kuruluş · 1994"' color={textColors['founded']} onColorChange={setColor('founded')} />
+              <Field id="story_title" label="Başlık" value={settings.story_title} onChange={set('story_title')} multiline hint='Satır kesmek için Enter kullanın.' color={textColors['story_title']} onColorChange={setColor('story_title')} />
+              <Field id="story_p1" label="1. Paragraf" value={settings.story_p1} onChange={set('story_p1')} multiline color={textColors['story_p1']} onColorChange={setColor('story_p1')} />
+              <Field id="story_p2" label="2. Paragraf" value={settings.story_p2} onChange={set('story_p2')} multiline color={textColors['story_p2']} onColorChange={setColor('story_p2')} />
+              <Field id="story_p3" label="3. Paragraf" value={settings.story_p3} onChange={set('story_p3')} multiline color={textColors['story_p3']} onColorChange={setColor('story_p3')} />
             </div>
 
             {/* ── İstatistikler ── */}
@@ -508,8 +537,8 @@ export default function AdminAboutPage() {
               <h2 className="text-lg font-semibold text-gray-800">İstatistikler</h2>
               {([1, 2, 3, 4] as const).map((n) => (
                 <div key={n} className="grid grid-cols-2 gap-4">
-                  <Field id={`stat${n}_value`} label={`${n}. Değer`} value={settings[`stat${n}_value`]} onChange={set(`stat${n}_value`)} hint='Örn: "30+", "%98"' />
-                  <Field id={`stat${n}_label`} label={`${n}. Etiket`} value={settings[`stat${n}_label`]} onChange={set(`stat${n}_label`)} hint='Örn: "Yıl Deneyim"' />
+                  <Field id={`stat${n}_value`} label={`${n}. Değer`} value={settings[`stat${n}_value`]} onChange={set(`stat${n}_value`)} hint='Örn: "30+", "%98"' color={textColors[`stat${n}_value`]} onColorChange={setColor(`stat${n}_value`)} />
+                  <Field id={`stat${n}_label`} label={`${n}. Etiket`} value={settings[`stat${n}_label`]} onChange={set(`stat${n}_label`)} hint='Örn: "Yıl Deneyim"' color={textColors[`stat${n}_label`]} onColorChange={setColor(`stat${n}_label`)} />
                 </div>
               ))}
             </div>
@@ -520,8 +549,8 @@ export default function AdminAboutPage() {
               {([1, 2, 3, 4] as const).map((n) => (
                 <div key={n} className="space-y-2 pb-4 border-b border-gray-100 last:border-0 last:pb-0">
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{n}. Değer</p>
-                  <Field id={`val${n}_title`} label="Başlık" value={settings[`val${n}_title`]} onChange={set(`val${n}_title`)} />
-                  <Field id={`val${n}_desc`} label="Açıklama" value={settings[`val${n}_desc`]} onChange={set(`val${n}_desc`)} multiline />
+                  <Field id={`val${n}_title`} label="Başlık" value={settings[`val${n}_title`]} onChange={set(`val${n}_title`)} color={textColors[`val${n}_title`]} onColorChange={setColor(`val${n}_title`)} />
+                  <Field id={`val${n}_desc`} label="Açıklama" value={settings[`val${n}_desc`]} onChange={set(`val${n}_desc`)} multiline color={textColors[`val${n}_desc`]} onColorChange={setColor(`val${n}_desc`)} />
                 </div>
               ))}
             </div>

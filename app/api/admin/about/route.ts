@@ -83,6 +83,7 @@ export async function PUT(request: NextRequest) {
       val3_desc: str('val3_desc', DEFAULT.val3_desc),
       val4_title: str('val4_title', DEFAULT.val4_title),
       val4_desc: str('val4_desc', DEFAULT.val4_desc),
+      text_colors: typeof body.text_colors === 'object' && body.text_colors !== null ? body.text_colors : {},
       updated_at: new Date().toISOString(),
     };
 

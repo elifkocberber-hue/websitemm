@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ScrollReveal } from '@/components/ScrollReveal';
@@ -31,6 +32,7 @@ interface AboutSettings {
   val3_desc: string;
   val4_title: string;
   val4_desc: string;
+  text_colors?: Record<string, string>;
 }
 
 export default function AboutPage() {
@@ -55,18 +57,21 @@ export default function AboutPage() {
   const storyP3 = about?.story_p3 ?? t.about.story_p3;
 
   const stats = [
-    { value: about?.stat1_value ?? '30+', label: about?.stat1_label ?? t.about.stat1 },
-    { value: about?.stat2_value ?? '400+', label: about?.stat2_label ?? t.about.stat2 },
-    { value: about?.stat3_value ?? '%98', label: about?.stat3_label ?? t.about.stat3 },
-    { value: about?.stat4_value ?? '3', label: about?.stat4_label ?? t.about.stat4 },
+    { n: 1, value: about?.stat1_value ?? '30+', label: about?.stat1_label ?? t.about.stat1 },
+    { n: 2, value: about?.stat2_value ?? '400+', label: about?.stat2_label ?? t.about.stat2 },
+    { n: 3, value: about?.stat3_value ?? '%98', label: about?.stat3_label ?? t.about.stat3 },
+    { n: 4, value: about?.stat4_value ?? '3', label: about?.stat4_label ?? t.about.stat4 },
   ];
 
   const values = [
-    { title: about?.val1_title ?? t.about.val1_title, desc: about?.val1_desc ?? t.about.val1_desc },
-    { title: about?.val2_title ?? t.about.val2_title, desc: about?.val2_desc ?? t.about.val2_desc },
-    { title: about?.val3_title ?? t.about.val3_title, desc: about?.val3_desc ?? t.about.val3_desc },
-    { title: about?.val4_title ?? t.about.val4_title, desc: about?.val4_desc ?? t.about.val4_desc },
+    { n: 1, title: about?.val1_title ?? t.about.val1_title, desc: about?.val1_desc ?? t.about.val1_desc },
+    { n: 2, title: about?.val2_title ?? t.about.val2_title, desc: about?.val2_desc ?? t.about.val2_desc },
+    { n: 3, title: about?.val3_title ?? t.about.val3_title, desc: about?.val3_desc ?? t.about.val3_desc },
+    { n: 4, title: about?.val4_title ?? t.about.val4_title, desc: about?.val4_desc ?? t.about.val4_desc },
   ];
+
+  const tc = about?.text_colors ?? {};
+  const cs = (key: string): React.CSSProperties | undefined => tc[key] ? { color: tc[key] } : undefined;
 
   return (
     <>
@@ -93,13 +98,13 @@ export default function AboutPage() {
       <section className="max-w-350 mx-auto px-6 md:px-10 py-20 md:py-32">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
           <ScrollReveal direction="left">
-            <p className="text-xs tracking-[0.2em] uppercase text-accent mb-4">{founded}</p>
-            <h2 className="heading-display text-3xl md:text-4xl text-charcoal mb-6 whitespace-pre-line">
+            <p className="text-xs tracking-[0.2em] uppercase text-accent mb-4" style={cs('founded')}>{founded}</p>
+            <h2 className="heading-display text-3xl md:text-4xl text-charcoal mb-6 whitespace-pre-line" style={cs('story_title')}>
               {storyTitle}
             </h2>
-            <p className="text-earth leading-relaxed mb-4">{storyP1}</p>
-            <p className="text-earth leading-relaxed mb-4">{storyP2}</p>
-            <p className="text-earth leading-relaxed">{storyP3}</p>
+            <p className="text-earth leading-relaxed mb-4" style={cs('story_p1')}>{storyP1}</p>
+            <p className="text-earth leading-relaxed mb-4" style={cs('story_p2')}>{storyP2}</p>
+            <p className="text-earth leading-relaxed" style={cs('story_p3')}>{storyP3}</p>
           </ScrollReveal>
           <ScrollReveal direction="right">
             <div className="relative aspect-4/5">
@@ -127,8 +132,8 @@ export default function AboutPage() {
           {stats.map((stat, i) => (
             <ScrollReveal key={stat.label} delay={i * 100}>
               <div className="text-center">
-                <p className="heading-display text-4xl md:text-5xl text-accent">{stat.value}</p>
-                <p className="text-xs tracking-[0.15em] uppercase text-earth mt-3">{stat.label}</p>
+                <p className="heading-display text-4xl md:text-5xl text-accent" style={cs(`stat${stat.n}_value`)}>{stat.value}</p>
+                <p className="text-xs tracking-[0.15em] uppercase text-earth mt-3" style={cs(`stat${stat.n}_label`)}>{stat.label}</p>
               </div>
             </ScrollReveal>
           ))}
@@ -148,8 +153,8 @@ export default function AboutPage() {
             {values.map((val, i) => (
               <ScrollReveal key={val.title} delay={i * 100}>
                 <div className="border-l border-bone/20 pl-6">
-                  <h3 className="heading-serif text-lg text-bone mb-2">{val.title}</h3>
-                  <p className="text-bone/50 text-sm leading-relaxed">{val.desc}</p>
+                  <h3 className="heading-serif text-lg text-bone mb-2" style={cs(`val${val.n}_title`)}>{val.title}</h3>
+                  <p className="text-bone/50 text-sm leading-relaxed" style={cs(`val${val.n}_desc`)}>{val.desc}</p>
                 </div>
               </ScrollReveal>
             ))}

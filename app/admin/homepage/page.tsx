@@ -60,6 +60,8 @@ function Field({
   onChange,
   multiline = false,
   hint,
+  color,
+  onColorChange,
 }: {
   id: string;
   label: string;
@@ -67,10 +69,36 @@ function Field({
   onChange: (v: string) => void;
   multiline?: boolean;
   hint?: string;
+  color?: string;
+  onColorChange?: (c: string) => void;
 }) {
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <div className="flex items-center justify-between mb-1">
+        {label && <label htmlFor={id} className="block text-sm font-medium text-gray-700">{label}</label>}
+        {onColorChange && (
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs text-gray-400">Renk</span>
+            <input
+              type="color"
+              value={color || '#000000'}
+              onChange={(e) => onColorChange(e.target.value)}
+              className="w-7 h-7 rounded border border-gray-300 cursor-pointer p-0.5 bg-white"
+              title="Metin rengi seç"
+            />
+            {color && color !== '#000000' && (
+              <button
+                type="button"
+                onClick={() => onColorChange('')}
+                className="text-xs text-gray-400 hover:text-gray-700"
+                title="Rengi sıfırla"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        )}
+      </div>
       {hint && <p className="text-xs text-gray-400 mb-1">{hint}</p>}
       {multiline ? (
         <textarea
@@ -78,6 +106,7 @@ function Field({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           rows={3}
+          style={color ? { color } : undefined}
           className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56] resize-y"
         />
       ) : (
@@ -86,6 +115,7 @@ function Field({
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          style={color ? { color } : undefined}
           className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56]"
         />
       )}
@@ -98,6 +128,7 @@ export default function AdminHomepagePage() {
   const router = useRouter();
 
   const [settings, setSettings] = useState<HomepageSettings>(DEFAULT);
+  const [textColors, setTextColors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -115,7 +146,10 @@ export default function AdminHomepagePage() {
     if (isAuthenticated) {
       fetch('/api/admin/homepage')
         .then((r) => r.json())
-        .then((d) => setSettings({ ...DEFAULT, ...d }))
+        .then((d) => {
+          setSettings({ ...DEFAULT, ...d });
+          setTextColors(d.text_colors || {});
+        })
         .catch(() => {})
         .finally(() => setLoading(false));
     }
@@ -123,6 +157,11 @@ export default function AdminHomepagePage() {
 
   const set = (key: keyof HomepageSettings) => (value: string) =>
     setSettings((prev) => ({ ...prev, [key]: value }));
+
+  const setColor = (key: string) => (c: string) =>
+    setTextColors((prev) =>
+      c ? { ...prev, [key]: c } : Object.fromEntries(Object.entries(prev).filter(([k]) => k !== key))
+    );
 
   const loadForCrop = useCallback(async (imageUrl: string) => {
     setLoadingCrop(true);
@@ -187,7 +226,7 @@ export default function AdminHomepagePage() {
       const res = await fetch('/api/admin/homepage', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settings),
+        body: JSON.stringify({ ...settings, text_colors: textColors }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -232,24 +271,24 @@ export default function AdminHomepagePage() {
             {/* ── Hero ── */}
             <div className="bg-white rounded-lg shadow p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-800">Hero Bölümü</h2>
-              <Field id="hero_subtitle" label="Alt başlık" value={settings.hero_subtitle} onChange={set('hero_subtitle')} hint='Örn: "El Yapımı Seramik Ürünler & Hediyeler"' />
-              <Field id="hero_title" label="Ana başlık" value={settings.hero_title} onChange={set('hero_title')} multiline hint='Satır kesmek için Enter kullanın.' />
-              <Field id="hero_desc" label="Açıklama metni" value={settings.hero_desc} onChange={set('hero_desc')} multiline />
+              <Field id="hero_subtitle" label="Alt başlık" value={settings.hero_subtitle} onChange={set('hero_subtitle')} hint='Örn: "El Yapımı Seramik Ürünler & Hediyeler"' color={textColors['hero_subtitle']} onColorChange={setColor('hero_subtitle')} />
+              <Field id="hero_title" label="Ana başlık" value={settings.hero_title} onChange={set('hero_title')} multiline hint='Satır kesmek için Enter kullanın.' color={textColors['hero_title']} onColorChange={setColor('hero_title')} />
+              <Field id="hero_desc" label="Açıklama metni" value={settings.hero_desc} onChange={set('hero_desc')} multiline color={textColors['hero_desc']} onColorChange={setColor('hero_desc')} />
             </div>
 
             {/* ── Öne Çıkan Ürünler ── */}
             <div className="bg-white rounded-lg shadow p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-800">Öne Çıkan Ürünler Bölümü</h2>
-              <Field id="collection_label" label="Bölüm etiketi" value={settings.collection_label} onChange={set('collection_label')} hint='Örn: "Koleksiyon"' />
-              <Field id="featured_title" label="Başlık" value={settings.featured_title} onChange={set('featured_title')} hint='Örn: "Öne Çıkan Eserler"' />
+              <Field id="collection_label" label="Bölüm etiketi" value={settings.collection_label} onChange={set('collection_label')} hint='Örn: "Koleksiyon"' color={textColors['collection_label']} onColorChange={setColor('collection_label')} />
+              <Field id="featured_title" label="Başlık" value={settings.featured_title} onChange={set('featured_title')} hint='Örn: "Öne Çıkan Eserler"' color={textColors['featured_title']} onColorChange={setColor('featured_title')} />
             </div>
 
             {/* ── Felsefe ── */}
             <div className="bg-white rounded-lg shadow p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-800">Felsefe Bölümü</h2>
-              <Field id="philosophy_label" label="Bölüm etiketi" value={settings.philosophy_label} onChange={set('philosophy_label')} hint='Örn: "Felsefemiz"' />
-              <Field id="philosophy_title" label="Başlık" value={settings.philosophy_title} onChange={set('philosophy_title')} hint='Örn: "Wabi-Sabi"' />
-              <Field id="philosophy_desc" label="Açıklama" value={settings.philosophy_desc} onChange={set('philosophy_desc')} multiline />
+              <Field id="philosophy_label" label="Bölüm etiketi" value={settings.philosophy_label} onChange={set('philosophy_label')} hint='Örn: "Felsefemiz"' color={textColors['philosophy_label']} onColorChange={setColor('philosophy_label')} />
+              <Field id="philosophy_title" label="Başlık" value={settings.philosophy_title} onChange={set('philosophy_title')} hint='Örn: "Wabi-Sabi"' color={textColors['philosophy_title']} onColorChange={setColor('philosophy_title')} />
+              <Field id="philosophy_desc" label="Açıklama" value={settings.philosophy_desc} onChange={set('philosophy_desc')} multiline color={textColors['philosophy_desc']} onColorChange={setColor('philosophy_desc')} />
 
               <div className="pt-2 space-y-4">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">3 Sütun</p>
@@ -260,12 +299,16 @@ export default function AdminHomepagePage() {
                       label={`${n}. Sütun Başlığı`}
                       value={settings[`pillar${n}_title`]}
                       onChange={set(`pillar${n}_title`)}
+                      color={textColors[`pillar${n}_title`]}
+                      onColorChange={setColor(`pillar${n}_title`)}
                     />
                     <Field
                       id={`pillar${n}_desc`}
                       label={`${n}. Sütun Açıklaması`}
                       value={settings[`pillar${n}_desc`]}
                       onChange={set(`pillar${n}_desc`)}
+                      color={textColors[`pillar${n}_desc`]}
+                      onColorChange={setColor(`pillar${n}_desc`)}
                     />
                   </div>
                 ))}
@@ -379,15 +422,15 @@ export default function AdminHomepagePage() {
                 </div>
               </div>
 
-              <Field id="cta_title" label="Başlık" value={settings.cta_title} onChange={set('cta_title')} hint='Örn: "Evinize Sanat Katın"' />
-              <Field id="cta_btn" label="Buton metni" value={settings.cta_btn} onChange={set('cta_btn')} hint='Örn: "Alışverişe Başla"' />
+              <Field id="cta_title" label="Başlık" value={settings.cta_title} onChange={set('cta_title')} hint='Örn: "Evinize Sanat Katın"' color={textColors['cta_title']} onColorChange={setColor('cta_title')} />
+              <Field id="cta_btn" label="Buton metni" value={settings.cta_btn} onChange={set('cta_btn')} hint='Örn: "Alışverişe Başla"' color={textColors['cta_btn']} onColorChange={setColor('cta_btn')} />
             </div>
 
             {/* ── Newsletter ── */}
             <div className="bg-white rounded-lg shadow p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-800">Bülten Bölümü</h2>
-              <Field id="newsletter_title" label="Başlık" value={settings.newsletter_title} onChange={set('newsletter_title')} hint='Örn: "Haberdar Olun"' />
-              <Field id="newsletter_desc" label="Açıklama" value={settings.newsletter_desc} onChange={set('newsletter_desc')} multiline />
+              <Field id="newsletter_title" label="Başlık" value={settings.newsletter_title} onChange={set('newsletter_title')} hint='Örn: "Haberdar Olun"' color={textColors['newsletter_title']} onColorChange={setColor('newsletter_title')} />
+              <Field id="newsletter_desc" label="Açıklama" value={settings.newsletter_desc} onChange={set('newsletter_desc')} multiline color={textColors['newsletter_desc']} onColorChange={setColor('newsletter_desc')} />
             </div>
 
             {/* ── Kaydet ── */}

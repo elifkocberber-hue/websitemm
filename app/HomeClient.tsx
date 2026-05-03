@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CeramicProduct } from '@/types/ceramic';
@@ -43,6 +44,7 @@ interface HomepageData {
   cta_btn: string;
   newsletter_title: string;
   newsletter_desc: string;
+  text_colors?: Record<string, string>;
 }
 
 interface HomeClientProps {
@@ -58,10 +60,13 @@ export default function HomeClient({ featured, banner, about, homepage }: HomeCl
   const marqueeItems: string[] = banner.items ?? ['Ceramic', 'Illustration', 'Gift', 'Handmade', 'Unique'];
   const showCampaign = banner.campaign_active && Boolean(banner.campaign_text);
 
+  const tc = homepage.text_colors ?? {};
+  const cs = (key: string): React.CSSProperties | undefined => tc[key] ? { color: tc[key] } : undefined;
+
   const pillars = [
-    { num: '01', title: homepage.pillar1_title, desc: homepage.pillar1_desc },
-    { num: '02', title: homepage.pillar2_title, desc: homepage.pillar2_desc },
-    { num: '03', title: homepage.pillar3_title, desc: homepage.pillar3_desc },
+    { num: '01', n: 1, title: homepage.pillar1_title, desc: homepage.pillar1_desc },
+    { num: '02', n: 2, title: homepage.pillar2_title, desc: homepage.pillar2_desc },
+    { num: '03', n: 3, title: homepage.pillar3_title, desc: homepage.pillar3_desc },
   ];
 
   return (
@@ -80,13 +85,13 @@ export default function HomeClient({ featured, banner, about, homepage }: HomeCl
 
         <div className="relative z-10 h-full flex items-end pb-16 md:pb-24">
           <div className="max-w-350 mx-auto px-6 md:px-10 w-full">
-            <p className="text-earth/70 text-xs tracking-[0.3em] uppercase mb-6">
+            <p className="text-earth/70 text-xs tracking-[0.3em] uppercase mb-6" style={cs('hero_subtitle')}>
               {homepage.hero_subtitle}
             </p>
-            <h1 className="heading-display text-charcoal text-4xl md:text-6xl lg:text-7xl mb-6 whitespace-pre-line">
+            <h1 className="heading-display text-charcoal text-4xl md:text-6xl lg:text-7xl mb-6 whitespace-pre-line" style={cs('hero_title')}>
               {homepage.hero_title}
             </h1>
-            <p className="text-charcoal/80 max-w-md text-lg mb-10 leading-relaxed">
+            <p className="text-charcoal/80 max-w-md text-lg mb-10 leading-relaxed" style={cs('hero_desc')}>
               {language === 'tr' ? (
                 <>
                   Bu atölyede her şey{' '}
@@ -162,8 +167,8 @@ export default function HomeClient({ featured, banner, about, homepage }: HomeCl
         <ScrollReveal>
           <div className="flex justify-between items-end mb-12 md:mb-16">
             <div>
-              <p className="text-xs tracking-[0.2em] uppercase text-earth mb-3">{homepage.collection_label}</p>
-              <h2 className="heading-display text-3xl md:text-4xl text-charcoal">{homepage.featured_title}</h2>
+              <p className="text-xs tracking-[0.2em] uppercase text-earth mb-3" style={cs('collection_label')}>{homepage.collection_label}</p>
+              <h2 className="heading-display text-3xl md:text-4xl text-charcoal" style={cs('featured_title')}>{homepage.featured_title}</h2>
             </div>
             <Link href="/ceramics" className="link-line text-sm tracking-wider uppercase text-earth hover:text-charcoal transition-colors hidden md:block">
               {t.home.see_all}
@@ -200,9 +205,9 @@ export default function HomeClient({ featured, banner, about, homepage }: HomeCl
       <section className="max-w-350 mx-auto px-6 md:px-10 py-20 md:py-32">
         <ScrollReveal>
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <p className="text-xs tracking-[0.2em] uppercase text-earth mb-3">{homepage.philosophy_label}</p>
-            <h2 className="heading-display text-3xl md:text-4xl text-charcoal">{homepage.philosophy_title}</h2>
-            <p className="text-earth mt-4 leading-relaxed max-w-xl mx-auto">
+            <p className="text-xs tracking-[0.2em] uppercase text-earth mb-3" style={cs('philosophy_label')}>{homepage.philosophy_label}</p>
+            <h2 className="heading-display text-3xl md:text-4xl text-charcoal" style={cs('philosophy_title')}>{homepage.philosophy_title}</h2>
+            <p className="text-earth mt-4 leading-relaxed max-w-xl mx-auto" style={cs('philosophy_desc')}>
               {homepage.philosophy_desc}
             </p>
           </div>
@@ -213,8 +218,8 @@ export default function HomeClient({ featured, banner, about, homepage }: HomeCl
             <ScrollReveal key={item.num} delay={i * 120}>
               <div className="text-center">
                 <span className="heading-display text-6xl md:text-7xl text-accent/15">{item.num}</span>
-                <h3 className="heading-serif text-lg text-charcoal mt-2 mb-3">{item.title}</h3>
-                <p className="text-earth text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="heading-serif text-lg text-charcoal mt-2 mb-3" style={cs(`pillar${item.n}_title`)}>{item.title}</h3>
+                <p className="text-earth text-sm leading-relaxed" style={cs(`pillar${item.n}_desc`)}>{item.desc}</p>
               </div>
             </ScrollReveal>
           ))}
@@ -227,11 +232,12 @@ export default function HomeClient({ featured, banner, about, homepage }: HomeCl
         <div className="cta-overlay absolute inset-0 bg-charcoal" />
         <div className="relative z-10 h-full flex items-center justify-center text-center px-6">
           <ScrollReveal direction="scale">
-            <h2 className="heading-display text-bone text-3xl md:text-5xl mb-8">
+            <h2 className="heading-display text-bone text-3xl md:text-5xl mb-8" style={cs('cta_title')}>
               {homepage.cta_title}
             </h2>
             <Link
               href="/ceramics"
+              style={cs('cta_btn')}
               className="inline-block bg-bone text-charcoal px-10 py-4 text-sm tracking-wider uppercase hover:bg-accent hover:text-bone transition-colors duration-300"
             >
               {homepage.cta_btn}
@@ -244,8 +250,8 @@ export default function HomeClient({ featured, banner, about, homepage }: HomeCl
       <section className="max-w-350 mx-auto px-6 md:px-10 py-20 md:py-28">
         <ScrollReveal>
           <div className="max-w-xl mx-auto text-center">
-            <h2 className="heading-serif text-2xl text-charcoal mb-3">{homepage.newsletter_title}</h2>
-            <p className="text-earth text-sm mb-8">
+            <h2 className="heading-serif text-2xl text-charcoal mb-3" style={cs('newsletter_title')}>{homepage.newsletter_title}</h2>
+            <p className="text-earth text-sm mb-8" style={cs('newsletter_desc')}>
               {homepage.newsletter_desc}
             </p>
             <NewsletterForm />
