@@ -355,7 +355,7 @@ export default function PrivacyPage() {
           </p>
           <a
             href="mailto:elsdreamfactory@gmail.com"
-            className="inline-block bg-white text-[#5C0A1A] px-8 py-3 text-sm tracking-wider uppercase hover:bg-bone transition-colors duration-300"
+            className="inline-block bg-white text-[#5C0A1A] px-8 py-3 text-sm hover:bg-bone transition-colors duration-300"
           >
             elsdreamfactory@gmail.com
           </a>
