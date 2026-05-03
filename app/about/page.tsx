@@ -88,7 +88,6 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-charcoal/40" />
         <div className="relative z-10 h-full flex items-end pb-12 md:pb-16">
           <div className="max-w-350 mx-auto px-6 md:px-10 w-full">
-            <p className="text-bone/50 text-xs tracking-[0.3em] uppercase mb-4">{t.about.hero_label}</p>
             <h1 className="heading-display text-bone text-4xl md:text-6xl">{t.about.hero_title}</h1>
           </div>
         </div>
