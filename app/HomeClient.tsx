@@ -53,7 +53,7 @@ interface HomeClientProps {
 }
 
 export default function HomeClient({ featured, banner, about, homepage }: HomeClientProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const marqueeItems: string[] = banner.items ?? ['Ceramic', 'Illustration', 'Gift', 'Handmade', 'Unique'];
   const showCampaign = banner.campaign_active && Boolean(banner.campaign_text);
