@@ -177,16 +177,16 @@ export default function HomeClient({ featured, banner, about, homepage }: HomeCl
         </ScrollReveal>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={100} className="h-full">
             <CeramicProductCard product={featured[0]} imageClass="aspect-[3/4]" />
           </ScrollReveal>
-          <ScrollReveal delay={200}>
+          <ScrollReveal delay={200} className="h-full">
             <CeramicProductCard product={featured[1]} imageClass="aspect-[3/4]" />
           </ScrollReveal>
-          <ScrollReveal delay={300}>
+          <ScrollReveal delay={300} className="h-full">
             <CeramicProductCard product={featured[2]} imageClass="aspect-[3/4]" />
           </ScrollReveal>
-          <ScrollReveal delay={400}>
+          <ScrollReveal delay={400} className="h-full">
             <CeramicProductCard product={featured[3]} imageClass="aspect-[3/4]" />
           </ScrollReveal>
         </div>

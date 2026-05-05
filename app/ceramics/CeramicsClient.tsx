@@ -144,7 +144,7 @@ export default function CeramicsClient({ products, definedCategories }: Ceramics
           {filteredProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {filteredProducts.map((product, i) => (
-                <ScrollReveal key={product.id} delay={Math.min(i * 60, 400)}>
+                <ScrollReveal key={product.id} delay={Math.min(i * 60, 400)} className="h-full">
                   <CeramicProductCard
                     product={product}
                     imageClass="aspect-[3/4]"

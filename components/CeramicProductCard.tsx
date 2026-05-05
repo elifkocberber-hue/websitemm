@@ -40,7 +40,7 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
   };
 
   return (
-    <div className="group">
+    <div className="group flex flex-col h-full">
       {/* Image with hover */}
       <Link href={`/ceramic/${product.id}`} aria-label={product.name}>
         <div className={`product-image-hover relative ${imageClass} bg-warm-gray overflow-hidden`}>
@@ -74,7 +74,7 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
       </Link>
 
       {/* Info */}
-      <div className="mt-5">
+      <div className="mt-5 flex flex-col flex-1">
         <div className="flex items-center justify-between gap-2 mb-2">
           <p className="text-[12px] sm:text-[11px] tracking-[0.08em] sm:tracking-[0.15em] uppercase text-earth truncate">
             {product.category}
@@ -85,16 +85,16 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
         </div>
 
         <Link href={`/ceramic/${product.id}`}>
-          <h3 className="heading-serif text-lg text-charcoal group-hover:text-accent transition-colors duration-300">
+          <h3 className="heading-serif text-lg text-charcoal group-hover:text-accent transition-colors duration-300 line-clamp-2 min-h-[3.5rem]">
             {product.name}
           </h3>
         </Link>
 
-        <p className="text-earth text-sm mt-1 line-clamp-2 leading-relaxed">
+        <p className="text-earth text-sm mt-1 line-clamp-2 leading-relaxed min-h-[2.5rem]">
           {product.description}
         </p>
 
-        <div className="flex items-center justify-between mt-4">
+        <div className="flex items-center justify-between mt-auto pt-4">
           <span className="text-xl font-light text-charcoal">₺{product.price}</span>
           <span className={`text-xs ${product.stock > 0 ? 'text-earth' : 'text-accent'}`}>
             {product.stock > 0 ? `Stok: ${product.stock}` : 'Tükendi'}
