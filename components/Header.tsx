@@ -49,6 +49,15 @@ export const Header: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
   const viewportShift = Math.max(0, Math.min(1, (1200 - windowWidth) / 400));
   const effectiveProgress = Math.max(scrollProgress, viewportShift);
 
@@ -221,54 +230,56 @@ export const Header: React.FC = () => {
           </button>
         </nav>
 
-        {/* Mobile Menu */}
-        {menuOpen && (
-          <div className="md:hidden fixed inset-0 top-18 bg-bone z-[70] flex flex-col items-center justify-start gap-5 px-6 pt-8 overflow-y-auto">
-            <div className="w-full max-w-xs">
-              <SearchBar />
-            </div>
-            <Link href="/" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
-              {t.nav.home}
-            </Link>
-            <Link href="/ceramics" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
-              {t.nav.ceramics}
-            </Link>
-            <Link href="/favorites" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
-              {t.nav.favorites}{totalFavorites > 0 ? ` (${totalFavorites})` : ''}
-            </Link>
-            <Link href="/cart" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
-              {t.nav.cart}{totalItems > 0 ? ` (${totalItems})` : ''}
-            </Link>
-            {user ? (
-              <>
-                <p className="text-earth text-sm">{t.nav.hello}, {user.firstName}</p>
-                <Link href="/orders" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
-                  Siparişlerim
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => { logout(); setMenuOpen(false); }}
-                  className="heading-serif text-2xl text-earth hover:text-accent transition-colors"
-                >
-                  {t.nav.logout}
-                </button>
-              </>
-            ) : (
-              <Link href="/login" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
-                {t.nav.login}
-              </Link>
-            )}
-            {/* Language Switcher - Mobile */}
-            <button
-              type="button"
-              onClick={() => { setLanguage(language === 'tr' ? 'en' : 'tr'); setMenuOpen(false); }}
-              className="mt-4 text-sm tracking-widest font-medium text-earth hover:text-charcoal transition-colors border border-earth/30 rounded px-4 py-2"
-            >
-              {language === 'tr' ? 'English' : 'Türkçe'}
-            </button>
-          </div>
-        )}
       </header>
+
+      {/* Mobile Menu — outside header to avoid stacking issues */}
+      {menuOpen && (
+        <div className="md:hidden fixed top-18 left-0 right-0 bottom-0 bg-bone z-[80] flex flex-col items-center justify-start gap-5 px-6 pt-8 overflow-y-auto">
+
+          <div className="w-full max-w-xs">
+            <SearchBar />
+          </div>
+          <Link href="/" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
+            {t.nav.home}
+          </Link>
+          <Link href="/ceramics" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
+            {t.nav.ceramics}
+          </Link>
+          <Link href="/favorites" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
+            {t.nav.favorites}{totalFavorites > 0 ? ` (${totalFavorites})` : ''}
+          </Link>
+          <Link href="/cart" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
+            {t.nav.cart}{totalItems > 0 ? ` (${totalItems})` : ''}
+          </Link>
+          {user ? (
+            <>
+              <p className="text-earth text-sm">{t.nav.hello}, {user.firstName}</p>
+              <Link href="/orders" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
+                Siparişlerim
+              </Link>
+              <button
+                type="button"
+                onClick={() => { logout(); setMenuOpen(false); }}
+                className="heading-serif text-2xl text-earth hover:text-accent transition-colors"
+              >
+                {t.nav.logout}
+              </button>
+            </>
+          ) : (
+            <Link href="/login" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
+              {t.nav.login}
+            </Link>
+          )}
+          {/* Language Switcher - Mobile */}
+          <button
+            type="button"
+            onClick={() => { setLanguage(language === 'tr' ? 'en' : 'tr'); setMenuOpen(false); }}
+            className="mt-4 text-sm tracking-widest font-medium text-earth hover:text-charcoal transition-colors border border-earth/30 rounded px-4 py-2"
+          >
+            {language === 'tr' ? 'English' : 'Türkçe'}
+          </button>
+        </div>
+      )}
     </>
   );
 };
