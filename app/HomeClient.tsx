@@ -264,7 +264,8 @@ export default function HomeClient({ featured, banner, about, homepage }: HomeCl
         <div className="absolute inset-y-0 right-0 w-full md:w-[55%]">
           <Image
             src="/images/arkaplan.jpg"
-            alt="Arka plan"
+            alt=""
+            aria-hidden="true"
             fill
             className="object-contain object-right opacity-20"
           />

@@ -111,6 +111,36 @@ export default async function CeramicDetailPage({ params }: PageProps) {
           }),
         }}
       />
+      {/* JSON-LD BreadcrumbList — SERP'te breadcrumb göster */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Ana Sayfa',
+                item: 'https://elsdreamfactory.com',
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Koleksiyon',
+                item: 'https://elsdreamfactory.com/ceramics',
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: product.name,
+                item: `https://elsdreamfactory.com/ceramic/${product.id}`,
+              },
+            ],
+          }),
+        }}
+      />
       <CeramicDetailClient product={product} relatedProducts={relatedProducts} />
     </>
   );

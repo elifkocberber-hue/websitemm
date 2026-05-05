@@ -101,6 +101,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://elsdreamfactory.com"),
   alternates: {
     canonical: "https://elsdreamfactory.com",
+    languages: {
+      'tr-TR': 'https://elsdreamfactory.com',
+      'en-US': 'https://elsdreamfactory.com',
+      'x-default': 'https://elsdreamfactory.com',
+    },
   },
 
   icons: {

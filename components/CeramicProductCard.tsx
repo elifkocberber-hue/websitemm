@@ -46,7 +46,7 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
         <div className={`product-image-hover relative ${imageClass} bg-warm-gray overflow-hidden`}>
           <Image
             src={product.images[0]}
-            alt={product.name}
+            alt={`${product.name} — el yapımı ${product.category} seramik`}
             fill
             className={`${objectFit === 'contain' ? 'object-contain' : 'object-cover'} img-primary`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

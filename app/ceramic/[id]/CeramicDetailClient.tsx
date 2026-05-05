@@ -91,7 +91,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
                   >
                     <Image
                       src={product.images[currentImageIndex]}
-                      alt={product.name}
+                      alt={`${product.name} — el yapımı ${product.category} seramik`}
                       fill
                       className="object-contain"
                       priority
