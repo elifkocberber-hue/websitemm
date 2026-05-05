@@ -56,9 +56,49 @@ export default function CeramicsClient({ products, definedCategories }: Ceramics
         </div>
       </ScrollReveal>
 
+      {/* Mobile/Tablet horizontal category chips */}
+      <div className="lg:hidden -mx-6 md:-mx-10 mb-8">
+        <div className="flex gap-2 overflow-x-auto px-6 md:px-10 pb-2 scrollbar-hide">
+          <button
+            type="button"
+            onClick={() => setSelectedCategory(null)}
+            className={`shrink-0 px-4 min-h-10 rounded-full text-sm tracking-wide transition-colors border ${
+              !selectedCategory
+                ? 'bg-charcoal text-bone border-charcoal'
+                : 'bg-bone text-earth border-warm-gray hover:text-charcoal hover:border-charcoal'
+            }`}
+          >
+            {t.ceramics.all}
+          </button>
+          {categories.map(cat => (
+            <button
+              type="button"
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`shrink-0 px-4 min-h-10 rounded-full text-sm tracking-wide transition-colors border ${
+                selectedCategory === cat
+                  ? 'bg-charcoal text-bone border-charcoal'
+                  : 'bg-bone text-earth border-warm-gray hover:text-charcoal hover:border-charcoal'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+          {hasActiveFilters && (
+            <button
+              type="button"
+              onClick={() => { setSelectedCategory(null); setSelectedClayType(null); }}
+              className="shrink-0 px-4 min-h-10 text-sm text-accent hover:text-charcoal transition-colors"
+            >
+              {t.ceramics.clear_filters}
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10 md:gap-14">
-        {/* Sidebar Filters */}
-        <aside className="lg:sticky lg:top-23 lg:self-start">
+        {/* Sidebar Filters - desktop only */}
+        <aside className="hidden lg:block lg:sticky lg:top-23 lg:self-start">
           <div className="space-y-8">
             {/* Category */}
             <div>
@@ -102,7 +142,7 @@ export default function CeramicsClient({ products, definedCategories }: Ceramics
           <p className="text-sm text-earth mb-8">{filteredProducts.length} {t.ceramics.product_count}</p>
 
           {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {filteredProducts.map((product, i) => (
                 <ScrollReveal key={product.id} delay={Math.min(i * 60, 400)}>
                   <CeramicProductCard

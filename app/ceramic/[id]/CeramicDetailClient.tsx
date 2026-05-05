@@ -56,12 +56,12 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
   return (
     <div className="max-w-350 mx-auto px-6 md:px-10 py-12">
       {/* Breadcrumb */}
-      <div className="mb-8 text-sm text-earth">
+      <div className="mb-8 text-xs sm:text-sm text-earth flex flex-wrap items-center gap-x-1 gap-y-1">
         <Link href="/" className="hover:text-amber-600">{t.product.breadcrumb_home}</Link>
-        <span className="mx-2">›</span>
+        <span>›</span>
         <Link href="/ceramics" className="hover:text-amber-600">{t.product.breadcrumb_collection}</Link>
-        <span className="mx-2">›</span>
-        <span className="text-gray-900">{product.name}</span>
+        <span>›</span>
+        <span className="text-gray-900 truncate max-w-[60vw] sm:max-w-none">{product.name}</span>
       </div>
 
       {/* Product Detail */}
@@ -74,7 +74,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
               onMouseMove={handleMouseMove}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
-              className="relative w-full h-[520px] bg-gray-100 rounded-lg overflow-hidden cursor-zoom-in"
+              className="relative w-full h-[360px] sm:h-[440px] md:h-[520px] bg-gray-100 rounded-lg overflow-hidden cursor-zoom-in"
             >
               {product.images.length > 0 ? (
                 /\.(mp4|webm|mov)$/i.test(product.images[currentImageIndex]) ? (

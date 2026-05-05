@@ -114,14 +114,14 @@ export const Header: React.FC = () => {
             {/* Favorites */}
             <Link
               href="/favorites"
-              className="relative flex items-center"
+              className="relative flex items-center justify-center w-11 h-11 -mr-2"
               aria-label={`${t.nav.favorites}${totalFavorites > 0 ? ` (${totalFavorites})` : ''}`}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill={totalFavorites > 0 ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={totalFavorites > 0 ? 'text-accent' : 'text-charcoal'}>
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
               {totalFavorites > 0 && (
-                <span className="absolute -top-2 -right-3 w-5 h-5 bg-accent text-white text-[10px] font-medium flex items-center justify-center rounded-full">
+                <span className="absolute top-1 right-1 w-5 h-5 bg-accent text-white text-[10px] font-medium flex items-center justify-center rounded-full">
                   {totalFavorites}
                 </span>
               )}
@@ -130,7 +130,7 @@ export const Header: React.FC = () => {
             {/* Cart */}
             <Link
               href="/cart"
-              className="relative flex items-center gap-2"
+              className="relative flex items-center justify-center w-11 h-11 -mr-2"
               aria-label={`${t.nav.cart}${totalItems > 0 ? ` (${totalItems})` : ''}`}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-charcoal">
@@ -139,7 +139,7 @@ export const Header: React.FC = () => {
                 <path d="M16 10a4 4 0 01-8 0" />
               </svg>
               {totalItems > 0 && (
-                <span className="absolute -top-2 -right-3 w-5 h-5 bg-accent text-white text-[10px] font-medium flex items-center justify-center rounded-full">
+                <span className="absolute top-1 right-1 w-5 h-5 bg-accent text-white text-[10px] font-medium flex items-center justify-center rounded-full">
                   {totalItems}
                 </span>
               )}
@@ -223,7 +223,10 @@ export const Header: React.FC = () => {
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="md:hidden fixed inset-0 top-18 bg-bone z-[70] flex flex-col items-center justify-start gap-5 px-6 pt-12">
+          <div className="md:hidden fixed inset-0 top-18 bg-bone z-[70] flex flex-col items-center justify-start gap-5 px-6 pt-8 overflow-y-auto">
+            <div className="w-full max-w-xs">
+              <SearchBar />
+            </div>
             <Link href="/" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
               {t.nav.home}
             </Link>

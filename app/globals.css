@@ -56,6 +56,10 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--clay); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
+/* Hide scrollbar utility (for horizontal chip rows etc.) */
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
 /* ── Typography ── */
 
 .heading-serif {

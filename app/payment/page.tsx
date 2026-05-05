@@ -136,7 +136,7 @@ export default function PaymentPage() {
                       value={formData.firstName}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                       placeholder="Adınız"
                     />
                   </div>
@@ -148,7 +148,7 @@ export default function PaymentPage() {
                       value={formData.lastName}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                       placeholder="Soyadınız"
                     />
                   </div>
@@ -164,7 +164,7 @@ export default function PaymentPage() {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                       placeholder="example@email.com"
                     />
                   </div>
@@ -176,7 +176,7 @@ export default function PaymentPage() {
                       value={formData.phone}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                       placeholder="+90 555 123 4567"
                     />
                   </div>
@@ -191,7 +191,7 @@ export default function PaymentPage() {
                     value={formData.address}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                     placeholder="Sokak ve bina adı"
                   />
                 </div>
@@ -206,7 +206,7 @@ export default function PaymentPage() {
                       value={formData.city}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                       placeholder="Şehir"
                     />
                   </div>
@@ -218,7 +218,7 @@ export default function PaymentPage() {
                       value={formData.postalCode}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                       placeholder="34000"
                     />
                   </div>
@@ -237,7 +237,7 @@ export default function PaymentPage() {
                       value={formData.cardHolderName}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                       placeholder="ADINIZ SOYADINIZ"
                       autoComplete="cc-name"
                     />
@@ -256,7 +256,7 @@ export default function PaymentPage() {
                         setFormData(prev => ({ ...prev, cardNumber: formatted }));
                       }}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent font-mono tracking-wider"
+                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent font-mono tracking-wider"
                       placeholder="0000 0000 0000 0000"
                       maxLength={19}
                       autoComplete="cc-number"
@@ -264,7 +264,7 @@ export default function PaymentPage() {
                   </div>
 
                   {/* Son Kullanma & CVC */}
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Ay</label>
                       <select
@@ -272,7 +272,7 @@ export default function PaymentPage() {
                         value={formData.expireMonth}
                         onChange={(e) => setFormData(prev => ({ ...prev, expireMonth: e.target.value }))}
                         required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                        className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                         title="Son kullanma ayı"
                       >
                         <option value="">Ay</option>
@@ -290,7 +290,7 @@ export default function PaymentPage() {
                         value={formData.expireYear}
                         onChange={(e) => setFormData(prev => ({ ...prev, expireYear: e.target.value }))}
                         required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                        className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                         title="Son kullanma yılı"
                       >
                         <option value="">Yıl</option>
@@ -315,7 +315,7 @@ export default function PaymentPage() {
                           setFormData(prev => ({ ...prev, cvc: value }));
                         }}
                         required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent font-mono tracking-wider"
+                        className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent font-mono tracking-wider"
                         placeholder="000"
                         maxLength={4}
                         autoComplete="cc-csc"

@@ -231,28 +231,32 @@ export const CookieConsent: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-3">
             {showSettings ? (
               <button
+                type="button"
                 onClick={handleSaveSettings}
-                className="flex-1 bg-amber-700 hover:bg-amber-800 text-white px-6 py-3 rounded-lg text-sm font-semibold tracking-wide uppercase transition-colors duration-200"
+                className="flex-1 min-h-11 bg-amber-700 hover:bg-amber-800 text-white px-6 py-3.5 rounded-lg text-sm font-semibold tracking-wide uppercase transition-colors duration-200"
               >
                 Seçimi Kaydet
               </button>
             ) : (
               <button
+                type="button"
                 onClick={() => setShowSettings(true)}
-                className="flex-1 border border-gray-300 hover:border-gray-400 text-gray-700 px-6 py-3 rounded-lg text-sm font-semibold tracking-wide uppercase transition-colors duration-200"
+                className="flex-1 min-h-11 border border-gray-300 hover:border-gray-400 text-gray-700 px-6 py-3.5 rounded-lg text-sm font-semibold tracking-wide uppercase transition-colors duration-200"
               >
                 Kişiselleştir
               </button>
             )}
             <button
+              type="button"
               onClick={handleReject}
-              className="flex-1 border border-gray-300 hover:border-gray-400 text-gray-700 px-6 py-3 rounded-lg text-sm font-semibold tracking-wide uppercase transition-colors duration-200"
+              className="flex-1 min-h-11 border border-gray-300 hover:border-gray-400 text-gray-700 px-6 py-3.5 rounded-lg text-sm font-semibold tracking-wide uppercase transition-colors duration-200"
             >
               Reddet
             </button>
             <button
+              type="button"
               onClick={handleAccept}
-              className="flex-1 bg-charcoal hover:bg-charcoal/90 text-bone px-6 py-3 rounded-lg text-sm font-semibold tracking-wide uppercase transition-colors duration-200"
+              className="flex-1 min-h-11 bg-charcoal hover:bg-charcoal/90 text-bone px-6 py-3.5 rounded-lg text-sm font-semibold tracking-wide uppercase transition-colors duration-200"
             >
               Kabul Et
             </button>

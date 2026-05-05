@@ -75,11 +75,11 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
 
       {/* Info */}
       <div className="mt-5">
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-[11px] tracking-[0.15em] uppercase text-earth">
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <p className="text-[12px] sm:text-[11px] tracking-[0.08em] sm:tracking-[0.15em] uppercase text-earth truncate">
             {product.category}
           </p>
-          <p className="text-[11px] tracking-widest uppercase text-clay">
+          <p className="text-[12px] sm:text-[11px] tracking-[0.08em] sm:tracking-widest uppercase text-clay truncate">
             {clayTypeLabels[product.clayType]}
           </p>
         </div>

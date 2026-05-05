@@ -102,13 +102,16 @@ export default function CartPage() {
 
                     <div className="flex items-center gap-2">
                       <button
+                        type="button"
                         onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                        className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm font-bold transition-colors"
+                        className="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded text-base font-bold transition-colors"
+                        aria-label="Adedi azalt"
                       >
                         −
                       </button>
                       <input
                         type="number"
+                        inputMode="numeric"
                         min="1"
                         max={item.stock}
                         value={item.quantity}
@@ -116,12 +119,14 @@ export default function CartPage() {
                           const newQty = parseInt(e.target.value) || 1;
                           updateQuantity(item.id, Math.max(1, Math.min(item.stock, newQty)));
                         }}
-                        className="w-12 text-center border border-gray-300 rounded"
+                        className="w-14 h-10 text-center text-base border border-gray-300 rounded"
                         title="Ürün adedi"
                       />
                       <button
+                        type="button"
                         onClick={() => updateQuantity(item.id, Math.min(item.stock, item.quantity + 1))}
-                        className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm font-bold transition-colors"
+                        className="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded text-base font-bold transition-colors"
+                        aria-label="Adedi artır"
                       >
                         +
                       </button>
