@@ -15,7 +15,8 @@ const clayTypeLabels: Record<string, { tr: string; en: string }> = {
   terracotta:  { tr: 'Terracotta', en: 'Terracotta' },
 };
 
-const imageClasses = ['aspect-[4/5]', 'aspect-[3/4]', 'aspect-square', 'aspect-[5/6]', 'aspect-[4/5]'];
+const imageClasses = ['aspect-[3/4]', 'aspect-[4/5]', 'aspect-square', 'aspect-[5/6]', 'aspect-[3/4]', 'aspect-[4/5]'];
+const offsetClasses = ['md:translate-y-0', 'md:translate-y-8', 'md:translate-y-4', 'md:-translate-y-2', 'md:translate-y-10', 'md:translate-y-6'];
 
 interface CeramicsClientProps {
   products: CeramicProduct[];
@@ -102,13 +103,15 @@ export default function CeramicsClient({ products, definedCategories }: Ceramics
           <p className="text-sm text-earth mb-8">{filteredProducts.length} {t.ceramics.product_count}</p>
 
           {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 md:items-start">
               {filteredProducts.map((product, i) => (
                 <ScrollReveal key={product.id} delay={Math.min(i * 60, 400)}>
-                  <CeramicProductCard
-                    product={product}
-                    imageClass="aspect-[3/4]"
-                  />
+                  <div className={offsetClasses[i % offsetClasses.length]}>
+                    <CeramicProductCard
+                      product={product}
+                      imageClass={imageClasses[i % imageClasses.length]}
+                    />
+                  </div>
                 </ScrollReveal>
               ))}
             </div>

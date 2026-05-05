@@ -176,18 +176,26 @@ export default function HomeClient({ featured, banner, about, homepage }: HomeCl
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 md:items-start">
           <ScrollReveal delay={100}>
-            <CeramicProductCard product={featured[0]} imageClass="aspect-[3/4]" />
+            <div className="md:translate-y-8">
+              <CeramicProductCard product={featured[0]} imageClass="aspect-[3/4]" />
+            </div>
           </ScrollReveal>
           <ScrollReveal delay={200}>
-            <CeramicProductCard product={featured[1]} imageClass="aspect-[3/4]" />
+            <div className="md:-translate-y-4">
+              <CeramicProductCard product={featured[1]} imageClass="aspect-[4/5]" />
+            </div>
           </ScrollReveal>
           <ScrollReveal delay={300}>
-            <CeramicProductCard product={featured[2]} imageClass="aspect-[3/4]" />
+            <div className="md:translate-y-12">
+              <CeramicProductCard product={featured[2]} imageClass="aspect-square" />
+            </div>
           </ScrollReveal>
           <ScrollReveal delay={400}>
-            <CeramicProductCard product={featured[3]} imageClass="aspect-[3/4]" />
+            <div className="md:translate-y-2">
+              <CeramicProductCard product={featured[3]} imageClass="aspect-[5/6]" />
+            </div>
           </ScrollReveal>
         </div>
 
