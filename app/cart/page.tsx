@@ -193,9 +193,19 @@ export default function CartPage() {
               <div className="mt-6 p-4 bg-amber-50 rounded-lg">
                 <p className="text-sm text-amber-900">
                   Türkiye geneline ücretsiz kargo<br />
-                  30 gün iade garantisi<br />
-                  Güvenli ödeme sistemi
+                  30 gün iade garantisi
                 </p>
+              </div>
+
+              <div className="mt-4 flex flex-col items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                <Image
+                  src="/images/payment/logo_band_colored.png"
+                  alt="iyzico ile Öde, Mastercard, Visa, American Express ve Troy ile güvenli ödeme"
+                  width={520}
+                  height={36}
+                  className="h-7 w-auto"
+                />
+                <p className="text-[11px] text-gray-500 text-center">SSL ile güvenli ödeme</p>
               </div>
             </div>
           </div>

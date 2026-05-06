@@ -325,9 +325,16 @@ export default function PaymentPage() {
                 </div>
 
                 {/* Iyzico Badge */}
-                <div className="flex items-center justify-center p-4 bg-blue-50 rounded-lg">
-                  <p className="text-sm text-gray-700">
-                    Ödemeniz Iyzico tarafından güvenli şekilde işlenir
+                <div className="flex flex-col items-center justify-center gap-3 p-4 bg-blue-50 rounded-lg">
+                  <Image
+                    src="/images/payment/logo_band_colored.png"
+                    alt="iyzico ile Öde, Mastercard, Visa, American Express ve Troy ile güvenli ödeme"
+                    width={520}
+                    height={36}
+                    className="h-8 w-auto"
+                  />
+                  <p className="text-xs text-gray-600 text-center">
+                    Ödemeniz iyzico tarafından SSL ile güvenli şekilde işlenir
                   </p>
                 </div>
 

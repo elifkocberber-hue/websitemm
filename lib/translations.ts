@@ -26,6 +26,7 @@ export const tr = {
     country: 'Türkiye',
     made_with_love: 'Sevgiyle üretildi',
     rights: 'Tüm hakları saklıdır',
+    secure_payment: 'Güvenli Ödeme',
   },
   home: {
     hero_subtitle: 'El Yapımı Seramik Ürünler & Hediyeler',
@@ -148,6 +149,7 @@ export const en = {
     country: 'Turkey',
     made_with_love: 'Made with love',
     rights: 'All rights reserved',
+    secure_payment: 'Secure Payment',
   },
   home: {
     hero_subtitle: 'Handmade Ceramic Products & Gifts',

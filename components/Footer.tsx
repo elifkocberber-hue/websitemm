@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 
 export const Footer: React.FC = () => {
@@ -63,6 +64,18 @@ export const Footer: React.FC = () => {
               </svg>
             </a>
           </div>
+        </div>
+
+        {/* Secure Payment */}
+        <div className="border-t border-bone/10 pt-8 mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <p className="text-[11px] tracking-[0.2em] uppercase text-clay">{t.footer.secure_payment}</p>
+          <Image
+            src="/images/payment/logo_band_white.png"
+            alt="iyzico ile Öde, Mastercard, Visa, American Express ve Troy ile güvenli ödeme"
+            width={520}
+            height={36}
+            className="h-8 w-auto opacity-90"
+          />
         </div>
 
         {/* Bottom */}
