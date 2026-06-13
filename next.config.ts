@@ -10,6 +10,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // iyzipay paketi dinamik require kullanıyor; bundle etme, runtime'da node_modules'tan yükle
+  serverExternalPackages: ['iyzipay'],
   async headers() {
     return [
       {

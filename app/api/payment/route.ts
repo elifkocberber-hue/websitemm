@@ -1,17 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import crypto from 'crypto';
 import { validateCustomerData } from '@/lib/validation';
 import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
+import { threedsInitialize } from '@/lib/iyzipay';
 
 function generateRandomId(): string {
-  return Math.random().toString(36).substring(2, 15);
-}
-
-function generateSignature(message: string, secretKey: string): string {
-  return crypto
-    .createHmac('sha1', secretKey)
-    .update(message)
-    .digest('base64');
+  return Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
 }
 
 export async function POST(request: NextRequest) {
@@ -52,53 +45,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const apiKey = process.env.IYZICO_API_KEY || '';
-    const secretKey = process.env.IYZICO_SECRET_KEY || '';
-    const baseUrl = process.env.IYZICO_BASE_URL;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://elsdreamfactory.com';
 
-    if (!baseUrl || !apiKey || !secretKey) {
+    if (!process.env.IYZICO_API_KEY || !process.env.IYZICO_SECRET_KEY || !process.env.IYZICO_BASE_URL) {
       return NextResponse.json(
         { success: false, error: 'Ödeme servisi yapılandırılmamış. Lütfen site yöneticisi ile iletişime geçin.' },
         { status: 503 }
-      );
-    }
-
-    // Server-side fiyat doğrulaması — client'ın gönderdiği fiyata güvenme
-    let verifiedTotal = 0;
-    for (const item of items) {
-      const { data: dbProduct } = await (await import('@/lib/supabaseAdmin')).supabaseAdmin
-        .from('products')
-        .select('price, stock')
-        .eq('id', item.id)
-        .single();
-
-      if (!dbProduct) {
-        const { getCeramicProductById } = await import('@/data/ceramicProducts');
-        const localProduct = getCeramicProductById(item.id);
-        if (!localProduct) {
-          return NextResponse.json(
-            { success: false, error: `Ürün bulunamadı: ${item.name}` },
-            { status: 400 }
-          );
-        }
-        verifiedTotal += localProduct.price * (item.quantity || 1);
-      } else {
-        if (dbProduct.stock < (item.quantity || 1)) {
-          return NextResponse.json(
-            { success: false, error: `Yetersiz stok: ${item.name}` },
-            { status: 400 }
-          );
-        }
-        verifiedTotal += dbProduct.price * (item.quantity || 1);
-      }
-    }
-
-    // Fiyat farkı %1'den fazlaysa reddet (yuvarlama toleransı)
-    if (Math.abs(verifiedTotal - totalPrice) > verifiedTotal * 0.01) {
-      return NextResponse.json(
-        { success: false, error: 'Fiyat uyuşmazlığı tespit edildi. Lütfen sayfayı yenileyip tekrar deneyin.' },
-        { status: 400 }
       );
     }
 
@@ -109,22 +61,80 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Server-side fiyat doğrulaması — client fiyatına güvenme.
+    // Aynı döngüde iyzico sepet kalemlerini de doğrulanmış fiyatlarla kuruyoruz
+    // (iyzico, basketItems toplamının price ile birebir aynı olmasını ister).
+    const { supabaseAdmin } = await import('@/lib/supabaseAdmin');
+    const { getCeramicProductById } = await import('@/data/ceramicProducts');
+
+    const basketItems: Array<{ id: string; name: string; category1: string; itemType: string; price: string }> = [];
+
+    for (const item of items) {
+      const qty = item.quantity || 1;
+      let unitPrice: number;
+
+      const { data: dbProduct } = await supabaseAdmin
+        .from('products')
+        .select('price, stock')
+        .eq('id', item.id)
+        .single();
+
+      if (dbProduct) {
+        if (dbProduct.stock < qty) {
+          return NextResponse.json(
+            { success: false, error: `Yetersiz stok: ${item.name}` },
+            { status: 400 }
+          );
+        }
+        unitPrice = Number(dbProduct.price);
+      } else {
+        const localProduct = getCeramicProductById(item.id);
+        if (!localProduct) {
+          return NextResponse.json(
+            { success: false, error: `Ürün bulunamadı: ${item.name}` },
+            { status: 400 }
+          );
+        }
+        unitPrice = localProduct.price;
+      }
+
+      basketItems.push({
+        id: String(item.id),
+        name: String(item.name || 'Ürün'),
+        category1: item.category || 'Seramik',
+        itemType: 'PHYSICAL',
+        price: (unitPrice * qty).toFixed(2),
+      });
+    }
+
+    // Sepet kalemlerinin toplamı — iyzico price/paidPrice ile birebir eşit olmalı
+    const basketSum = basketItems.reduce((s, b) => s + parseFloat(b.price), 0);
+
+    // Doğrulanmış toplam, client'ın gönderdiği tutarla uyuşmuyorsa reddet
+    if (Math.abs(basketSum - totalPrice) > Math.max(basketSum * 0.01, 0.01)) {
+      return NextResponse.json(
+        { success: false, error: 'Fiyat uyuşmazlığı tespit edildi. Lütfen sayfayı yenileyip tekrar deneyin.' },
+        { status: 400 }
+      );
+    }
+
     const clientIp =
       request.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
-      request.headers.get('cf-connecting-ip') ||
       request.headers.get('x-real-ip') ||
-      '0.0.0.0';
+      '85.34.78.112';
 
     const conversationId = generateRandomId();
+    const priceStr = basketSum.toFixed(2);
 
-    // 3D Secure başlatma payload'ı
-    const paymentPayload = {
+    // 3D Secure başlatma — imza/kimlik doğrulama resmi SDK tarafından yapılır
+    const result = await threedsInitialize({
       locale: 'tr',
       conversationId,
-      price: verifiedTotal.toFixed(2),
-      paidPrice: verifiedTotal.toFixed(2),
+      price: priceStr,
+      paidPrice: priceStr,
       currency: 'TRY',
       installment: '1',
+      basketId: `B-${conversationId}`,
       paymentChannel: 'WEB',
       paymentGroup: 'PRODUCT',
       // Banka OTP sonrası iyzico'nun geri döneceği URL
@@ -144,8 +154,6 @@ export async function POST(request: NextRequest) {
         gsmNumber: customer.phone,
         email: customer.email,
         identityNumber: customer.identityNumber || '11111111111',
-        lastLoginDate: new Date().toISOString(),
-        registrationDate: new Date().toISOString(),
         registrationAddress: customer.address,
         ip: clientIp,
         city: customer.city,
@@ -166,33 +174,8 @@ export async function POST(request: NextRequest) {
         address: customer.address,
         zipCode: customer.postalCode,
       },
-      basketItems: items.map((item: any) => ({
-        id: item.id.toString(),
-        name: item.name,
-        category1: item.category || 'Seramik',
-        itemType: 'PHYSICAL',
-        price: (item.price * item.quantity).toFixed(2),
-      })),
-    };
-
-    const jsonPayload = JSON.stringify(paymentPayload);
-    const signature = generateSignature(jsonPayload, secretKey);
-    const authorizationHeader = Buffer.from(apiKey).toString('base64');
-
-    // 3D Secure başlatma isteği
-    const response = await fetch(`${baseUrl}/payment/3dsecure/initialize`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `IyzipayV2 ${authorizationHeader}`,
-        'X-IyzipayV2-Client-Version': '1.0.0',
-        'X-Iyzi-Rnd': generateRandomId(),
-        'X-IyzipayV2': signature,
-      },
-      body: jsonPayload,
+      basketItems,
     });
-
-    const result = await response.json();
 
     if (result.status === 'success' && result.threeDSHtmlContent) {
       // iyzico banka OTP sayfasının HTML içeriğini döner;
@@ -203,22 +186,22 @@ export async function POST(request: NextRequest) {
         threeDSHtmlContent: result.threeDSHtmlContent,
         conversationId,
       });
-    } else {
-      let errorCode = 'timeout';
-      const errorMsg = result.errorMessage || '';
-
-      if (errorMsg.includes('Kart reddedildi') || errorMsg.includes('declined')) errorCode = 'card_declined';
-      else if (errorMsg.includes('yetersiz') || errorMsg.includes('insufficient')) errorCode = 'insufficient_funds';
-      else if (errorMsg.includes('süresi') || errorMsg.includes('expired')) errorCode = 'expired_card';
-      else if (errorMsg.includes('geçersiz') || errorMsg.includes('invalid')) errorCode = 'invalid_card';
-      else if (errorMsg.includes('ağ') || errorMsg.includes('network')) errorCode = 'network_error';
-
-      return NextResponse.json(
-        { success: false, errorCode, error: result.errorMessage || 'Ödeme başlatılamadı' },
-        { status: 400 }
-      );
     }
+
+    // Hata: iyzico'nun gerçek mesajını sınıflandır
+    const errorMsg = result.errorMessage || '';
+    let errorCode = 'payment_failed';
+    if (/reddedildi|declined/i.test(errorMsg)) errorCode = 'card_declined';
+    else if (/yetersiz|insufficient/i.test(errorMsg)) errorCode = 'insufficient_funds';
+    else if (/süresi|expired/i.test(errorMsg)) errorCode = 'expired_card';
+    else if (/geçersiz|invalid/i.test(errorMsg)) errorCode = 'invalid_card';
+
+    return NextResponse.json(
+      { success: false, errorCode, error: errorMsg || 'Ödeme başlatılamadı' },
+      { status: 400 }
+    );
   } catch (error) {
+    console.error('Ödeme başlatma hatası:', error);
     return NextResponse.json(
       { success: false, error: 'Bir hata oluştu' },
       { status: 500 }
