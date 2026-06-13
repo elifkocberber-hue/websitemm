@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { generateEventId } from '@/lib/pixel';
 
 export default function PaymentPage() {
-  const { items, totalPrice, clearCart } = useCart();
+  const { items, totalPrice } = useCart();
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -89,7 +89,8 @@ export default function PaymentPage() {
           eventId: generateEventId(),
         }));
 
-        clearCart();
+        // NOT: Sepeti burada TEMİZLEME — ödeme 3DS sonrası tamamlanınca
+        // "Teşekkürler" sayfasında temizlenir. Aksi halde 3DS başarısız olursa sepet kaybolur.
 
         // iyzico'nun 3DS HTML'ini DOM'a yaz ve otomatik submit et
         const container = document.createElement('div');
@@ -107,7 +108,6 @@ export default function PaymentPage() {
           totalPrice,
           eventId: generateEventId(),
         }));
-        clearCart();
         router.push(`/thank-you?orderId=${orderId}&date=${encodeURIComponent(date)}`);
       } else {
         const errorReason = data.errorCode || 'timeout';

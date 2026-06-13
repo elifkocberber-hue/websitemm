@@ -4,15 +4,19 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 import { trackPurchase } from '@/lib/pixel';
+import { useCart } from '@/context/CeramicCartContext';
 
 function ThankYouContent() {
   const searchParams = useSearchParams();
+  const { clearCart } = useCart();
   const [isMounted, setIsMounted] = useState(false);
   const orderId = searchParams.get('orderId') || '#' + Math.floor(Math.random() * 1000000);
   const orderDate = searchParams.get('date') || new Date().toLocaleDateString('tr-TR');
 
   useEffect(() => {
     setIsMounted(true);
+    // Ödeme başarıyla tamamlandı (bu sayfaya yalnız başarılı ödeme sonrası gelinir) → sepeti temizle
+    clearCart();
     // Ödeme sayfasından bırakılan purchase snapshot'ı oku ve tetikle
     try {
       const raw = sessionStorage.getItem('last_purchase');
@@ -22,6 +26,8 @@ function ThankYouContent() {
         trackPurchase(pId, pItems, pTotal, eventId);
       }
     } catch { /* ignore */ }
+    // clearCart referansı sabit; yalnız mount'ta çalışsın
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!isMounted) return null;
