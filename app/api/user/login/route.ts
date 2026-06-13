@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 import * as bcrypt from 'bcrypt';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
 import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
+import { signUserJWT } from '@/lib/userAuth';
+
+const SESSION_TTL = 30 * 24 * 60 * 60; // 30 gün
 
 export async function POST(request: Request) {
   try {
@@ -36,14 +39,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'E-posta veya şifre hatalı' }, { status: 401 });
     }
 
-    return NextResponse.json({
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.first_name,
-        lastName: user.last_name,
-      },
+    const sessionUser = {
+      id: user.id,
+      email: user.email,
+      firstName: user.first_name,
+      lastName: user.last_name,
+    };
+
+    const token = signUserJWT(sessionUser, SESSION_TTL);
+    const response = NextResponse.json({ user: sessionUser });
+    response.cookies.set('userToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: SESSION_TTL,
     });
+    return response;
   } catch {
     return NextResponse.json({ error: 'Bir hata oluştu' }, { status: 500 });
   }

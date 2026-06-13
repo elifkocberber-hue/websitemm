@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
+import { getSessionUser } from '@/lib/userAuth';
 import { Resend } from 'resend';
 import crypto from 'crypto';
 
@@ -8,10 +9,12 @@ function generateReturnCode(): string {
 }
 
 export async function POST(req: NextRequest) {
-  const userId = req.headers.get('x-user-id');
-  if (!userId) {
+  // user_id ASLA client'tan alınmaz — doğrulanmış oturum cookie'sinden gelir.
+  const session = getSessionUser(req);
+  if (!session) {
     return NextResponse.json({ error: 'Yetkisiz' }, { status: 401 });
   }
+  const userId = session.id;
 
   try {
     const { orderId } = await req.json();

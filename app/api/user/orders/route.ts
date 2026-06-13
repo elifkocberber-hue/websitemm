@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
+import { getSessionUser } from '@/lib/userAuth';
 
 export async function GET(req: NextRequest) {
-  const userId = req.headers.get('x-user-id');
-  if (!userId) {
+  // user_id ASLA client'tan alınmaz — doğrulanmış oturum cookie'sinden gelir.
+  const session = getSessionUser(req);
+  if (!session) {
     return NextResponse.json({ error: 'Yetkisiz' }, { status: 401 });
   }
+  const userId = session.id;
 
   const { data, error } = await supabase
     .from('orders')

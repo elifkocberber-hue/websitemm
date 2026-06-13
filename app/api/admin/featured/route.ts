@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
 import { isAdminAuthenticated } from '@/lib/adminAuth';
 
 // GET — tüm aktif ürünler + mevcut öne çıkan ID listesi

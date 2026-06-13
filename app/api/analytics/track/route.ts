@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
 import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
 
 function parseUserAgent(ua: string) {

@@ -57,9 +57,7 @@ export default function OrdersPage() {
 
   useEffect(() => {
     if (user) {
-      fetch('/api/user/orders', {
-        headers: { 'x-user-id': user.id },
-      })
+      fetch('/api/user/orders', { credentials: 'same-origin' })
         .then(r => r.json())
         .then(data => setOrders(Array.isArray(data) ? data : []))
         .catch(() => setError('Siparişler yüklenemedi'))
@@ -74,10 +72,8 @@ export default function OrdersPage() {
     try {
       const res = await fetch('/api/user/returns', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-id': user.id,
-        },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
         body: JSON.stringify({ orderId }),
       });
       const data = await res.json();

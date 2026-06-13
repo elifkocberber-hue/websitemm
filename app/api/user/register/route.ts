@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
 import * as bcrypt from 'bcrypt';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
 import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
+import { isValidPassword } from '@/lib/validation';
+import { signUserJWT } from '@/lib/userAuth';
+
+const SESSION_TTL = 30 * 24 * 60 * 60; // 30 gün
 
 export async function POST(request: Request) {
   try {
@@ -21,8 +25,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Tüm alanlar gereklidir' }, { status: 400 });
     }
 
-    if (password.length < 6) {
-      return NextResponse.json({ error: 'Şifre en az 6 karakter olmalıdır' }, { status: 400 });
+    if (!isValidPassword(password)) {
+      return NextResponse.json(
+        { error: 'Şifre en az 8 karakter olmalı; büyük harf, küçük harf ve rakam içermelidir' },
+        { status: 400 }
+      );
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -68,14 +75,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Kayıt sırasında bir hata oluştu' }, { status: 500 });
     }
 
-    return NextResponse.json({
-      user: {
-        id: newUser.id,
-        email: newUser.email,
-        firstName: newUser.first_name,
-        lastName: newUser.last_name,
-      },
-    }, { status: 201 });
+    const sessionUser = {
+      id: newUser.id,
+      email: newUser.email,
+      firstName: newUser.first_name,
+      lastName: newUser.last_name,
+    };
+
+    const token = signUserJWT(sessionUser, SESSION_TTL);
+    const response = NextResponse.json({ user: sessionUser }, { status: 201 });
+    response.cookies.set('userToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: SESSION_TTL,
+    });
+    return response;
   } catch {
     return NextResponse.json({ error: 'Bir hata oluştu' }, { status: 500 });
   }

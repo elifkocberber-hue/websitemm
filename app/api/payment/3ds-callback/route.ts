@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { getOrCreateUser, createOrder, createOrderItems } from '@/lib/supabase';
+import { getOrCreateUser, createOrder, createOrderItems } from '@/lib/supabaseAdmin';
 import { Resend } from 'resend';
 
 async function sendOrderConfirmationEmail(params: {

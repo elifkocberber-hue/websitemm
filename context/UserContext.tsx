@@ -23,17 +23,23 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Check for existing session on mount
+  // Oturum kaynağı: httpOnly cookie. Mount'ta sunucudan doğrula.
   useEffect(() => {
-    const stored = localStorage.getItem('user_session');
-    if (stored) {
-      try {
-        setUser(JSON.parse(stored));
-      } catch {
-        localStorage.removeItem('user_session');
-      }
-    }
-    setLoading(false);
+    let active = true;
+    fetch('/api/user/me', { credentials: 'same-origin' })
+      .then((res) => (res.ok ? res.json() : { user: null }))
+      .then((data) => {
+        if (active) setUser(data.user ?? null);
+      })
+      .catch(() => {
+        if (active) setUser(null);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -41,12 +47,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       const res = await fetch('/api/user/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
       if (res.ok && data.user) {
         setUser(data.user);
-        localStorage.setItem('user_session', JSON.stringify(data.user));
         return { success: true };
       }
       return { success: false, error: data.error || 'Giriş başarısız' };
@@ -60,12 +66,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       const res = await fetch('/api/user/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
         body: JSON.stringify(regData),
       });
       const data = await res.json();
       if (res.ok && data.user) {
         setUser(data.user);
-        localStorage.setItem('user_session', JSON.stringify(data.user));
         return { success: true };
       }
       return { success: false, error: data.error || 'Kayıt başarısız' };
@@ -74,9 +80,13 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await fetch('/api/user/logout', { method: 'POST', credentials: 'same-origin' });
+    } catch {
+      // yine de yerel durumu temizle
+    }
     setUser(null);
-    localStorage.removeItem('user_session');
   };
 
   return (

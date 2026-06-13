@@ -1,23 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
+import { getSessionUser } from '@/lib/userAuth';
 
-function getSupabase() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-  return createClient(url, key);
-}
-
-// GET /api/user/cart?userId=xxx — kullanıcının sepetini getir
+// GET /api/user/cart — oturumdaki kullanıcının sepetini getir
 export async function GET(request: NextRequest) {
-  const userId = request.nextUrl.searchParams.get('userId');
-  if (!userId) return NextResponse.json({ error: 'userId gerekli' }, { status: 400 });
+  const session = getSessionUser(request);
+  if (!session) return NextResponse.json({ error: 'Yetkisiz' }, { status: 401 });
 
   try {
-    const supabase = getSupabase();
     const { data, error } = await supabase
       .from('user_carts')
       .select('product_id, quantity')
-      .eq('user_id', userId);
+      .eq('user_id', session.id);
 
     if (error) {
       console.error('Supabase cart GET error:', error);
@@ -31,17 +25,17 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/user/cart — sepeti Supabase'e kaydet (tam üzerine yazar)
+// POST /api/user/cart — oturumdaki kullanıcının sepetini kaydet (tam üzerine yazar)
 export async function POST(request: NextRequest) {
+  const session = getSessionUser(request);
+  if (!session) return NextResponse.json({ error: 'Yetkisiz' }, { status: 401 });
+
   try {
-    const { userId, items } = await request.json() as {
-      userId: string;
+    const { items } = (await request.json()) as {
       items: { product_id: string; quantity: number }[];
     };
 
-    if (!userId) return NextResponse.json({ error: 'userId gerekli' }, { status: 400 });
-
-    const supabase = getSupabase();
+    const userId = session.id; // user_id daima oturumdan — client'tan değil
 
     // Önce kullanıcının mevcut sepetini sil
     const { error: deleteError } = await supabase
@@ -55,8 +49,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Yeni items varsa ekle
-    if (items.length > 0) {
-      const rows = items.map(i => ({
+    if (Array.isArray(items) && items.length > 0) {
+      const rows = items.map((i) => ({
         user_id: userId,
         product_id: i.product_id,
         quantity: i.quantity,

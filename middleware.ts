@@ -1,13 +1,64 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+// Edge runtime'da Node 'crypto' yok; HMAC doğrulamasını Web Crypto ile yaparız.
+function base64urlToUint8(input: string): Uint8Array {
+  const b64 = input.replace(/-/g, '+').replace(/_/g, '/').padEnd(
+    input.length + ((4 - (input.length % 4)) % 4),
+    '='
+  );
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+
+function uint8ToBase64url(bytes: Uint8Array): string {
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+// Admin JWT'sini Edge'de doğrula (lib/adminAuth.ts ile aynı şema: HS256).
+async function verifyAdminToken(token: string): Promise<boolean> {
+  try {
+    const secret = process.env.ADMIN_JWT_SECRET;
+    if (!secret) return false;
+
+    const parts = token.split('.');
+    if (parts.length !== 3) return false;
+    const [header, payload, signature] = parts;
+
+    const key = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(secret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    );
+    const sig = await crypto.subtle.sign(
+      'HMAC',
+      key,
+      new TextEncoder().encode(`${header}.${payload}`)
+    );
+    const expected = uint8ToBase64url(new Uint8Array(sig));
+    if (expected !== signature) return false;
+
+    const data = JSON.parse(new TextDecoder().decode(base64urlToUint8(payload)));
+    if (!data.exp || data.exp < Math.floor(Date.now() / 1000)) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Admin route koruması — cookie yoksa login sayfasına yönlendir
+  // Admin route koruması — geçerli, imzalı ve süresi dolmamış token gerekir
   if (pathname.startsWith('/admin')) {
     const adminToken = request.cookies.get('adminToken')?.value;
-    if (!adminToken) {
+    if (!adminToken || !(await verifyAdminToken(adminToken))) {
       return NextResponse.redirect(new URL('/sergenim/login', request.url));
     }
   }

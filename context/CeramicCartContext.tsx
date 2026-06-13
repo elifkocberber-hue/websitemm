@@ -30,15 +30,16 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const prevUserIdRef = useRef<string | null>(null);
 
   // Supabase'e debounced sync
-  const syncToSupabase = useCallback((cartItems: CartCeramicItem[], userId: string) => {
+  const syncToSupabase = useCallback((cartItems: CartCeramicItem[]) => {
     if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current);
     syncTimeoutRef.current = setTimeout(async () => {
       try {
         await fetch('/api/user/cart', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
           body: JSON.stringify({
-            userId,
+            // user_id sunucuda oturum cookie'sinden alınır — burada gönderilmez
             items: cartItems.map(i => ({ product_id: String(i.id), quantity: i.quantity })),
           }),
         });
@@ -81,7 +82,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const fetchAndMerge = async () => {
       try {
-        const res = await fetch(`/api/user/cart?userId=${user.id}`);
+        const res = await fetch('/api/user/cart', { credentials: 'same-origin' });
         if (!res.ok) return;
         const { items: remoteItems } = await res.json() as {
           items: { product_id: string; quantity: number }[];
@@ -90,7 +91,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (!remoteItems?.length) {
           // Uzak sepet boş → local sepeti Supabase'e yükle
           setItems(prev => {
-            if (prev.length > 0) syncToSupabase(prev, user.id);
+            if (prev.length > 0) syncToSupabase(prev);
             return prev;
           });
           return;
@@ -112,7 +113,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             }
           }
           // Birleştirilmiş sepeti Supabase'e kaydet
-          syncToSupabase(merged, user.id);
+          syncToSupabase(merged);
           return merged;
         });
       } catch {
@@ -127,7 +128,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     if (!mounted || !user) return;
     // İlk merge tetiklemesi dışında sync et
-    syncToSupabase(items, user.id);
+    syncToSupabase(items);
   }, [items, user, mounted, syncToSupabase]);
 
   const addToCart = (product: CeramicProduct, quantity: number) => {

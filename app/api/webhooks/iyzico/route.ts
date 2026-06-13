@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { createOrder, createOrderItems, getOrCreateUser } from '@/lib/supabase';
+import { createOrder, createOrderItems, getOrCreateUser } from '@/lib/supabaseAdmin';
 
 // Webhook'un orijini doğrulama
 function verifyWebhookSignature(

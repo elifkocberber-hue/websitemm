@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     // Server-side fiyat doğrulaması — client'ın gönderdiği fiyata güvenme
     let verifiedTotal = 0;
     for (const item of items) {
-      const { data: dbProduct } = await (await import('@/lib/supabase')).supabase
+      const { data: dbProduct } = await (await import('@/lib/supabaseAdmin')).supabaseAdmin
         .from('products')
         .select('price, stock')
         .eq('id', item.id)
