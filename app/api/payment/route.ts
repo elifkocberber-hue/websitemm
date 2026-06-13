@@ -178,12 +178,16 @@ export async function POST(request: NextRequest) {
     });
 
     if (result.status === 'success' && result.threeDSHtmlContent) {
-      // iyzico banka OTP sayfasının HTML içeriğini döner;
-      // istemci bunu bir form olarak sayfaya yazıp otomatik submit eder.
+      // iyzico threeDSHtmlContent'i base64 kodlu döner — çöz ki istemci doğrudan basabilsin.
+      let html = result.threeDSHtmlContent;
+      if (!html.includes('<')) {
+        html = Buffer.from(html, 'base64').toString('utf8');
+      }
+      // istemci bunu sayfaya yazıp formu otomatik submit eder.
       return NextResponse.json({
         success: true,
         requires3DS: true,
-        threeDSHtmlContent: result.threeDSHtmlContent,
+        threeDSHtmlContent: html,
         conversationId,
       });
     }

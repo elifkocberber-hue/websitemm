@@ -101,6 +101,8 @@ export async function middleware(request: NextRequest) {
       "img-src 'self' data: https: https://www.facebook.com",
       "font-src 'self' data:",
       "connect-src 'self' https://sandbox-api.iyzipay.com https://api.iyzipay.com https://zpqtdaoyeokavrkosuii.supabase.co https://graph.facebook.com",
+      // 3D Secure: ödeme formu banka/iyzico ACS adresine (https) gönderilebilmeli
+      "form-action 'self' https:",
       "frame-ancestors 'none'",
     ].join('; ')
   );
