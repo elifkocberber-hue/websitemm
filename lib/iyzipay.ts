@@ -1,6 +1,10 @@
-import Iyzipay from 'iyzipay';
+import crypto from 'crypto';
 
-// iyzico API yanıtının ihtiyaç duyduğumuz alanları
+// iyzico ödeme entegrasyonu — resmi imza algoritması (IYZWSv2 / HMAC-SHA256)
+// doğrudan fetch ile uygulanır. Böylece 'iyzipay' npm paketine (ve onun ağır,
+// dinamik require'lı 'postman-request' bağımlılığına) gerek kalmaz; Vercel
+// serverless ortamında sorunsuz çalışır.
+
 export interface IyzicoResult {
   status?: string;
   errorCode?: string;
@@ -14,33 +18,71 @@ export interface IyzicoResult {
   [key: string]: unknown;
 }
 
-// Resmi iyzipay SDK client'ı — imza/kimlik doğrulamayı SDK kendi halleder.
-function getClient() {
+function getConfig() {
   const apiKey = process.env.IYZICO_API_KEY;
   const secretKey = process.env.IYZICO_SECRET_KEY;
-  const uri = process.env.IYZICO_BASE_URL;
-  if (!apiKey || !secretKey || !uri) {
+  const baseUrl = process.env.IYZICO_BASE_URL;
+  if (!apiKey || !secretKey || !baseUrl) {
     throw new Error('iyzico ortam değişkenleri eksik (IYZICO_API_KEY / IYZICO_SECRET_KEY / IYZICO_BASE_URL).');
   }
-  return new Iyzipay({ apiKey, secretKey, uri });
+  return { apiKey, secretKey, baseUrl };
+}
+
+function generateRandomString(): string {
+  return Date.now().toString() + crypto.randomBytes(8).toString('hex');
+}
+
+// IYZWSv2 yetkilendirme başlığı:
+//   signature = HMAC_SHA256(secretKey, randomString + uriPath + body).hex
+//   header    = "IYZWSv2 " + base64("apiKey:..&randomKey:..&signature:..")
+function buildAuthHeader(
+  apiKey: string,
+  secretKey: string,
+  uriPath: string,
+  bodyStr: string,
+  randomString: string
+): string {
+  const signature = crypto
+    .createHmac('sha256', secretKey)
+    .update(randomString + uriPath + bodyStr)
+    .digest('hex');
+
+  const params = [
+    `apiKey:${apiKey}`,
+    `randomKey:${randomString}`,
+    `signature:${signature}`,
+  ];
+  return 'IYZWSv2 ' + Buffer.from(params.join('&')).toString('base64');
+}
+
+async function post(uriPath: string, payload: Record<string, unknown>): Promise<IyzicoResult> {
+  const { apiKey, secretKey, baseUrl } = getConfig();
+  // İmza, gönderilen body string'i ÜZERİNDEN hesaplanır — ikisi birebir aynı olmalı.
+  const bodyStr = JSON.stringify(payload);
+  const randomString = generateRandomString();
+  const authHeader = buildAuthHeader(apiKey, secretKey, uriPath, bodyStr, randomString);
+
+  const response = await fetch(`${baseUrl}${uriPath}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': authHeader,
+      'x-iyzi-rnd': randomString,
+      'x-iyzi-client-version': 'iyzipay-node-2.0.65',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: bodyStr,
+  });
+
+  return (await response.json()) as IyzicoResult;
 }
 
 // 3D Secure başlatma (kart bilgisiyle) — banka OTP HTML içeriğini döndürür
-export function threedsInitialize(request: Record<string, unknown>): Promise<IyzicoResult> {
-  const client = getClient();
-  return new Promise((resolve, reject) => {
-    client.threedsInitialize.create(request, (err: Error | null, result: IyzicoResult) =>
-      err ? reject(err) : resolve(result)
-    );
-  });
+export function threedsInitialize(payload: Record<string, unknown>): Promise<IyzicoResult> {
+  return post('/payment/3dsecure/initialize', payload);
 }
 
 // 3D Secure tamamlama (banka OTP sonrası callback'te çağrılır)
-export function threedsComplete(request: Record<string, unknown>): Promise<IyzicoResult> {
-  const client = getClient();
-  return new Promise((resolve, reject) => {
-    client.threedsPayment.create(request, (err: Error | null, result: IyzicoResult) =>
-      err ? reject(err) : resolve(result)
-    );
-  });
+export function threedsComplete(payload: Record<string, unknown>): Promise<IyzicoResult> {
+  return post('/payment/3dsecure/auth', payload);
 }
