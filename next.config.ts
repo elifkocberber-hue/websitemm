@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // iyzipay paketi dinamik require kullanıyor; bundle etme, runtime'da node_modules'tan yükle
   serverExternalPackages: ['iyzipay'],
+  // iyzipay dinamik olarak lib/resources altını okur; Vercel fonksiyonuna bu dosyaları zorla dahil et
+  outputFileTracingIncludes: {
+    '/api/payment': ['./node_modules/iyzipay/**'],
+    '/api/payment/3ds-callback': ['./node_modules/iyzipay/**'],
+  },
   async headers() {
     return [
       {
