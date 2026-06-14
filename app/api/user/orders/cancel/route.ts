@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { getSessionUser } from '@/lib/userAuth';
+import { refundFullPayment } from '@/lib/iyzipay';
 import { Resend } from 'resend';
 
 // Kargoya verilmiş/teslim edilmiş/iptal edilmiş siparişler iptal edilemez
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest) {
     // Sipariş bu kullanıcıya mı ait? (IDOR koruması: id + user_id birlikte)
     const { data: order, error } = await supabaseAdmin
       .from('orders')
-      .select('id, status, customer_email, customer_name, total_price')
+      .select('id, status, customer_email, customer_name, total_price, iyzico_payment_id')
       .eq('id', orderId)
       .eq('user_id', session.id)
       .single();
@@ -38,6 +39,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+      request.headers.get('x-real-ip') ||
+      '85.34.78.112';
+
+    // Otomatik para iadesi (önce iptal, olmazsa transaction bazlı iade)
+    const refund = await refundFullPayment(order.iyzico_payment_id || '', ip);
+
+    // Siparişi her durumda iptal et (iade başarısızsa admin manuel tamamlar)
     const { error: updateError } = await supabaseAdmin
       .from('orders')
       .update({ status: 'cancelled', updated_at: new Date().toISOString() })
@@ -52,9 +62,13 @@ export async function POST(request: NextRequest) {
     if (resendKey) {
       const resend = new Resend(resendKey);
       const shortId = `ORD-${order.id.slice(0, 8).toUpperCase()}`;
+      const amount = `₺${Number(order.total_price).toFixed(2)}`;
 
       // Müşteriye iptal onayı
       if (order.customer_email) {
+        const refundLine = refund.ok
+          ? `Ödediğiniz tutar (<strong>${amount}</strong>) iade edilmiştir; bankanıza bağlı olarak birkaç iş günü içinde kartınıza yansıyacaktır.`
+          : `Ödediğiniz tutarın (<strong>${amount}</strong>) iadesi en kısa sürede gerçekleştirilecektir.`;
         resend.emails.send({
           from: "El's Dream Factory <noreply@elsdreamfactory.com>",
           to: order.customer_email,
@@ -64,7 +78,7 @@ export async function POST(request: NextRequest) {
               <h2 style="font-size:22px;font-weight:normal;">Siparişiniz İptal Edildi</h2>
               <p>Merhaba ${order.customer_name || 'Değerli Müşterimiz'},</p>
               <p><strong>${shortId}</strong> numaralı siparişiniz talebiniz üzerine iptal edilmiştir.</p>
-              <p>Ödediğiniz tutar (<strong>₺${Number(order.total_price).toFixed(2)}</strong>), bankanıza bağlı olarak birkaç iş günü içinde kartınıza iade edilecektir.</p>
+              <p>${refundLine}</p>
               <hr style="border:none;border-top:1px solid #E8E0D8;margin:24px 0;" />
               <p style="color:#9B8E85;font-size:12px;">
                 Sorularınız için: <a href="mailto:elsdreamfactory@gmail.com" style="color:#5C0A1A;">elsdreamfactory@gmail.com</a><br/>
@@ -75,26 +89,29 @@ export async function POST(request: NextRequest) {
         }).catch(() => {});
       }
 
-      // Admin'e bildirim (iade işlemi için)
+      // Admin'e bildirim
       const adminEmail = process.env.ADMIN_EMAIL;
       if (adminEmail) {
+        const adminLine = refund.ok
+          ? `<p style="color:#166534;"><strong>Otomatik iade başarılı</strong> (${refund.method === 'cancel' ? 'iptal' : 'iade'}). Ek işlem gerekmez.</p>`
+          : `<p style="color:#991b1b;"><strong>⚠️ OTOMATİK İADE BAŞARISIZ:</strong> ${refund.error || 'bilinmeyen hata'}<br/>Lütfen iyzico panelinden manuel iade yapın.</p>`;
         resend.emails.send({
           from: "El's Dream Factory <noreply@elsdreamfactory.com>",
           to: adminEmail,
-          subject: `⚠️ Müşteri siparişi iptal etti – ${shortId}`,
+          subject: `${refund.ok ? '↩️' : '⚠️'} Sipariş iptal edildi – ${shortId}`,
           html: `
             <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#2C2C2C;line-height:1.6;">
               <p><strong>${shortId}</strong> numaralı sipariş müşteri tarafından iptal edildi.</p>
               <p>Müşteri: ${order.customer_name || '-'} (${order.customer_email || '-'})<br/>
-              Tutar: ₺${Number(order.total_price).toFixed(2)}</p>
-              <p><strong>Yapılması gereken:</strong> Ödeme iadesini iyzico panelinden gerçekleştirin.</p>
+              Tutar: ${amount}</p>
+              ${adminLine}
             </div>
           `,
         }).catch(() => {});
       }
     }
 
-    return NextResponse.json({ success: true, status: 'cancelled' });
+    return NextResponse.json({ success: true, status: 'cancelled', refunded: refund.ok });
   } catch {
     return NextResponse.json({ error: 'Bir hata oluştu' }, { status: 500 });
   }

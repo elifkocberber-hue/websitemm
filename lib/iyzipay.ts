@@ -86,3 +86,54 @@ export function threedsInitialize(payload: Record<string, unknown>): Promise<Iyz
 export function threedsComplete(payload: Record<string, unknown>): Promise<IyzicoResult> {
   return post('/payment/3dsecure/auth', payload);
 }
+
+// Tam para iadesi: önce iptal (aynı gün), olmazsa transaction bazlı iade (gün kapandıysa).
+// Döner: { ok, method } başarılıysa, { ok:false, error } değilse.
+export async function refundFullPayment(
+  paymentId: string,
+  ip: string
+): Promise<{ ok: boolean; method?: 'cancel' | 'refund'; error?: string }> {
+  if (!paymentId) return { ok: false, error: 'paymentId yok' };
+
+  // 1) İptal dene (aynı gün, tam tutar tek seferde)
+  const cancelRes = await post('/payment/cancel', {
+    locale: 'tr',
+    conversationId: generateRandomString(),
+    paymentId,
+    ip,
+  });
+  if (cancelRes.status === 'success') return { ok: true, method: 'cancel' };
+
+  // 2) İptal olmadıysa (ör. gün kapandı) → ödeme detayından transaction'ları al ve tek tek iade et
+  const detail = await post('/payment/detail', {
+    locale: 'tr',
+    conversationId: generateRandomString(),
+    paymentId,
+  });
+
+  const itemTransactions =
+    (detail.itemTransactions as Array<{ paymentTransactionId: string; paidPrice: number | string }>) || [];
+
+  if (detail.status !== 'success' || itemTransactions.length === 0) {
+    return { ok: false, error: detail.errorMessage || cancelRes.errorMessage || 'İade detayları alınamadı' };
+  }
+
+  let allOk = true;
+  let lastErr = '';
+  for (const tx of itemTransactions) {
+    const refundRes = await post('/payment/refund', {
+      locale: 'tr',
+      conversationId: generateRandomString(),
+      paymentTransactionId: tx.paymentTransactionId,
+      price: String(tx.paidPrice),
+      ip,
+      currency: 'TRY',
+    });
+    if (refundRes.status !== 'success') {
+      allOk = false;
+      lastErr = refundRes.errorMessage || lastErr;
+    }
+  }
+
+  return allOk ? { ok: true, method: 'refund' } : { ok: false, error: lastErr || 'İade başarısız' };
+}
