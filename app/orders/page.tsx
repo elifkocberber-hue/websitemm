@@ -26,6 +26,7 @@ interface Order {
   total_price: number;
   status: string;
   created_at: string;
+  tracking_number?: string | null;
   order_items: OrderItem[];
   return_requests: ReturnRequest[];
 }
@@ -178,6 +179,15 @@ export default function OrdersPage() {
                     </div>
                   ))}
                 </div>
+
+                {/* Kargo takip numarası */}
+                {order.tracking_number && (
+                  <div className="px-6 py-4 border-t border-stone-100 bg-blue-50/50">
+                    <p className="text-xs text-earth uppercase tracking-wider mb-1">Kargo Takip Numarası</p>
+                    <p className="text-sm font-bold text-charcoal tracking-wider font-mono">{order.tracking_number}</p>
+                    <p className="text-xs text-earth mt-1">Bu numarayı kargo firmasının web sitesinden takip edebilirsiniz.</p>
+                  </div>
+                )}
 
                 {/* Return section */}
                 <div className="px-6 py-4 border-t border-stone-100 bg-white">

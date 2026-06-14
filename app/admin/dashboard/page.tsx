@@ -12,13 +12,15 @@ interface Order {
   status: string;
   payment_id: string;
   shipping_address: string;
+  customer_email?: string | null;
+  customer_name?: string | null;
   created_at: string;
   updated_at: string;
   users: {
     email: string;
     first_name: string;
     last_name: string;
-  };
+  } | null;
 }
 
 export default function AdminDashboardPage() {
@@ -294,9 +296,10 @@ export default function AdminDashboardPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         <div>
                           <p className="font-medium">
-                            {order.users.first_name} {order.users.last_name}
+                            {order.customer_name
+                              || (order.users ? `${order.users.first_name} ${order.users.last_name}` : 'Misafir')}
                           </p>
-                          <p className="text-xs">{order.users.email}</p>
+                          <p className="text-xs">{order.customer_email || order.users?.email || '—'}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">

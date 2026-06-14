@@ -22,6 +22,8 @@ interface OrderDetail {
   payment_id: string;
   shipping_address: string;
   tracking_number?: string;
+  customer_email?: string | null;
+  customer_name?: string | null;
   created_at: string;
   updated_at: string;
   users: {
@@ -30,7 +32,7 @@ interface OrderDetail {
     first_name: string;
     last_name: string;
     created_at: string;
-  };
+  } | null;
   items: OrderItem[];
 }
 
@@ -279,17 +281,20 @@ export default function OrderDetailPage() {
                 <div>
                   <p className="text-sm text-gray-600">Ad Soyad</p>
                   <p className="font-medium text-gray-900">
-                    {order.users.first_name} {order.users.last_name}
+                    {order.customer_name
+                      || (order.users ? `${order.users.first_name} ${order.users.last_name}` : '—')}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">E-posta</p>
-                  <p className="font-medium text-gray-900">{order.users.email}</p>
+                  <p className="font-medium text-gray-900">
+                    {order.customer_email || order.users?.email || '—'}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Müşteri Seit Tarihi</p>
+                  <p className="text-sm text-gray-600">Hesap</p>
                   <p className="font-medium text-gray-900">
-                    {new Date(order.users.created_at).toLocaleDateString('tr-TR')}
+                    {order.user_id ? 'Kayıtlı kullanıcı' : 'Misafir alışveriş'}
                   </p>
                 </div>
               </div>

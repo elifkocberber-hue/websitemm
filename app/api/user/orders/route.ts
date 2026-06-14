@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
       status,
       created_at,
       shipping_address,
+      tracking_number,
       order_items (
         id,
         product_name,

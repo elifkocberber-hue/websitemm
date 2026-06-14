@@ -23,6 +23,9 @@ export async function GET(request: NextRequest) {
         status,
         payment_id,
         shipping_address,
+        customer_email,
+        customer_name,
+        tracking_number,
         created_at,
         updated_at,
         users:user_id (

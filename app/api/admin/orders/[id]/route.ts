@@ -27,7 +27,11 @@ export async function GET(
         total_price,
         status,
         payment_id,
+        iyzico_payment_id,
+        tracking_number,
         shipping_address,
+        customer_email,
+        customer_name,
         created_at,
         updated_at,
         users:user_id (
@@ -109,17 +113,9 @@ export async function PATCH(
     // Kargo takip numarası girildiğinde müşteriye e-posta gönder
     if (!error && tracking_number && data) {
       try {
-        const { data: orderWithUser } = await supabase
-          .from('orders')
-          .select('users:user_id(email, first_name, last_name)')
-          .eq('id', orderId)
-          .single();
-
-        const userInfo = orderWithUser?.users as any;
-        const customerEmail = Array.isArray(userInfo) ? userInfo[0]?.email : userInfo?.email;
-        const customerName = Array.isArray(userInfo)
-          ? `${userInfo[0]?.first_name} ${userInfo[0]?.last_name}`.trim()
-          : `${userInfo?.first_name} ${userInfo?.last_name}`.trim();
+        // Müşteri bilgisi artık doğrudan siparişte tutuluyor (Phase 2) — eski users join'i kullanılmaz
+        const customerEmail = data.customer_email;
+        const customerName = data.customer_name || 'Değerli Müşterimiz';
 
         const resendKey = process.env.RESEND_API_KEY;
         if (resendKey && customerEmail) {
