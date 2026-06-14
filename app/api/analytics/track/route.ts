@@ -34,7 +34,7 @@ function parseUserAgent(ua: string) {
 export async function POST(request: NextRequest) {
   try {
     const rateLimitKey = getRateLimitKey(request, 'analytics-track');
-    const { allowed } = checkRateLimit(rateLimitKey, 60, 60 * 1000);
+    const { allowed } = await checkRateLimit(rateLimitKey, 60, 60 * 1000);
     if (!allowed) {
       return NextResponse.json({ success: false }, { status: 429 });
     }

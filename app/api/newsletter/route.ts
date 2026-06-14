@@ -5,7 +5,7 @@ import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
 export async function POST(request: Request) {
   try {
     const rateLimitKey = getRateLimitKey(request, 'newsletter');
-    const { allowed } = checkRateLimit(rateLimitKey, 3, 60 * 60 * 1000);
+    const { allowed } = await checkRateLimit(rateLimitKey, 3, 60 * 60 * 1000);
     if (!allowed) {
       return NextResponse.json({ error: 'Çok fazla deneme' }, { status: 429 });
     }

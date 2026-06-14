@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   try {
     // Rate limiting: max 10 payment attempts per hour
     const rateLimitKey = getRateLimitKey(request, 'payment');
-    const { allowed } = checkRateLimit(rateLimitKey, 10, 60 * 60 * 1000);
+    const { allowed } = await checkRateLimit(rateLimitKey, 10, 60 * 60 * 1000);
 
     if (!allowed) {
       return NextResponse.json(

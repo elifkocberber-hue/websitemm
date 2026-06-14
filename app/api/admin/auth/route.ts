@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const rateLimitKey = getRateLimitKey(request, 'admin-login');
-    const { allowed } = checkRateLimit(rateLimitKey, 5, 15 * 60 * 1000);
+    const { allowed } = await checkRateLimit(rateLimitKey, 5, 15 * 60 * 1000);
 
     if (!allowed) {
       return NextResponse.json(

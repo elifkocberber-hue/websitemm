@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   try {
     // Rate limiting
     const rateLimitKey = getRateLimitKey(request, 'register');
-    const { allowed } = checkRateLimit(rateLimitKey, 5, 60 * 60 * 1000);
+    const { allowed } = await checkRateLimit(rateLimitKey, 5, 60 * 60 * 1000);
     if (!allowed) {
       return NextResponse.json(
         { error: 'Çok fazla kayıt denemesi. Lütfen daha sonra tekrar deneyin.' },

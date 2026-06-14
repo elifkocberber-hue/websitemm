@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   try {
     // Rate limiting
     const rateLimitKey = getRateLimitKey(request, 'login');
-    const { allowed } = checkRateLimit(rateLimitKey, 10, 15 * 60 * 1000);
+    const { allowed } = await checkRateLimit(rateLimitKey, 10, 15 * 60 * 1000);
     if (!allowed) {
       return NextResponse.json(
         { error: 'Çok fazla giriş denemesi. Lütfen 15 dakika sonra tekrar deneyin.' },
