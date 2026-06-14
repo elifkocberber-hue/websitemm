@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
         id: generateRandomId(),
         name: customer.firstName,
         surname: customer.lastName,
-        gsmNumber: customer.phone,
+        gsmNumber: '+90' + String(customer.phone || '').replace(/\D/g, '').slice(-10),
         email: customer.email,
         identityNumber: customer.identityNumber || '11111111111',
         registrationAddress: customer.address,

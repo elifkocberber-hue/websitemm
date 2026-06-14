@@ -6,10 +6,21 @@ import { useEffect, useState, Suspense } from 'react';
 import { trackPurchase } from '@/lib/pixel';
 import { useCart } from '@/context/CeramicCartContext';
 
+const DEFAULT_TY_TITLE = 'Teşekkürler! Siparişiniz Onaylandı.';
+const DEFAULT_TY_BODY = `El's Dream Factory'den yaptığınız alışveriş için teşekkür ederiz. Sipariş detaylarınız e-posta adresinize gönderilmiştir.
+
+Ürünleriniz özenle hazırlanarak 1-3 iş günü içerisinde kargoya verilecektir. Kargonuz yola çıktığında takip bilgilerinizi sizinle paylaşacağız. Seramiklerinizin size güvenle ve en kısa sürede ulaşması için çalışıyoruz.
+
+"Seramiklerinizi yeni evlerinde görmeyi çok isteriz! Bizi @elsdreamfactory etiketleyerek Instagram'da paylaşabilirsiniz."
+
+Keyifli günlerde kullanmanız dileğiyle!`;
+
 function ThankYouContent() {
   const searchParams = useSearchParams();
   const { clearCart } = useCart();
   const [isMounted, setIsMounted] = useState(false);
+  const [tyTitle, setTyTitle] = useState(DEFAULT_TY_TITLE);
+  const [tyBody, setTyBody] = useState(DEFAULT_TY_BODY);
   const orderId = searchParams.get('orderId') || '#' + Math.floor(Math.random() * 1000000);
   const orderDate = searchParams.get('date') || new Date().toLocaleDateString('tr-TR');
 
@@ -26,6 +37,11 @@ function ThankYouContent() {
         trackPurchase(pId, pItems, pTotal, eventId);
       }
     } catch { /* ignore */ }
+    // Admin'in düzenleyebildiği teşekkür metnini çek (yoksa varsayılan kalır)
+    fetch('/api/admin/thankyou')
+      .then(r => r.json())
+      .then(d => { if (d.title) setTyTitle(d.title); if (d.body) setTyBody(d.body); })
+      .catch(() => {});
     // clearCart referansı sabit; yalnız mount'ta çalışsın
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -45,12 +61,15 @@ function ThankYouContent() {
               </svg>
             </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Teşekkürler! Siparişiniz Onaylandı.</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">{tyTitle}</h1>
           <div className="text-lg text-gray-600 space-y-4 max-w-xl mx-auto text-left sm:text-center">
-            <p>El&apos;s Dream Factory&apos;den yaptığınız alışveriş için teşekkür ederiz. Sipariş detaylarınız e-posta adresinize gönderilmiştir.</p>
-            <p>Ürünleriniz özenle hazırlanarak 1-3 iş günü içerisinde kargoya verilecektir. Kargonuz yola çıktığında takip bilgilerinizi sizinle paylaşacağız. Seramiklerinizin size güvenle ve en kısa sürede ulaşması için çalışıyoruz.</p>
-            <p className="italic text-emerald-700">&ldquo;Seramiklerinizi yeni evlerinde görmeyi çok isteriz! Bizi @elsdreamfactory etiketleyerek Instagram&apos;da paylaşabilirsiniz.&rdquo;</p>
-            <p className="font-medium">Keyifli günlerde kullanmanız dileğiyle!</p>
+            {tyBody
+              .split(/\n\s*\n/)
+              .map(p => p.trim())
+              .filter(Boolean)
+              .map((p, i) => (
+                <p key={i} className={/^["“]/.test(p) ? 'italic text-emerald-700' : undefined}>{p}</p>
+              ))}
           </div>
         </div>
 

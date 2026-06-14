@@ -61,7 +61,7 @@ async function sendOrderConfirmationEmail(params: {
           </tfoot>
         </table>
         <p><strong>Teslimat Adresi:</strong> ${params.shippingAddress}</p>
-        <p>Siparişiniz <strong>3–7 iş günü</strong> içinde kargoya verilecektir. Kargo takip bilgilerinizi ayrıca e-posta ile ileteceğiz.</p>
+        <p>Siparişiniz <strong>1-3 iş günü</strong> içinde kargoya verilecektir. Kargo takip bilgilerinizi ayrıca e-posta ile ileteceğiz.</p>
         <p>Teslimattan itibaren <strong>14 gün</strong> içinde cayma hakkınızı kullanabilirsiniz. Detaylar için <a href="https://elsdreamfactory.com/returns" style="color:#5C0A1A;">İade Politikamıza</a> bakabilirsiniz.</p>
         <hr style="border:none;border-top:1px solid #E8E0D8;margin:24px 0;" />
         <p style="color:#9B8E85;font-size:12px;">

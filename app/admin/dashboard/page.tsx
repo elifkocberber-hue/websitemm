@@ -202,6 +202,12 @@ export default function AdminDashboardPage() {
           >
             Kullanım Şartları
           </Link>
+          <Link
+            href="/admin/thankyou"
+            className="inline-flex items-center gap-2 bg-[#DD6B56] hover:bg-[#C45540] text-white font-medium py-2 px-5 rounded-lg transition"
+          >
+            Ödeme Sonrası Metin
+          </Link>
         </div>
 
         {/* Stats Cards */}

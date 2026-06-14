@@ -186,15 +186,21 @@ export default function PaymentPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Telefon</label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                      placeholder="+90 555 123 4567"
-                    />
+                    <div className="flex">
+                      <span className="inline-flex items-center px-3 min-h-11 border border-r-0 border-gray-300 rounded-l-lg bg-gray-100 text-gray-600 text-base select-none">+90</span>
+                      <input
+                        type="tel"
+                        inputMode="numeric"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value.replace(/\D/g, '').slice(0, 10) }))}
+                        required
+                        maxLength={10}
+                        className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                        placeholder="5XX XXX XX XX"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">Başında 0 olmadan, 10 haneli numaranızı girin (örn. 5XX XXX XX XX).</p>
                   </div>
                 </div>
 
