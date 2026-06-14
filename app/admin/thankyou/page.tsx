@@ -10,6 +10,7 @@ export default function AdminThankYouPage() {
   const router = useRouter();
 
   const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
   const [body, setBody] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -23,7 +24,7 @@ export default function AdminThankYouPage() {
     if (isAuthenticated) {
       fetch('/api/admin/thankyou')
         .then(r => r.json())
-        .then(d => { setTitle(d.title || ''); setBody(d.body || ''); })
+        .then(d => { setTitle(d.title || ''); setSubtitle(d.subtitle || ''); setBody(d.body || ''); })
         .catch(() => {})
         .finally(() => setLoading(false));
     }
@@ -36,7 +37,7 @@ export default function AdminThankYouPage() {
       const res = await fetch('/api/admin/thankyou', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, body }),
+        body: JSON.stringify({ title, subtitle, body }),
       });
       if (res.ok) {
         setMessage({ type: 'success', text: 'Teşekkür metni kaydedildi' });
@@ -85,20 +86,39 @@ export default function AdminThankYouPage() {
           ) : (
             <>
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Başlık</label>
+                <label htmlFor="ty-title" className="block text-sm font-medium text-gray-700 mb-2">Başlık (büyük)</label>
                 <input
+                  id="ty-title"
                   type="text"
+                  title="Başlık"
+                  placeholder="Teşekkürler!"
                   value={title}
                   onChange={e => setTitle(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56]"
                 />
               </div>
+              <div className="mb-6">
+                <label htmlFor="ty-subtitle" className="block text-sm font-medium text-gray-700 mb-2">Alt Başlık</label>
+                <input
+                  id="ty-subtitle"
+                  type="text"
+                  title="Alt başlık"
+                  placeholder="Siparişiniz Onaylandı."
+                  value={subtitle}
+                  onChange={e => setSubtitle(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6B56]"
+                />
+                <p className="text-xs text-gray-500 mt-1">Başlığın hemen altında, daha küçük gösterilir. Boş bırakırsanız gösterilmez.</p>
+              </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Metin</label>
+                <label htmlFor="ty-body" className="block text-sm font-medium text-gray-700 mb-2">Metin</label>
                 <p className="text-xs text-gray-500 mb-2">
                   Her paragrafı boş bir satırla ayırın. Tırnak (&quot;...&quot;) ile başlayan paragraf vurgulu (italik) gösterilir.
                 </p>
                 <textarea
+                  id="ty-body"
+                  title="Metin"
+                  placeholder="Paragraflar..."
                   value={body}
                   onChange={e => setBody(e.target.value)}
                   rows={16}

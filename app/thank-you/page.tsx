@@ -6,7 +6,8 @@ import { useEffect, useState, Suspense } from 'react';
 import { trackPurchase } from '@/lib/pixel';
 import { useCart } from '@/context/CeramicCartContext';
 
-const DEFAULT_TY_TITLE = 'Teşekkürler! Siparişiniz Onaylandı.';
+const DEFAULT_TY_TITLE = 'Teşekkürler!';
+const DEFAULT_TY_SUBTITLE = 'Siparişiniz Onaylandı.';
 const DEFAULT_TY_BODY = `El's Dream Factory'den yaptığınız alışveriş için teşekkür ederiz. Sipariş detaylarınız e-posta adresinize gönderilmiştir.
 
 Ürünleriniz özenle hazırlanarak 1-3 iş günü içerisinde kargoya verilecektir. Kargonuz yola çıktığında takip bilgilerinizi sizinle paylaşacağız. Seramiklerinizin size güvenle ve en kısa sürede ulaşması için çalışıyoruz.
@@ -20,6 +21,7 @@ function ThankYouContent() {
   const { clearCart } = useCart();
   const [isMounted, setIsMounted] = useState(false);
   const [tyTitle, setTyTitle] = useState(DEFAULT_TY_TITLE);
+  const [tySubtitle, setTySubtitle] = useState(DEFAULT_TY_SUBTITLE);
   const [tyBody, setTyBody] = useState(DEFAULT_TY_BODY);
   const orderId = searchParams.get('orderId') || '#' + Math.floor(Math.random() * 1000000);
   const orderDate = searchParams.get('date') || new Date().toLocaleDateString('tr-TR');
@@ -40,7 +42,7 @@ function ThankYouContent() {
     // Admin'in düzenleyebildiği teşekkür metnini çek (yoksa varsayılan kalır)
     fetch('/api/admin/thankyou')
       .then(r => r.json())
-      .then(d => { if (d.title) setTyTitle(d.title); if (d.body) setTyBody(d.body); })
+      .then(d => { if (d.title) setTyTitle(d.title); if (d.subtitle !== undefined) setTySubtitle(d.subtitle); if (d.body) setTyBody(d.body); })
       .catch(() => {});
     // clearCart referansı sabit; yalnız mount'ta çalışsın
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,7 +63,10 @@ function ThankYouContent() {
               </svg>
             </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">{tyTitle}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">{tyTitle}</h1>
+          {tySubtitle && (
+            <p className="text-xl md:text-2xl font-medium text-gray-700 mb-6">{tySubtitle}</p>
+          )}
           <div className="text-lg text-gray-600 space-y-4 max-w-xl mx-auto text-left sm:text-center">
             {tyBody
               .split(/\n\s*\n/)
