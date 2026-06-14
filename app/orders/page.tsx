@@ -41,6 +41,8 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const RETURNABLE_STATUSES = ['delivered', 'shipped', 'confirmed'];
+// Kargoya verilmiş/teslim/iptal olmuş siparişler iptal edilemez
+const NON_CANCELLABLE_STATUSES = ['shipped', 'delivered', 'cancelled'];
 
 export default function OrdersPage() {
   const { user, loading: userLoading } = useUser();
@@ -49,6 +51,7 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
   const [returningOrderId, setReturningOrderId] = useState<string | null>(null);
   const [returnResult, setReturnResult] = useState<Record<string, string>>({});
+  const [cancellingOrderId, setCancellingOrderId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -99,6 +102,31 @@ export default function OrdersPage() {
       setError('Bir hata oluştu');
     } finally {
       setReturningOrderId(null);
+    }
+  };
+
+  const handleCancel = async (orderId: string) => {
+    if (!user) return;
+    if (!window.confirm('Siparişinizi iptal etmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) return;
+    setCancellingOrderId(orderId);
+    setError(null);
+    try {
+      const res = await fetch('/api/user/orders/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ orderId }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setOrders(prev => prev.map(o => (o.id === orderId ? { ...o, status: 'cancelled' } : o)));
+      } else {
+        setError(data.error || 'Sipariş iptal edilemedi');
+      }
+    } catch {
+      setError('Bir hata oluştu');
+    } finally {
+      setCancellingOrderId(null);
     }
   };
 
@@ -221,6 +249,34 @@ export default function OrdersPage() {
                     </button>
                   ) : order.status === 'cancelled' ? null : (
                     <p className="text-xs text-earth">İade talebi oluşturmak için siparişinizin teslim edilmiş olması gerekmektedir.</p>
+                  )}
+                </div>
+
+                {/* Sipariş iptal */}
+                <div className="px-6 py-4 border-t border-stone-100 bg-white">
+                  {order.status === 'cancelled' ? (
+                    <p className="text-xs text-earth">Bu sipariş iptal edildi.</p>
+                  ) : NON_CANCELLABLE_STATUSES.includes(order.status) ? (
+                    <>
+                      <button
+                        type="button"
+                        disabled
+                        title="Kargoya verildikten sonra iptal edilemez"
+                        className="text-sm border border-charcoal/15 text-charcoal/40 px-5 py-2 cursor-not-allowed"
+                      >
+                        Siparişi İptal Et
+                      </button>
+                      <p className="text-xs text-earth mt-2">Kargoya verilen siparişler iptal edilemez.</p>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => handleCancel(order.id)}
+                      disabled={cancellingOrderId === order.id}
+                      className="text-sm border border-red-300 text-red-700 px-5 py-2 hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors disabled:opacity-50"
+                    >
+                      {cancellingOrderId === order.id ? 'İptal ediliyor...' : 'Siparişi İptal Et'}
+                    </button>
                   )}
                 </div>
               </div>
