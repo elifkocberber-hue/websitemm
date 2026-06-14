@@ -34,14 +34,7 @@ export async function GET(
         customer_email,
         customer_name,
         created_at,
-        updated_at,
-        users:user_id (
-          id,
-          email,
-          first_name,
-          last_name,
-          created_at
-        )
+        updated_at
         `
       )
       .eq('id', orderId)

@@ -27,12 +27,7 @@ export async function GET(request: NextRequest) {
         customer_name,
         tracking_number,
         created_at,
-        updated_at,
-        users:user_id (
-          email,
-          first_name,
-          last_name
-        )
+        updated_at
         `,
         { count: 'exact' }
       )
