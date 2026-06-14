@@ -3,6 +3,7 @@ import { validateCustomerData } from '@/lib/validation';
 import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
 import { threedsInitialize } from '@/lib/iyzipay';
 import { getSessionUser } from '@/lib/userAuth';
+import { titleCaseName } from '@/lib/format';
 
 function generateRandomId(): string {
   return Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
@@ -153,7 +154,7 @@ export async function POST(request: NextRequest) {
         payment_id: conversationId,
         shipping_address: shippingAddress,
         customer_email: customer.email,
-        customer_name: `${customer.firstName} ${customer.lastName}`.trim(),
+        customer_name: titleCaseName(`${customer.firstName} ${customer.lastName}`),
       })
       .select('id')
       .single();

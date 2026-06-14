@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
 import { isAdminAuthenticated } from '@/lib/adminAuth';
+import { titleCaseName } from '@/lib/format';
 
 // Disable static generation for this route
 export const dynamic = 'force-dynamic';
@@ -125,7 +126,7 @@ export async function PATCH(
             html: `
               <div style="font-family:Georgia,serif;max-width:580px;margin:0 auto;color:#2C2C2C;line-height:1.7;">
                 <h2 style="font-size:22px;font-weight:normal;">Siparişiniz Yola Çıktı!</h2>
-                <p>Merhaba ${customerName},</p>
+                <p>Merhaba ${titleCaseName(customerName)},</p>
                 <p>Siparişiniz <strong>${carrier || 'kargo'}</strong> ile yola çıktı. Kargo takip numaranız:</p>
                 <div style="background:#5C0A1A;color:#fff;padding:16px 24px;border-radius:8px;margin:20px 0;font-size:20px;letter-spacing:0.12em;font-weight:bold;text-align:center;">
                   ${tracking_number}

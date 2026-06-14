@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { getSessionUser } from '@/lib/userAuth';
 import { refundFullPayment } from '@/lib/iyzipay';
+import { titleCaseName } from '@/lib/format';
 import { Resend } from 'resend';
 
 // Kargoya verilmiş/teslim edilmiş/iptal edilmiş siparişler iptal edilemez
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
           html: `
             <div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#2C2C2C;line-height:1.7;">
               <h2 style="font-size:22px;font-weight:normal;">Siparişiniz İptal Edildi</h2>
-              <p>Merhaba ${order.customer_name || 'Değerli Müşterimiz'},</p>
+              <p>Merhaba ${titleCaseName(order.customer_name) || 'Değerli Müşterimiz'},</p>
               <p><strong>${shortId}</strong> numaralı siparişiniz talebiniz üzerine iptal edilmiştir.</p>
               <p>${refundLine}</p>
               <hr style="border:none;border-top:1px solid #E8E0D8;margin:24px 0;" />

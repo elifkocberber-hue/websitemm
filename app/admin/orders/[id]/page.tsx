@@ -74,7 +74,8 @@ export default function OrderDetailPage() {
       }
 
       const data = await response.json();
-      setOrder(data.order);
+      // PATCH yalnız güncellenen sipariş satırını döner (items hariç) — mevcut state'le birleştir
+      setOrder((prev) => (prev ? { ...prev, ...data.order } : data.order));
       setNewStatus(data.order.status);
       setTrackingNumber(data.order.tracking_number || '');
       setCarrier(data.order.carrier || '');
@@ -96,7 +97,8 @@ export default function OrderDetailPage() {
       });
       if (!response.ok) throw new Error('Kargo numarası güncellenemedi');
       const data = await response.json();
-      setOrder(data.order);
+      // PATCH yalnız güncellenen sipariş satırını döner (items hariç) — mevcut state'le birleştir
+      setOrder((prev) => (prev ? { ...prev, ...data.order } : data.order));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu');
     } finally {
@@ -120,7 +122,8 @@ export default function OrderDetailPage() {
       }
 
       const data = await response.json();
-      setOrder(data.order);
+      // PATCH yalnız güncellenen sipariş satırını döner (items hariç) — mevcut state'le birleştir
+      setOrder((prev) => (prev ? { ...prev, ...data.order } : data.order));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu');
     } finally {

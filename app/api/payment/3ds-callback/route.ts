@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { threedsComplete } from '@/lib/iyzipay';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { titleCaseName } from '@/lib/format';
 import { Resend } from 'resend';
 
 function generateRandomId(): string {
@@ -37,7 +38,7 @@ async function sendOrderConfirmationEmail(params: {
     html: `
       <div style="font-family:Georgia,serif;max-width:580px;margin:0 auto;color:#2C2C2C;line-height:1.7;">
         <h2 style="font-size:22px;font-weight:normal;margin-bottom:4px;">Siparişiniz için teşekkürler!</h2>
-        <p>Merhaba ${params.customerName},</p>
+        <p>Merhaba ${titleCaseName(params.customerName)},</p>
         <p>Siparişiniz başarıyla alındı ve hazırlanmaya başlandı. Aşağıda sipariş özetinizi bulabilirsiniz.</p>
         <div style="background:#f9f6f2;border-radius:8px;padding:16px 20px;margin:20px 0;">
           <p style="margin:0 0 4px;font-size:13px;color:#9B8E85;">Sipariş Numarası</p>
