@@ -27,6 +27,7 @@ interface Order {
   status: string;
   created_at: string;
   tracking_number?: string | null;
+  carrier?: string | null;
   order_items: OrderItem[];
   return_requests: ReturnRequest[];
 }
@@ -180,12 +181,22 @@ export default function OrdersPage() {
                   ))}
                 </div>
 
-                {/* Kargo takip numarası */}
+                {/* Kargo bilgileri */}
                 {order.tracking_number && (
                   <div className="px-6 py-4 border-t border-stone-100 bg-blue-50/50">
-                    <p className="text-xs text-earth uppercase tracking-wider mb-1">Kargo Takip Numarası</p>
-                    <p className="text-sm font-bold text-charcoal tracking-wider font-mono">{order.tracking_number}</p>
-                    <p className="text-xs text-earth mt-1">Bu numarayı kargo firmasının web sitesinden takip edebilirsiniz.</p>
+                    <p className="text-xs text-earth uppercase tracking-wider mb-1">Kargo Bilgileri</p>
+                    {order.carrier && (
+                      <p className="text-sm text-charcoal"><span className="text-earth">Firma:</span> <span className="font-medium">{order.carrier}</span></p>
+                    )}
+                    <p className="text-sm text-charcoal mt-0.5">
+                      <span className="text-earth">Takip No:</span>{' '}
+                      <span className="font-bold tracking-wider font-mono">{order.tracking_number}</span>
+                    </p>
+                    <p className="text-xs text-earth mt-1">
+                      {order.carrier
+                        ? `Bu numarayı ${order.carrier} web sitesinden takip edebilirsiniz.`
+                        : 'Bu numarayı kargo firmasının web sitesinden takip edebilirsiniz.'}
+                    </p>
                   </div>
                 )}
 

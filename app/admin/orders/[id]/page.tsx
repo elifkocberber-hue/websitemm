@@ -22,6 +22,7 @@ interface OrderDetail {
   payment_id: string;
   shipping_address: string;
   tracking_number?: string;
+  carrier?: string | null;
   customer_email?: string | null;
   customer_name?: string | null;
   created_at: string;
@@ -48,6 +49,7 @@ export default function OrderDetailPage() {
   const [updating, setUpdating] = useState(false);
   const [newStatus, setNewStatus] = useState('');
   const [trackingNumber, setTrackingNumber] = useState('');
+  const [carrier, setCarrier] = useState('');
   const [trackingUpdating, setTrackingUpdating] = useState(false);
 
   useEffect(() => {
@@ -75,6 +77,7 @@ export default function OrderDetailPage() {
       setOrder(data.order);
       setNewStatus(data.order.status);
       setTrackingNumber(data.order.tracking_number || '');
+      setCarrier(data.order.carrier || '');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu');
     } finally {
@@ -83,13 +86,13 @@ export default function OrderDetailPage() {
   };
 
   const handleTrackingUpdate = async () => {
-    if (!order || !trackingNumber.trim()) return;
+    if (!order || !trackingNumber.trim() || !carrier.trim()) return;
     try {
       setTrackingUpdating(true);
       const response = await fetch(`/api/admin/orders/${orderId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tracking_number: trackingNumber.trim() }),
+        body: JSON.stringify({ tracking_number: trackingNumber.trim(), carrier: carrier.trim() }),
       });
       if (!response.ok) throw new Error('Kargo numarası güncellenemedi');
       const data = await response.json();
@@ -237,19 +240,42 @@ export default function OrderDetailPage() {
               </div>
             </div>
 
-            {/* Kargo Takip Numarası */}
+            {/* Kargo Bilgileri */}
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Kargo Takip Numarası</h2>
-              {order.tracking_number && (
-                <div className="mb-4 bg-green-50 border border-green-200 rounded-lg px-4 py-3">
-                  <p className="text-sm text-gray-600 mb-1">Mevcut takip numarası</p>
-                  <p className="font-mono font-bold text-green-800">{order.tracking_number}</p>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Kargo Bilgileri</h2>
+              {(order.tracking_number || order.carrier) && (
+                <div className="mb-4 bg-green-50 border border-green-200 rounded-lg px-4 py-3 space-y-1">
+                  {order.carrier && (
+                    <p className="text-sm">
+                      <span className="text-gray-600">Kargo firması: </span>
+                      <span className="font-bold text-green-800">{order.carrier}</span>
+                    </p>
+                  )}
+                  {order.tracking_number && (
+                    <p className="text-sm">
+                      <span className="text-gray-600">Takip no: </span>
+                      <span className="font-mono font-bold text-green-800">{order.tracking_number}</span>
+                    </p>
+                  )}
                 </div>
               )}
-              <div className="flex gap-4 items-end">
-                <div className="flex-1">
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="carrier" className="block text-sm font-medium text-gray-700 mb-2">
+                    Kargo Firması
+                  </label>
+                  <input
+                    id="carrier"
+                    type="text"
+                    value={carrier}
+                    onChange={(e) => setCarrier(e.target.value)}
+                    placeholder="örn. Yurtiçi Kargo"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
                   <label htmlFor="tracking-number" className="block text-sm font-medium text-gray-700 mb-2">
-                    {order.tracking_number ? 'Takip Numarasını Güncelle' : 'Takip Numarası Gir'}
+                    Takip Numarası
                   </label>
                   <input
                     id="tracking-number"
@@ -263,14 +289,14 @@ export default function OrderDetailPage() {
                 <button
                   type="button"
                   onClick={handleTrackingUpdate}
-                  disabled={trackingUpdating || !trackingNumber.trim()}
+                  disabled={trackingUpdating || !trackingNumber.trim() || !carrier.trim()}
                   className="bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 text-white font-bold py-2 px-6 rounded-lg transition"
                 >
                   {trackingUpdating ? 'Gönderiliyor...' : 'Kaydet & Bildir'}
                 </button>
               </div>
               <p className="text-xs text-gray-500 mt-2">
-                Kaydettiğinizde müşteriye otomatik e-posta gönderilir.
+                Kaydettiğinizde müşteriye kargo firması ve takip numarasıyla otomatik e-posta gönderilir.
               </p>
             </div>
 

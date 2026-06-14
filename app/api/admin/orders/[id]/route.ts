@@ -29,6 +29,7 @@ export async function GET(
         payment_id,
         iyzico_payment_id,
         tracking_number,
+        carrier,
         shipping_address,
         customer_email,
         customer_name,
@@ -90,7 +91,7 @@ export async function PATCH(
     const { id } = await params;
     const orderId = id;
     const body = await request.json();
-    const { status, tracking_number } = body;
+    const { status, tracking_number, carrier } = body;
 
     if (status !== undefined) {
       const validStatuses = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
@@ -102,6 +103,9 @@ export async function PATCH(
     const updatePayload: Record<string, any> = { updated_at: new Date().toISOString() };
     if (status !== undefined) updatePayload.status = status;
     if (tracking_number !== undefined) updatePayload.tracking_number = tracking_number;
+    if (carrier !== undefined) updatePayload.carrier = carrier;
+    // Takip numarası girildiyse durumu otomatik 'shipped' yap (admin status göndermediyse)
+    if (tracking_number && status === undefined) updatePayload.status = 'shipped';
 
     const { data, error } = await supabase
       .from('orders')
@@ -129,11 +133,11 @@ export async function PATCH(
               <div style="font-family:Georgia,serif;max-width:580px;margin:0 auto;color:#2C2C2C;line-height:1.7;">
                 <h2 style="font-size:22px;font-weight:normal;">Siparişiniz Yola Çıktı!</h2>
                 <p>Merhaba ${customerName},</p>
-                <p>Siparişiniz kargoya verilmiştir. Kargo takip numaranız:</p>
+                <p>Siparişiniz <strong>${carrier || 'kargo'}</strong> ile yola çıktı. Kargo takip numaranız:</p>
                 <div style="background:#5C0A1A;color:#fff;padding:16px 24px;border-radius:8px;margin:20px 0;font-size:20px;letter-spacing:0.12em;font-weight:bold;text-align:center;">
                   ${tracking_number}
                 </div>
-                <p>Bu numarayı kargo şirketinin web sitesi veya uygulaması üzerinden takip edebilirsiniz.</p>
+                <p>Bu numarayı <strong>${carrier || 'kargo firmasının'}</strong> web sitesi veya uygulaması üzerinden takip edebilirsiniz.</p>
                 <p>Teslimattan itibaren <strong>14 gün</strong> içinde cayma hakkınızı kullanabilirsiniz.</p>
                 <hr style="border:none;border-top:1px solid #E8E0D8;margin:24px 0;" />
                 <p style="color:#9B8E85;font-size:12px;">
