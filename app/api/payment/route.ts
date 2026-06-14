@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateCustomerData } from '@/lib/validation';
 import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
 import { threedsInitialize } from '@/lib/iyzipay';
+import { getSessionUser } from '@/lib/userAuth';
 
 function generateRandomId(): string {
   return Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
@@ -67,7 +68,10 @@ export async function POST(request: NextRequest) {
     const { supabaseAdmin } = await import('@/lib/supabaseAdmin');
     const { getCeramicProductById } = await import('@/data/ceramicProducts');
 
-    const basketItems: Array<{ id: string; name: string; category1: string; itemType: string; price: string }> = [];
+    // Doğrulanmış kalemler — hem iyzico sepeti hem DB sipariş kaydı için kaynak
+    const verifiedItems: Array<{
+      id: string; name: string; category: string; quantity: number; unitPrice: number;
+    }> = [];
 
     for (const item of items) {
       const qty = item.quantity || 1;
@@ -98,14 +102,23 @@ export async function POST(request: NextRequest) {
         unitPrice = localProduct.price;
       }
 
-      basketItems.push({
+      verifiedItems.push({
         id: String(item.id),
         name: String(item.name || 'Ürün'),
-        category1: item.category || 'Seramik',
-        itemType: 'PHYSICAL',
-        price: (unitPrice * qty).toFixed(2),
+        category: item.category || 'Seramik',
+        quantity: qty,
+        unitPrice,
       });
     }
+
+    // iyzico sepet kalemleri (satır toplamı bazında)
+    const basketItems = verifiedItems.map((v) => ({
+      id: v.id,
+      name: v.name,
+      category1: v.category,
+      itemType: 'PHYSICAL',
+      price: (v.unitPrice * v.quantity).toFixed(2),
+    }));
 
     // Sepet kalemlerinin toplamı — iyzico price/paidPrice ile birebir eşit olmalı
     const basketSum = basketItems.reduce((s, b) => s + parseFloat(b.price), 0);
@@ -125,6 +138,46 @@ export async function POST(request: NextRequest) {
 
     const conversationId = generateRandomId();
     const priceStr = basketSum.toFixed(2);
+
+    // Bekleyen siparişi oluştur — 3DS sonrası callback'te 'completed' yapılır.
+    // payment_id = conversationId ile callback siparişi bulur.
+    const session = getSessionUser(request);
+    const shippingAddress = `${customer.address}, ${customer.city} ${customer.postalCode}`.trim();
+
+    const { data: pendingOrder, error: orderErr } = await supabaseAdmin
+      .from('orders')
+      .insert({
+        user_id: session?.id ?? null,
+        total_price: basketSum,
+        status: 'pending',
+        payment_id: conversationId,
+        shipping_address: shippingAddress,
+        customer_email: customer.email,
+        customer_name: `${customer.firstName} ${customer.lastName}`.trim(),
+      })
+      .select('id')
+      .single();
+
+    if (orderErr || !pendingOrder) {
+      console.error('Sipariş oluşturma hatası:', orderErr);
+      return NextResponse.json({ success: false, error: 'Sipariş oluşturulamadı' }, { status: 500 });
+    }
+
+    const { error: itemsErr } = await supabaseAdmin.from('order_items').insert(
+      verifiedItems.map((v) => ({
+        order_id: pendingOrder.id,
+        product_id: v.id,
+        product_name: v.name,
+        quantity: v.quantity,
+        price: v.unitPrice,
+      }))
+    );
+
+    if (itemsErr) {
+      console.error('Sipariş kalemi hatası:', itemsErr);
+      await supabaseAdmin.from('orders').delete().eq('id', pendingOrder.id);
+      return NextResponse.json({ success: false, error: 'Sipariş oluşturulamadı' }, { status: 500 });
+    }
 
     // 3D Secure başlatma — imza/kimlik doğrulama resmi SDK tarafından yapılır
     const result = await threedsInitialize({
@@ -191,6 +244,9 @@ export async function POST(request: NextRequest) {
         conversationId,
       });
     }
+
+    // Başlatma başarısız — bekleyen siparişi temizle
+    await supabaseAdmin.from('orders').delete().eq('id', pendingOrder.id);
 
     // Hata: iyzico'nun gerçek mesajını sınıflandır
     const errorMsg = result.errorMessage || '';

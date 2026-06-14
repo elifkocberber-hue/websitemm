@@ -22,8 +22,7 @@ export async function GET(req: NextRequest) {
         id,
         product_name,
         quantity,
-        unit_price,
-        image_url
+        unit_price:price
       ),
       return_requests (
         id,
