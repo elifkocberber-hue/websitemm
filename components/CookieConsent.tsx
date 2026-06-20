@@ -87,7 +87,7 @@ export const CookieConsent: React.FC = () => {
 
               <div>
                 <h3 className="font-semibold text-gray-900 mb-1">1. Veri Sorumlusu</h3>
-                <p><strong>Unvan:</strong> El&apos;s Dream Factory<br /><strong>E-posta:</strong> elsdreamfactory@gmail.com<br /><strong>Web:</strong> elsdreamfactory.com</p>
+                <p><strong>Unvan:</strong> El&apos;s Dream Factory<br /><strong>E-posta:</strong> elsdreamfactory@gmail.com<br /><strong>Web:</strong> www.elsdreamfactory.com</p>
               </div>
 
               <div>

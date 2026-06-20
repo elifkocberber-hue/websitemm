@@ -33,7 +33,7 @@ export default function MesafeliSatisSozlesmesiPage() {
                 <p><strong>Sicil No:</strong> 982174</p>
                 <p><strong>Adres:</strong> Erenköy Mah. Gülbahçe Sk. No:11/28 Kadıköy/İstanbul</p>
                 <p><strong>E-posta:</strong> elsdreamfactory@gmail.com</p>
-                <p><strong>Web:</strong> elsdreamfactory.com</p>
+                <p><strong>Web:</strong> www.elsdreamfactory.com</p>
               </div>
             </div>
             <div className="bg-amber-50 rounded-xl p-6">
@@ -49,7 +49,7 @@ export default function MesafeliSatisSozlesmesiPage() {
         <section className="mb-10">
           <h2 className="text-xl font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200">2. Sözleşmenin Konusu</h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            İşbu sözleşme, Alıcı&apos;nın elsdreamfactory.com adresinden elektronik ortamda sipariş ettiği,
+            İşbu sözleşme, Alıcı&apos;nın www.elsdreamfactory.com adresinden elektronik ortamda sipariş ettiği,
             aşağıda nitelikleri ve satış fiyatı belirtilen ürünün satışı ve teslimatına ilişkin olarak
             6502 Sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği hükümleri
             çerçevesinde tarafların hak ve yükümlülüklerini düzenlemektedir.

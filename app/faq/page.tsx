@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Sıkça Sorulan Sorular',
   description: 'El\'s Dream Factory hakkında sıkça sorulan sorular ve cevapları. Sipariş, kargo, iade ve seramik ürünler hakkında merak ettikleriniz.',
-  alternates: { canonical: 'https://elsdreamfactory.com/faq' },
+  alternates: { canonical: 'https://www.elsdreamfactory.com/faq' },
 };
 
 async function fetchFaqs(): Promise<Faq[]> {

@@ -62,7 +62,7 @@ async function sendOrderConfirmationEmail(params: {
         </table>
         <p><strong>Teslimat Adresi:</strong> ${params.shippingAddress}</p>
         <p>Siparişiniz <strong>1-3 iş günü</strong> içinde kargoya verilecektir. Kargo takip bilgilerinizi ayrıca e-posta ile ileteceğiz.</p>
-        <p>Teslimattan itibaren <strong>14 gün</strong> içinde cayma hakkınızı kullanabilirsiniz. Detaylar için <a href="https://elsdreamfactory.com/returns" style="color:#5C0A1A;">İade Politikamıza</a> bakabilirsiniz.</p>
+        <p>Teslimattan itibaren <strong>14 gün</strong> içinde cayma hakkınızı kullanabilirsiniz. Detaylar için <a href="https://www.elsdreamfactory.com/returns" style="color:#5C0A1A;">İade Politikamıza</a> bakabilirsiniz.</p>
         <hr style="border:none;border-top:1px solid #E8E0D8;margin:24px 0;" />
         <p style="color:#9B8E85;font-size:12px;">
           Sorularınız için: <a href="mailto:elsdreamfactory@gmail.com" style="color:#5C0A1A;">elsdreamfactory@gmail.com</a><br/>
@@ -76,7 +76,7 @@ async function sendOrderConfirmationEmail(params: {
 // iyzico 3D Secure callback — banka OTP doğrulaması sonrası iyzico bu endpoint'e POST atar.
 // Tarayıcı POST ile gelir; başarı/başarısızlık sayfasına 303 (GET) ile yönlendiririz.
 export async function POST(request: NextRequest) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://elsdreamfactory.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.elsdreamfactory.com';
 
   try {
     if (!process.env.IYZICO_API_KEY || !process.env.IYZICO_SECRET_KEY || !process.env.IYZICO_BASE_URL) {

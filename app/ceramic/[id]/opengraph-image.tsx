@@ -34,7 +34,7 @@ export default async function ProductOGImage({ params }: { params: { id: string 
 
   const productImage = product.images[0]?.startsWith('http')
     ? product.images[0]
-    : `https://elsdreamfactory.com${product.images[0]}`;
+    : `https://www.elsdreamfactory.com${product.images[0]}`;
 
   return new ImageResponse(
     (
@@ -120,7 +120,7 @@ export default async function ProductOGImage({ params }: { params: { id: string 
               letterSpacing: '0.15em',
             }}
           >
-            elsdreamfactory.com
+            www.elsdreamfactory.com
           </div>
         </div>
       </div>

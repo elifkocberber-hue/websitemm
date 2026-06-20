@@ -18,11 +18,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Hikayemiz',
     description,
-    alternates: { canonical: 'https://elsdreamfactory.com/about' },
+    alternates: { canonical: 'https://www.elsdreamfactory.com/about' },
     openGraph: {
       title: 'Hikayemiz | El\'s Dream Factory',
       description,
-      url: 'https://elsdreamfactory.com/about',
+      url: 'https://www.elsdreamfactory.com/about',
       type: 'website',
     },
   };

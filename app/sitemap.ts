@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { ceramicProducts } from '@/data/ceramicProducts';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://elsdreamfactory.com';
+  const baseUrl = 'https://www.elsdreamfactory.com';
 
   // Ana sayfalar
   const pages: MetadataRoute.Sitemap = [

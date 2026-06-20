@@ -21,11 +21,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'El Yapımı Seramik Koleksiyonu | El\'s Dream Factory',
     description: 'El yapımı seramik kupalar, kedi figürleri ve dekoratif objeler. Sanatsal hediyeler keşfedin.',
-    url: 'https://elsdreamfactory.com/ceramics',
+    url: 'https://www.elsdreamfactory.com/ceramics',
     type: 'website',
   },
   alternates: {
-    canonical: 'https://elsdreamfactory.com/ceramics',
+    canonical: 'https://www.elsdreamfactory.com/ceramics',
   },
 };
 

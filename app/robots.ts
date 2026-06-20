@@ -14,7 +14,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/sergenim/', '/api/', '/private/', '/cart', '/payment', '/payment-failed', '/thank-you'],
       },
     ],
-    sitemap: 'https://elsdreamfactory.com/sitemap.xml',
-    host: 'https://elsdreamfactory.com',
+    sitemap: 'https://www.elsdreamfactory.com/sitemap.xml',
+    host: 'https://www.elsdreamfactory.com',
   };
 }

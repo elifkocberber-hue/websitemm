@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       }
 
       const resend = new Resend(resendKey);
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://elsdreamfactory.com';
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.elsdreamfactory.com';
       const resetLink = `${siteUrl}/reset-password?token=${token}`;
 
       const { error: emailError } = await resend.emails.send({

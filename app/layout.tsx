@@ -56,19 +56,19 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "tr_TR",
-    url: "https://elsdreamfactory.com",
+    url: "https://www.elsdreamfactory.com",
     title: "El's Dream Factory | El Yapımı Seramik & Hediye",
     description: "Sevimli kedi figürleri, el yapımı seramik kupalar ve dekoratif objeler. Sevdiklerinize özel, sanatsal hediyeler keşfedin.",
     siteName: "El's Dream Factory",
     images: [
       {
-        url: "https://elsdreamfactory.com/og-image.png",
+        url: "https://www.elsdreamfactory.com/og-image.png",
         width: 1200,
         height: 630,
         alt: "El's Dream Factory - El Yapımı Seramik Ürünler ve Hediyeler",
       },
       {
-        url: "https://elsdreamfactory.com/instagram-image.png",
+        url: "https://www.elsdreamfactory.com/instagram-image.png",
         width: 1080,
         height: 1080,
         alt: "El's Dream Factory - El Yapımı Seramik",
@@ -81,7 +81,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "El's Dream Factory | El Yapımı Seramik & Hediye",
     description: "Sevimli seramik kedi figürleri, el yapımı kupalar ve dekoratif objeler. Sanatsal hediyeler keşfedin.",
-    images: ["https://elsdreamfactory.com/twitter-image.png"],
+    images: ["https://www.elsdreamfactory.com/twitter-image.png"],
   },
 
   // Additional Metadata
@@ -98,13 +98,13 @@ export const metadata: Metadata = {
   },
 
   // Canonical (for Next.js)
-  metadataBase: new URL("https://elsdreamfactory.com"),
+  metadataBase: new URL("https://www.elsdreamfactory.com"),
   alternates: {
-    canonical: "https://elsdreamfactory.com",
+    canonical: "https://www.elsdreamfactory.com",
     languages: {
-      'tr-TR': 'https://elsdreamfactory.com',
-      'en-US': 'https://elsdreamfactory.com',
-      'x-default': 'https://elsdreamfactory.com',
+      'tr-TR': 'https://www.elsdreamfactory.com',
+      'en-US': 'https://www.elsdreamfactory.com',
+      'x-default': 'https://www.elsdreamfactory.com',
     },
   },
 
@@ -119,7 +119,7 @@ export const metadata: Metadata = {
   authors: [
     {
       name: "El's Dream Factory",
-      url: "https://elsdreamfactory.com",
+      url: "https://www.elsdreamfactory.com",
     },
   ],
 
@@ -145,8 +145,8 @@ export default function RootLayout({
               "@type": "Organization",
               name: "El's Dream Factory",
               alternateName: "Els Dream Factory",
-              url: "https://elsdreamfactory.com",
-              logo: "https://elsdreamfactory.com/logo.png",
+              url: "https://www.elsdreamfactory.com",
+              logo: "https://www.elsdreamfactory.com/logo.png",
               description: "El yapımı seramik ürünler, sevimli kedi figürleri, dekoratif objeler ve özel hediyeler. Benzersiz sanat eserleri.",
               foundingDate: "1994",
               foundingLocation: {
@@ -176,14 +176,14 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "El's Dream Factory",
-              url: "https://elsdreamfactory.com",
+              url: "https://www.elsdreamfactory.com",
               description: "El yapımı seramik ürünler ve hediyeler",
               inLanguage: "tr",
               potentialAction: {
                 "@type": "SearchAction",
                 target: {
                   "@type": "EntryPoint",
-                  urlTemplate: "https://elsdreamfactory.com/search?q={search_term_string}",
+                  urlTemplate: "https://www.elsdreamfactory.com/search?q={search_term_string}",
                 },
                 "query-input": "required name=search_term_string",
               },
@@ -199,8 +199,8 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Store",
               name: "El's Dream Factory",
-              image: "https://elsdreamfactory.com/og-image.png",
-              url: "https://elsdreamfactory.com",
+              image: "https://www.elsdreamfactory.com/og-image.png",
+              url: "https://www.elsdreamfactory.com",
               description: "El yapımı seramik ürünler, kedi figürleri, dekoratif objeler ve özel hediye seçenekleri",
               address: {
                 "@type": "PostalAddress",

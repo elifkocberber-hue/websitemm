@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const imageUrl = product.images[0]?.startsWith('http')
     ? product.images[0]
-    : `https://elsdreamfactory.com${product.images[0]}`;
+    : `https://www.elsdreamfactory.com${product.images[0]}`;
 
   return {
     title: `${product.name} | El Yapımı Seramik`,
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `${product.name} | El's Dream Factory`,
       description: product.description,
       type: 'website',
-      url: `https://elsdreamfactory.com/ceramic/${product.id}`,
+      url: `https://www.elsdreamfactory.com/ceramic/${product.id}`,
       images: [{ url: imageUrl, width: 800, height: 800, alt: product.name }],
     },
     twitter: {
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       images: [imageUrl],
     },
     alternates: {
-      canonical: `https://elsdreamfactory.com/ceramic/${product.id}`,
+      canonical: `https://www.elsdreamfactory.com/ceramic/${product.id}`,
     },
   };
 }
@@ -84,7 +84,7 @@ export default async function CeramicDetailPage({ params }: PageProps) {
             name: product.name,
             description: product.description,
             image: product.images.map((img) =>
-              img.startsWith('http') ? img : `https://elsdreamfactory.com${img}`
+              img.startsWith('http') ? img : `https://www.elsdreamfactory.com${img}`
             ),
             brand: {
               '@type': 'Brand',
@@ -92,7 +92,7 @@ export default async function CeramicDetailPage({ params }: PageProps) {
             },
             offers: {
               '@type': 'Offer',
-              url: `https://elsdreamfactory.com/ceramic/${product.id}`,
+              url: `https://www.elsdreamfactory.com/ceramic/${product.id}`,
               priceCurrency: 'TRY',
               price: product.price.toFixed(2),
               availability: product.stock > 0
@@ -123,19 +123,19 @@ export default async function CeramicDetailPage({ params }: PageProps) {
                 '@type': 'ListItem',
                 position: 1,
                 name: 'Ana Sayfa',
-                item: 'https://elsdreamfactory.com',
+                item: 'https://www.elsdreamfactory.com',
               },
               {
                 '@type': 'ListItem',
                 position: 2,
                 name: 'Koleksiyon',
-                item: 'https://elsdreamfactory.com/ceramics',
+                item: 'https://www.elsdreamfactory.com/ceramics',
               },
               {
                 '@type': 'ListItem',
                 position: 3,
                 name: product.name,
-                item: `https://elsdreamfactory.com/ceramic/${product.id}`,
+                item: `https://www.elsdreamfactory.com/ceramic/${product.id}`,
               },
             ],
           }),

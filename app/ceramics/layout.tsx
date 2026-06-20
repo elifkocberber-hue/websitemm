@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://elsdreamfactory.com/og-image.png',
+        url: 'https://www.elsdreamfactory.com/og-image.png',
         width: 1200,
         height: 630,
         alt: 'El Yapımı Seramik Koleksiyonu - Kedi Figürleri, Kupalar ve Dekoratif Objeler',

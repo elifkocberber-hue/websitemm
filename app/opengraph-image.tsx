@@ -24,7 +24,7 @@ export default function OGImage() {
       >
         {/* Logo */}
         <img
-          src="https://elsdreamfactory.com/images/logo.png"
+          src="https://www.elsdreamfactory.com/images/logo.png"
           alt="El's Dream Factory Logo"
           width={220}
           height={220}
@@ -82,7 +82,7 @@ export default function OGImage() {
               letterSpacing: '0.15em',
             }}
           >
-            elsdreamfactory.com
+            www.elsdreamfactory.com
           </div>
         </div>
       </div>

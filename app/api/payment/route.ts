@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://elsdreamfactory.com';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.elsdreamfactory.com';
 
     if (!process.env.IYZICO_API_KEY || !process.env.IYZICO_SECRET_KEY || !process.env.IYZICO_BASE_URL) {
       return NextResponse.json(
@@ -277,7 +277,7 @@ export async function OPTIONS(request: NextRequest) {
   const origin = request.headers.get('origin');
   const allowedOrigins = [
     process.env.NEXT_PUBLIC_APP_URL,
-    'https://elsdreamfactory.com',
+    'https://www.elsdreamfactory.com',
     'http://localhost:3000',
   ].filter(Boolean);
 

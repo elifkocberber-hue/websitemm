@@ -42,7 +42,7 @@ export default function PrivacyPage() {
             <p><strong>Sicil No:</strong> 982174</p>
             <p><strong>Adres:</strong> Erenköy Mah. Gülbahçe Sk. No:11/28 Kadıköy/İstanbul</p>
             <p><strong>E-posta:</strong> elsdreamfactory@gmail.com</p>
-            <p><strong>Web:</strong> elsdreamfactory.com</p>
+            <p><strong>Web:</strong> www.elsdreamfactory.com</p>
           </div>
         </section>
 
