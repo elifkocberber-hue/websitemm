@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { useUser } from '@/context/UserContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function RegisterPage() {
   const { register } = useUser();
+  const { t } = useLanguage();
   const router = useRouter();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -21,12 +23,12 @@ export default function RegisterPage() {
     setError('');
 
     if (password !== confirmPassword) {
-      setError('Şifreler eşleşmiyor');
+      setError(t.auth.passwords_mismatch);
       return;
     }
 
     if (password.length < 6) {
-      setError('Şifre en az 6 karakter olmalıdır');
+      setError(t.auth.password_min);
       return;
     }
 
@@ -35,7 +37,7 @@ export default function RegisterPage() {
     if (result.success) {
       router.push('/');
     } else {
-      setError(result.error || 'Kayıt başarısız');
+      setError(result.error || t.auth.register_failed);
     }
     setLoading(false);
   };
@@ -44,8 +46,8 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-bone flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
-          <h1 className="heading-display text-3xl md:text-4xl text-charcoal mb-3">Üye Ol</h1>
-          <p className="text-earth text-sm">Yeni bir hesap oluşturun</p>
+          <h1 className="heading-display text-3xl md:text-4xl text-charcoal mb-3">{t.auth.register_title}</h1>
+          <p className="text-earth text-sm">{t.auth.register_subtitle}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -58,7 +60,7 @@ export default function RegisterPage() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="firstName" className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">
-                Ad
+                {t.auth.first_name}
               </label>
               <input
                 id="firstName"
@@ -67,12 +69,12 @@ export default function RegisterPage() {
                 onChange={(e) => setFirstName(e.target.value)}
                 required
                 className="w-full min-h-11 px-4 py-3 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
-                placeholder="Adınız"
+                placeholder={t.auth.first_name_ph}
               />
             </div>
             <div>
               <label htmlFor="lastName" className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">
-                Soyad
+                {t.auth.last_name}
               </label>
               <input
                 id="lastName"
@@ -81,14 +83,14 @@ export default function RegisterPage() {
                 onChange={(e) => setLastName(e.target.value)}
                 required
                 className="w-full min-h-11 px-4 py-3 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
-                placeholder="Soyadınız"
+                placeholder={t.auth.last_name_ph}
               />
             </div>
           </div>
 
           <div>
             <label htmlFor="email" className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">
-              E-posta
+              {t.auth.email}
             </label>
             <input
               id="email"
@@ -97,13 +99,13 @@ export default function RegisterPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full min-h-11 px-4 py-3 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
-              placeholder="ornek@email.com"
+              placeholder={t.auth.email_ph}
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">
-              Şifre
+              {t.auth.password}
             </label>
             <input
               id="password"
@@ -113,13 +115,13 @@ export default function RegisterPage() {
               required
               minLength={6}
               className="w-full min-h-11 px-4 py-3 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
-              placeholder="En az 6 karakter"
+              placeholder={t.auth.password_min_ph}
             />
           </div>
 
           <div>
             <label htmlFor="confirmPassword" className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">
-              Şifre Tekrar
+              {t.auth.confirm_password}
             </label>
             <input
               id="confirmPassword"
@@ -129,7 +131,7 @@ export default function RegisterPage() {
               required
               minLength={6}
               className="w-full min-h-11 px-4 py-3 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
-              placeholder="Şifrenizi tekrarlayın"
+              placeholder={t.auth.confirm_password_ph}
             />
           </div>
 
@@ -138,20 +140,20 @@ export default function RegisterPage() {
             disabled={loading}
             className="w-full bg-charcoal text-bone py-3.5 text-sm tracking-wider uppercase hover:bg-accent transition-colors duration-300 disabled:opacity-50 rounded-lg"
           >
-            {loading ? 'Kayıt yapılıyor...' : 'Üye Ol'}
+            {loading ? t.auth.registering : t.auth.register_btn}
           </button>
         </form>
 
         <p className="text-center text-earth text-sm mt-8">
-          Zaten hesabınız var mı?{' '}
+          {t.auth.have_account}{' '}
           <Link href="/login" className="text-charcoal hover:text-accent font-medium transition-colors">
-            Giriş Yap
+            {t.auth.login_link}
           </Link>
         </p>
 
         <p className="text-center mt-4">
           <Link href="/" className="text-earth text-sm hover:text-charcoal transition-colors">
-            ← Ana Sayfaya Dön
+            {t.auth.back_home}
           </Link>
         </p>
       </div>

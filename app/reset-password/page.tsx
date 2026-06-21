@@ -3,8 +3,10 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 function ResetPasswordContent() {
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get('token');
@@ -16,17 +18,17 @@ function ResetPasswordContent() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    if (!token) setError('Geçersiz bağlantı. Lütfen yeni bir şifre sıfırlama talebi oluşturun.');
-  }, [token]);
+    if (!token) setError(t.auth.invalid_link);
+  }, [token, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirm) {
-      setError('Şifreler eşleşmiyor');
+      setError(t.auth.passwords_mismatch);
       return;
     }
     if (password.length < 6) {
-      setError('Şifre en az 6 karakter olmalıdır');
+      setError(t.auth.password_min);
       return;
     }
 
@@ -46,10 +48,10 @@ function ResetPasswordContent() {
         setSuccess(true);
         setTimeout(() => router.push('/login'), 3000);
       } else {
-        setError(data.error || 'Bir hata oluştu');
+        setError(data.error || t.auth.generic_error);
       }
     } catch {
-      setError('Bağlantı hatası. Lütfen tekrar deneyin.');
+      setError(t.auth.connection_error);
     } finally {
       setLoading(false);
     }
@@ -63,8 +65,8 @@ function ResetPasswordContent() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="heading-serif text-2xl text-charcoal mb-3">Şifreniz Güncellendi</h2>
-        <p className="text-earth text-sm">Giriş sayfasına yönlendiriliyorsunuz...</p>
+        <h2 className="heading-serif text-2xl text-charcoal mb-3">{t.auth.password_updated_title}</h2>
+        <p className="text-earth text-sm">{t.auth.redirecting_login}</p>
       </div>
     );
   }
@@ -72,8 +74,8 @@ function ResetPasswordContent() {
   return (
     <>
       <div className="text-center mb-10">
-        <h1 className="heading-display text-3xl md:text-4xl text-charcoal mb-3">Yeni Şifre</h1>
-        <p className="text-earth text-sm">Hesabınız için yeni bir şifre belirleyin.</p>
+        <h1 className="heading-display text-3xl md:text-4xl text-charcoal mb-3">{t.auth.reset_title}</h1>
+        <p className="text-earth text-sm">{t.auth.reset_subtitle}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -85,7 +87,7 @@ function ResetPasswordContent() {
 
         <div>
           <label htmlFor="password" className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">
-            Yeni Şifre
+            {t.auth.new_password}
           </label>
           <input
             id="password"
@@ -96,13 +98,13 @@ function ResetPasswordContent() {
             minLength={6}
             disabled={!token}
             className="w-full px-4 py-3 bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors disabled:opacity-50"
-            placeholder="En az 6 karakter"
+            placeholder={t.auth.password_min_ph}
           />
         </div>
 
         <div>
           <label htmlFor="confirm" className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">
-            Şifre Tekrar
+            {t.auth.confirm_password}
           </label>
           <input
             id="confirm"
@@ -121,13 +123,13 @@ function ResetPasswordContent() {
           disabled={loading || !token}
           className="w-full bg-charcoal text-bone py-3.5 text-sm tracking-wider uppercase hover:bg-accent transition-colors duration-300 disabled:opacity-50 rounded-lg"
         >
-          {loading ? 'Kaydediliyor...' : 'Şifremi Güncelle'}
+          {loading ? t.auth.saving : t.auth.update_password_btn}
         </button>
       </form>
 
       <p className="text-center mt-8">
         <Link href="/login" className="text-earth text-sm hover:text-charcoal transition-colors">
-          ← Giriş sayfasına dön
+          {t.auth.back_login}
         </Link>
       </p>
     </>

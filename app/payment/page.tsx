@@ -6,9 +6,11 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { generateEventId } from '@/lib/pixel';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function PaymentPage() {
   const { items, totalPrice } = useCart();
+  const { t } = useLanguage();
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -39,13 +41,13 @@ export default function PaymentPage() {
     return (
       <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">Ödeme</h1>
-          <p className="text-gray-600 mb-6">Ödeme yapmak için sepetinizin boş olmadığından emin olun.</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-6">{t.payment.empty_title}</h1>
+          <p className="text-gray-600 mb-6">{t.payment.empty_desc}</p>
           <Link
             href="/ceramics"
             className="inline-block bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-lg"
           >
-            Alışverişe Devam Et
+            {t.payment.continue_shopping}
           </Link>
         </div>
       </div>
@@ -126,26 +128,26 @@ export default function PaymentPage() {
       <div className="max-w-4xl mx-auto">
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm text-gray-600">
-          <Link href="/" className="text-amber-600 hover:text-amber-800">Ana Sayfa</Link>
+          <Link href="/" className="text-amber-600 hover:text-amber-800">{t.payment.breadcrumb_home}</Link>
           <span className="mx-2">›</span>
-          <Link href="/cart" className="text-amber-600 hover:text-amber-800">Sepet</Link>
+          <Link href="/cart" className="text-amber-600 hover:text-amber-800">{t.payment.breadcrumb_cart}</Link>
           <span className="mx-2">›</span>
-          <span>Ödeme</span>
+          <span>{t.payment.breadcrumb_payment}</span>
         </nav>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Güvenli Ödeme</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">{t.payment.title}</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Payment Form */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-md p-8 mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Kişisel Bilgiler</h2>
-              
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">{t.payment.personal_info}</h2>
+
               <form onSubmit={handlePayment} className="space-y-6">
                 {/* Name Fields */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Ad</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.first_name}</label>
                     <input
                       type="text"
                       name="firstName"
@@ -153,11 +155,11 @@ export default function PaymentPage() {
                       onChange={handleInputChange}
                       required
                       className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                      placeholder="Adınız"
+                      placeholder={t.payment.first_name_ph}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Soyadı</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.last_name}</label>
                     <input
                       type="text"
                       name="lastName"
@@ -165,7 +167,7 @@ export default function PaymentPage() {
                       onChange={handleInputChange}
                       required
                       className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                      placeholder="Soyadınız"
+                      placeholder={t.payment.last_name_ph}
                     />
                   </div>
                 </div>
@@ -173,7 +175,7 @@ export default function PaymentPage() {
                 {/* Email & Phone */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">E-posta</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.email}</label>
                     <input
                       type="email"
                       name="email"
@@ -185,7 +187,7 @@ export default function PaymentPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Telefon</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.phone}</label>
                     <div className="flex">
                       <span className="inline-flex items-center px-3 min-h-11 border border-r-0 border-gray-300 rounded-l-lg bg-gray-100 text-gray-600 text-base select-none">+90</span>
                       <input
@@ -200,13 +202,13 @@ export default function PaymentPage() {
                         placeholder="5XX XXX XX XX"
                       />
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">Başında 0 olmadan, 10 haneli numaranızı girin (örn. 5XX XXX XX XX).</p>
+                    <p className="text-xs text-gray-500 mt-1">{t.payment.phone_hint}</p>
                   </div>
                 </div>
 
                 {/* Address */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Adres</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.address}</label>
                   <input
                     type="text"
                     name="address"
@@ -214,14 +216,14 @@ export default function PaymentPage() {
                     onChange={handleInputChange}
                     required
                     className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                    placeholder="Sokak ve bina adı"
+                    placeholder={t.payment.address_ph}
                   />
                 </div>
 
                 {/* City & Postal */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Şehir</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.city}</label>
                     <input
                       type="text"
                       name="city"
@@ -229,11 +231,11 @@ export default function PaymentPage() {
                       onChange={handleInputChange}
                       required
                       className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                      placeholder="Şehir"
+                      placeholder={t.payment.city_ph}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Posta Kodu</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.postal_code}</label>
                     <input
                       type="text"
                       name="postalCode"
@@ -248,11 +250,11 @@ export default function PaymentPage() {
 
                 {/* ═══════ KART BİLGİLERİ ═══════ */}
                 <div className="border-t border-gray-200 pt-6 mt-2">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Kart Bilgileri</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">{t.payment.card_info}</h2>
 
                   {/* Kart Üzerindeki İsim */}
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Kart Üzerindeki İsim</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.card_holder}</label>
                     <input
                       type="text"
                       name="cardHolderName"
@@ -260,14 +262,14 @@ export default function PaymentPage() {
                       onChange={handleInputChange}
                       required
                       className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                      placeholder="ADINIZ SOYADINIZ"
+                      placeholder={t.payment.card_holder_ph}
                       autoComplete="cc-name"
                     />
                   </div>
 
                   {/* Kart Numarası */}
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Kart Numarası</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.card_number}</label>
                     <input
                       type="text"
                       name="cardNumber"
@@ -288,16 +290,16 @@ export default function PaymentPage() {
                   {/* Son Kullanma & CVC */}
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Ay</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.month}</label>
                       <select
                         name="expireMonth"
                         value={formData.expireMonth}
                         onChange={(e) => setFormData(prev => ({ ...prev, expireMonth: e.target.value }))}
                         required
                         className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                        title="Son kullanma ayı"
+                        title={t.payment.expire_month_title}
                       >
-                        <option value="">Ay</option>
+                        <option value="">{t.payment.month}</option>
                         {Array.from({ length: 12 }, (_, i) => (
                           <option key={i + 1} value={String(i + 1).padStart(2, '0')}>
                             {String(i + 1).padStart(2, '0')}
@@ -306,16 +308,16 @@ export default function PaymentPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Yıl</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.year}</label>
                       <select
                         name="expireYear"
                         value={formData.expireYear}
                         onChange={(e) => setFormData(prev => ({ ...prev, expireYear: e.target.value }))}
                         required
                         className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                        title="Son kullanma yılı"
+                        title={t.payment.expire_year_title}
                       >
-                        <option value="">Yıl</option>
+                        <option value="">{t.payment.year}</option>
                         {Array.from({ length: 10 }, (_, i) => {
                           const year = new Date().getFullYear() + i;
                           return (
@@ -356,7 +358,7 @@ export default function PaymentPage() {
                     className="h-8 w-auto"
                   />
                   <p className="text-xs text-gray-600 text-center">
-                    Ödemeniz iyzico tarafından SSL ile güvenli şekilde işlenir
+                    {t.payment.iyzico_note}
                   </p>
                 </div>
 
@@ -371,10 +373,11 @@ export default function PaymentPage() {
                       className="mt-1 w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500 shrink-0"
                     />
                     <span className="text-sm text-gray-700 leading-relaxed">
-                      <a href="/returns" target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:underline font-medium">Ön Bilgilendirme Koşulları</a>&apos;nı
-                      {' '}ve{' '}
-                      <a href="/mesafeli-satis-sozlesmesi" target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:underline font-medium">Mesafeli Satış Sözleşmesi</a>&apos;ni
-                      {' '}okudum, onaylıyorum.
+                      {t.payment.consent_1}
+                      <a href="/returns" target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:underline font-medium">{t.payment.consent_link1}</a>
+                      {t.payment.consent_2}
+                      <a href="/mesafeli-satis-sozlesmesi" target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:underline font-medium">{t.payment.consent_link2}</a>
+                      {t.payment.consent_3}
                       <span className="text-red-500 ml-1">*</span>
                     </span>
                   </label>
@@ -386,7 +389,7 @@ export default function PaymentPage() {
                   disabled={loading || !mssAccepted || !onBilgiAccepted}
                   className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-colors"
                 >
-                  {loading ? 'İşleniyor...' : `${totalPrice.toFixed(2)} ₺ Ödeme Yap`}
+                  {loading ? t.payment.processing : `${t.payment.pay_prefix}${totalPrice.toFixed(2)} ₺${t.payment.pay_suffix}`}
                 </button>
               </form>
             </div>
@@ -395,7 +398,7 @@ export default function PaymentPage() {
           {/* Order Summary */}
           <div>
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Sipariş Özeti</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-6">{t.payment.order_summary}</h3>
 
               <div className="space-y-4 mb-6 border-b pb-6">
                 {items.map(item => (
@@ -411,7 +414,7 @@ export default function PaymentPage() {
                     </div>
                     <div className="flex-1">
                       <p className="font-medium text-gray-900">{item.name}</p>
-                      <p className="text-sm text-gray-600">Adet: {item.quantity}</p>
+                      <p className="text-sm text-gray-600">{t.payment.qty_label} {item.quantity}</p>
                       <p className="text-amber-600 font-bold">₺{(item.price * item.quantity).toFixed(2)}</p>
                     </div>
                   </div>
@@ -420,17 +423,17 @@ export default function PaymentPage() {
 
               <div className="space-y-3 mb-6 border-b pb-6">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal</span>
+                  <span className="text-gray-600">{t.payment.subtotal}</span>
                   <span className="font-medium">₺{totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Kargo</span>
-                  <span className="font-medium text-green-600">Ücretsiz</span>
+                  <span className="text-gray-600">{t.payment.shipping}</span>
+                  <span className="font-medium text-green-600">{t.payment.free}</span>
                 </div>
               </div>
 
               <div className="flex justify-between mb-6 text-lg font-bold">
-                <span>Toplam</span>
+                <span>{t.payment.total}</span>
                 <span className="text-amber-600">₺{totalPrice.toFixed(2)}</span>
               </div>
 
@@ -438,7 +441,7 @@ export default function PaymentPage() {
                 href="/cart"
                 className="w-full block text-center text-amber-600 hover:text-amber-800 font-medium py-2"
               >
-                ← Sepete Dön
+                {t.payment.back_to_cart}
               </Link>
             </div>
           </div>

@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function ForgotPasswordPage() {
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,10 +27,10 @@ export default function ForgotPasswordPage() {
         setSubmitted(true);
       } else {
         const data = await res.json();
-        setError(data.error || 'Bir hata oluştu');
+        setError(data.error || t.auth.generic_error);
       }
     } catch {
-      setError('Bağlantı hatası. Lütfen tekrar deneyin.');
+      setError(t.auth.connection_error);
     } finally {
       setLoading(false);
     }
@@ -40,9 +42,9 @@ export default function ForgotPasswordPage() {
         {!submitted ? (
           <>
             <div className="text-center mb-10">
-              <h1 className="heading-display text-3xl md:text-4xl text-charcoal mb-3">Şifremi Unuttum</h1>
+              <h1 className="heading-display text-3xl md:text-4xl text-charcoal mb-3">{t.auth.forgot_title}</h1>
               <p className="text-earth text-sm">
-                E-posta adresinizi girin, şifre sıfırlama bağlantısı gönderelim.
+                {t.auth.forgot_subtitle}
               </p>
             </div>
 
@@ -55,7 +57,7 @@ export default function ForgotPasswordPage() {
 
               <div>
                 <label htmlFor="email" className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">
-                  E-posta
+                  {t.auth.email}
                 </label>
                 <input
                   id="email"
@@ -64,7 +66,7 @@ export default function ForgotPasswordPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   className="w-full px-4 py-3 bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
-                  placeholder="ornek@email.com"
+                  placeholder={t.auth.email_ph}
                 />
               </div>
 
@@ -73,7 +75,7 @@ export default function ForgotPasswordPage() {
                 disabled={loading}
                 className="w-full bg-charcoal text-bone py-3.5 text-sm tracking-wider uppercase hover:bg-accent transition-colors duration-300 disabled:opacity-50 rounded-lg"
               >
-                {loading ? 'Gönderiliyor...' : 'Bağlantı Gönder'}
+                {loading ? t.auth.sending : t.auth.send_link}
               </button>
             </form>
           </>
@@ -84,19 +86,19 @@ export default function ForgotPasswordPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="heading-serif text-2xl text-charcoal mb-3">E-posta Gönderildi</h2>
+            <h2 className="heading-serif text-2xl text-charcoal mb-3">{t.auth.email_sent_title}</h2>
             <p className="text-earth text-sm mb-2">
-              <span className="font-medium text-charcoal">{email}</span> adresine şifre sıfırlama bağlantısı gönderildi.
+              {t.auth.email_sent_to_1}<span className="font-medium text-charcoal">{email}</span>{t.auth.email_sent_to_2}
             </p>
             <p className="text-earth text-sm mb-8">
-              Bağlantı <strong>30 dakika</strong> geçerlidir. Spam klasörünü kontrol etmeyi unutmayın.
+              {t.auth.link_valid_1}<strong>{t.auth.link_valid_dur}</strong>{t.auth.link_valid_2}
             </p>
           </div>
         )}
 
         <p className="text-center mt-8">
           <Link href="/login" className="text-earth text-sm hover:text-charcoal transition-colors">
-            ← Giriş sayfasına dön
+            {t.auth.back_login}
           </Link>
         </p>
       </div>

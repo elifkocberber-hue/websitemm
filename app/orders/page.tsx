@@ -5,6 +5,7 @@ import { useUser } from '@/context/UserContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface ReturnRequest {
   id: string;
@@ -32,20 +33,13 @@ interface Order {
   return_requests: ReturnRequest[];
 }
 
-const STATUS_LABELS: Record<string, string> = {
-  pending: 'Beklemede',
-  confirmed: 'Onaylandı',
-  shipped: 'Kargoya Verildi',
-  delivered: 'Teslim Edildi',
-  cancelled: 'İptal Edildi',
-};
-
 const RETURNABLE_STATUSES = ['delivered', 'shipped', 'confirmed'];
 // Kargoya verilmiş/teslim/iptal olmuş siparişler iptal edilemez
 const NON_CANCELLABLE_STATUSES = ['shipped', 'delivered', 'cancelled'];
 
 export default function OrdersPage() {
   const { user, loading: userLoading } = useUser();
+  const { t, language } = useLanguage();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,6 +47,15 @@ export default function OrdersPage() {
   const [returnResult, setReturnResult] = useState<Record<string, string>>({});
   const [cancellingOrderId, setCancellingOrderId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const dateLocale = language === 'tr' ? 'tr-TR' : 'en-US';
+  const statusLabels: Record<string, string> = {
+    pending: t.orders.status_pending,
+    confirmed: t.orders.status_confirmed,
+    shipped: t.orders.status_shipped,
+    delivered: t.orders.status_delivered,
+    cancelled: t.orders.status_cancelled,
+  };
 
   useEffect(() => {
     if (!userLoading && !user) {
@@ -65,9 +68,10 @@ export default function OrdersPage() {
       fetch('/api/user/orders', { credentials: 'same-origin' })
         .then(r => r.json())
         .then(data => setOrders(Array.isArray(data) ? data : []))
-        .catch(() => setError('Siparişler yüklenemedi'))
+        .catch(() => setError(t.orders.load_error))
         .finally(() => setLoading(false));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const handleReturnRequest = async (orderId: string) => {
@@ -96,10 +100,10 @@ export default function OrdersPage() {
             : o
         ));
       } else {
-        setError(data.error || 'İade talebi oluşturulamadı');
+        setError(data.error || t.orders.return_failed);
       }
     } catch {
-      setError('Bir hata oluştu');
+      setError(t.orders.generic_error);
     } finally {
       setReturningOrderId(null);
     }
@@ -107,7 +111,7 @@ export default function OrdersPage() {
 
   const handleCancel = async (orderId: string) => {
     if (!user) return;
-    if (!window.confirm('Siparişinizi iptal etmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) return;
+    if (!window.confirm(t.orders.cancel_confirm)) return;
     setCancellingOrderId(orderId);
     setError(null);
     try {
@@ -121,10 +125,10 @@ export default function OrdersPage() {
       if (res.ok) {
         setOrders(prev => prev.map(o => (o.id === orderId ? { ...o, status: 'cancelled' } : o)));
       } else {
-        setError(data.error || 'Sipariş iptal edilemedi');
+        setError(data.error || t.orders.cancel_failed);
       }
     } catch {
-      setError('Bir hata oluştu');
+      setError(t.orders.generic_error);
     } finally {
       setCancellingOrderId(null);
     }
@@ -133,7 +137,7 @@ export default function OrdersPage() {
   if (userLoading || loading) {
     return (
       <div className="max-w-350 mx-auto px-6 md:px-10 py-20 text-center">
-        <p className="text-earth">Yükleniyor...</p>
+        <p className="text-earth">{t.orders.loading}</p>
       </div>
     );
   }
@@ -141,12 +145,12 @@ export default function OrdersPage() {
   return (
     <div className="max-w-350 mx-auto px-6 md:px-10 py-12 md:py-20">
       <div className="mb-8 text-sm text-earth">
-        <Link href="/" className="hover:text-charcoal transition-colors">Ana Sayfa</Link>
+        <Link href="/" className="hover:text-charcoal transition-colors">{t.orders.breadcrumb_home}</Link>
         <span className="mx-2">/</span>
-        <span className="text-charcoal">Siparişlerim</span>
+        <span className="text-charcoal">{t.orders.breadcrumb_orders}</span>
       </div>
 
-      <h1 className="heading-display text-3xl md:text-4xl text-charcoal mb-10">Siparişlerim</h1>
+      <h1 className="heading-display text-3xl md:text-4xl text-charcoal mb-10">{t.orders.title}</h1>
 
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-red-700 text-sm">
@@ -156,9 +160,9 @@ export default function OrdersPage() {
 
       {orders.length === 0 ? (
         <div className="text-center py-16">
-          <p className="heading-serif text-xl text-charcoal mb-4">Henüz siparişiniz yok</p>
+          <p className="heading-serif text-xl text-charcoal mb-4">{t.orders.empty}</p>
           <Link href="/ceramics" className="text-sm text-accent hover:text-charcoal transition-colors">
-            Koleksiyona Göz At
+            {t.orders.browse}
           </Link>
         </div>
       ) : (
@@ -173,10 +177,10 @@ export default function OrdersPage() {
                 <div className="bg-stone-50 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
                   <div>
                     <p className="text-xs text-earth tracking-wider uppercase mb-1">
-                      {new Date(order.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      {new Date(order.created_at).toLocaleDateString(dateLocale, { day: 'numeric', month: 'long', year: 'numeric' })}
                     </p>
                     <p className="text-sm text-charcoal font-medium">
-                      Sipariş #{order.id.slice(0, 8).toUpperCase()}
+                      {t.orders.order_label} #{order.id.slice(0, 8).toUpperCase()}
                     </p>
                   </div>
                   <div className="flex items-center gap-4">
@@ -186,7 +190,7 @@ export default function OrdersPage() {
                       order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                       'bg-amber-100 text-amber-800'
                     }`}>
-                      {STATUS_LABELS[order.status] ?? order.status}
+                      {statusLabels[order.status] ?? order.status}
                     </span>
                     <span className="text-charcoal font-medium">{order.total_price.toFixed(2)} ₺</span>
                   </div>
@@ -203,7 +207,7 @@ export default function OrdersPage() {
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-charcoal font-medium truncate">{item.product_name}</p>
-                        <p className="text-xs text-earth mt-0.5">{item.quantity} adet × {item.unit_price.toFixed(2)} ₺</p>
+                        <p className="text-xs text-earth mt-0.5">{item.quantity} {t.orders.qty_unit} {item.unit_price.toFixed(2)} ₺</p>
                       </div>
                     </div>
                   ))}
@@ -212,18 +216,18 @@ export default function OrdersPage() {
                 {/* Kargo bilgileri */}
                 {order.tracking_number && (
                   <div className="px-6 py-4 border-t border-stone-100 bg-blue-50/50">
-                    <p className="text-xs text-earth uppercase tracking-wider mb-1">Kargo Bilgileri</p>
+                    <p className="text-xs text-earth uppercase tracking-wider mb-1">{t.orders.shipping_info}</p>
                     {order.carrier && (
-                      <p className="text-sm text-charcoal"><span className="text-earth">Firma:</span> <span className="font-medium">{order.carrier}</span></p>
+                      <p className="text-sm text-charcoal"><span className="text-earth">{t.orders.carrier_label}</span> <span className="font-medium">{order.carrier}</span></p>
                     )}
                     <p className="text-sm text-charcoal mt-0.5">
-                      <span className="text-earth">Takip No:</span>{' '}
+                      <span className="text-earth">{t.orders.tracking_label}</span>{' '}
                       <span className="font-bold tracking-wider font-mono">{order.tracking_number}</span>
                     </p>
                     <p className="text-xs text-earth mt-1">
                       {order.carrier
-                        ? `Bu numarayı ${order.carrier} web sitesinden takip edebilirsiniz.`
-                        : 'Bu numarayı kargo firmasının web sitesinden takip edebilirsiniz.'}
+                        ? `${t.orders.track_hint_carrier_1}${order.carrier}${t.orders.track_hint_carrier_2}`
+                        : t.orders.track_hint_generic}
                     </p>
                   </div>
                 )}
@@ -232,11 +236,11 @@ export default function OrdersPage() {
                 <div className="px-6 py-4 border-t border-stone-100 bg-white">
                   {existingReturn ? (
                     <div className="text-sm">
-                      <p className="text-earth mb-1">İade talebiniz oluşturuldu.</p>
+                      <p className="text-earth mb-1">{t.orders.return_created}</p>
                       <p className="text-charcoal">
-                        İade Kodunuz: <span className="font-bold text-[#5C0A1A] tracking-wider">{existingReturn.return_code}</span>
+                        {t.orders.return_code_label} <span className="font-bold text-[#5C0A1A] tracking-wider">{existingReturn.return_code}</span>
                       </p>
-                      <p className="text-xs text-earth mt-1">Kod, e-posta adresinize de gönderilmiştir.</p>
+                      <p className="text-xs text-earth mt-1">{t.orders.return_code_sent}</p>
                     </div>
                   ) : canReturn ? (
                     <button
@@ -245,28 +249,28 @@ export default function OrdersPage() {
                       disabled={returningOrderId === order.id}
                       className="text-sm border border-charcoal/30 text-charcoal px-5 py-2 hover:bg-charcoal hover:text-bone transition-colors disabled:opacity-50"
                     >
-                      {returningOrderId === order.id ? 'İşleniyor...' : 'İade Talebi Oluştur'}
+                      {returningOrderId === order.id ? t.orders.processing : t.orders.request_return}
                     </button>
                   ) : order.status === 'cancelled' ? null : (
-                    <p className="text-xs text-earth">İade talebi oluşturmak için siparişinizin teslim edilmiş olması gerekmektedir.</p>
+                    <p className="text-xs text-earth">{t.orders.return_requires_delivery}</p>
                   )}
                 </div>
 
                 {/* Sipariş iptal */}
                 <div className="px-6 py-4 border-t border-stone-100 bg-white">
                   {order.status === 'cancelled' ? (
-                    <p className="text-xs text-earth">Bu sipariş iptal edildi.</p>
+                    <p className="text-xs text-earth">{t.orders.order_cancelled_note}</p>
                   ) : NON_CANCELLABLE_STATUSES.includes(order.status) ? (
                     <>
                       <button
                         type="button"
                         disabled
-                        title="Kargoya verildikten sonra iptal edilemez"
+                        title={t.orders.cancel_disabled_title}
                         className="text-sm border border-charcoal/15 text-charcoal/40 px-5 py-2 cursor-not-allowed"
                       >
-                        Siparişi İptal Et
+                        {t.orders.cancel_order}
                       </button>
-                      <p className="text-xs text-earth mt-2">Kargoya verilen siparişler iptal edilemez.</p>
+                      <p className="text-xs text-earth mt-2">{t.orders.cancel_shipped_note}</p>
                     </>
                   ) : (
                     <button
@@ -275,7 +279,7 @@ export default function OrdersPage() {
                       disabled={cancellingOrderId === order.id}
                       className="text-sm border border-red-300 text-red-700 px-5 py-2 hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors disabled:opacity-50"
                     >
-                      {cancellingOrderId === order.id ? 'İptal ediliyor...' : 'Siparişi İptal Et'}
+                      {cancellingOrderId === order.id ? t.orders.cancelling : t.orders.cancel_order}
                     </button>
                   )}
                 </div>

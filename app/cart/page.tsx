@@ -5,9 +5,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { trackInitiateCheckout } from '@/lib/pixel';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, totalPrice, clearCart } = useCart();
+  const { t } = useLanguage();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -22,20 +24,20 @@ export default function CartPage() {
         <div className="max-w-7xl mx-auto">
           {/* Breadcrumb */}
           <nav className="mb-8 text-sm text-gray-600">
-            <Link href="/" className="text-amber-600 hover:text-amber-800">Ana Sayfa</Link>
+            <Link href="/" className="text-amber-600 hover:text-amber-800">{t.cart.breadcrumb_home}</Link>
             <span className="mx-2">›</span>
-            <span>Sepet</span>
+            <span>{t.cart.breadcrumb_cart}</span>
           </nav>
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Alışveriş Sepeti</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">{t.cart.title}</h1>
 
           <div className="text-center py-12">
-            <p className="text-xl text-gray-600 mb-6">Sepetiniz boş</p>
+            <p className="text-xl text-gray-600 mb-6">{t.cart.empty}</p>
             <Link
               href="/ceramics"
               className="inline-block bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-lg transition-colors"
             >
-              Seramik Ürünleri Gözat
+              {t.cart.browse_products}
             </Link>
           </div>
         </div>
@@ -48,12 +50,12 @@ export default function CartPage() {
       <div className="max-w-7xl mx-auto">
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm text-gray-600">
-          <Link href="/" className="text-amber-600 hover:text-amber-800">Ana Sayfa</Link>
+          <Link href="/" className="text-amber-600 hover:text-amber-800">{t.cart.breadcrumb_home}</Link>
           <span className="mx-2">›</span>
-          <span>Sepet</span>
+          <span>{t.cart.breadcrumb_cart}</span>
         </nav>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Alışveriş Sepeti</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">{t.cart.title}</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
@@ -85,14 +87,14 @@ export default function CartPage() {
                     </Link>
                     <p className="text-sm text-gray-600 mb-2">{item.category}</p>
                     <p className="text-sm font-medium text-gray-700 mb-3">
-                      {item.clayType === 'stoneware' && 'Stoneware'}
-                      {item.clayType === 'porcelain' && 'Porselen'}
-                      {item.clayType === 'earthenware' && 'Toprak Çanak'}
-                      {item.clayType === 'bone-china' && 'Kemik Porseleni'}
-                      {item.clayType === 'terracotta' && 'Terracotta'}
+                      {item.clayType === 'stoneware' && t.materials.stoneware}
+                      {item.clayType === 'porcelain' && t.materials.porcelain}
+                      {item.clayType === 'earthenware' && t.materials.earthenware}
+                      {item.clayType === 'bone-china' && t.materials['bone-china']}
+                      {item.clayType === 'terracotta' && t.materials.terracotta}
                     </p>
                     <p className="text-sm text-gray-700">
-                      Birim Fiyat: <span className="font-bold text-amber-600">₺{item.price}</span>
+                      {t.cart.unit_price} <span className="font-bold text-amber-600">₺{item.price}</span>
                     </p>
                   </div>
 
@@ -105,7 +107,7 @@ export default function CartPage() {
                         type="button"
                         onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
                         className="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded text-base font-bold transition-colors"
-                        aria-label="Adedi azalt"
+                        aria-label={t.cart.decrease_qty}
                       >
                         −
                       </button>
@@ -120,13 +122,13 @@ export default function CartPage() {
                           updateQuantity(item.id, Math.max(1, Math.min(item.stock, newQty)));
                         }}
                         className="w-14 h-10 text-center text-base border border-gray-300 rounded"
-                        title="Ürün adedi"
+                        title={t.cart.quantity_title}
                       />
                       <button
                         type="button"
                         onClick={() => updateQuantity(item.id, Math.min(item.stock, item.quantity + 1))}
                         className="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded text-base font-bold transition-colors"
-                        aria-label="Adedi artır"
+                        aria-label={t.cart.increase_qty}
                       >
                         +
                       </button>
@@ -136,7 +138,7 @@ export default function CartPage() {
                       onClick={() => removeFromCart(item.id)}
                       className="text-red-600 hover:text-red-800 font-medium text-sm transition-colors"
                     >
-                      Kaldır
+                      {t.cart.remove}
                     </button>
                   </div>
                 </div>
@@ -149,7 +151,7 @@ export default function CartPage() {
                 href="/ceramics"
                 className="inline-block text-amber-600 hover:text-amber-800 font-medium"
               >
-                ← Alışverişe Devam Et
+                {t.cart.continue_shopping}
               </Link>
             </div>
           </div>
@@ -157,21 +159,21 @@ export default function CartPage() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Sipariş Özeti</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-6">{t.cart.order_summary}</h2>
 
               <div className="space-y-4 mb-6 border-b pb-6">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Ürünler ({items.length})</span>
+                  <span className="text-gray-600">{t.cart.products} ({items.length})</span>
                   <span className="font-medium">₺{totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Kargo</span>
-                  <span className="font-medium text-green-600">Ücretsiz</span>
+                  <span className="text-gray-600">{t.cart.shipping}</span>
+                  <span className="font-medium text-green-600">{t.cart.free}</span>
                 </div>
               </div>
 
               <div className="flex justify-between mb-6 text-lg font-bold">
-                <span>Toplam</span>
+                <span>{t.cart.total}</span>
                 <span className="text-amber-600">₺{totalPrice.toFixed(2)}</span>
               </div>
 
@@ -180,20 +182,20 @@ export default function CartPage() {
                 onClick={() => trackInitiateCheckout(items, totalPrice)}
                 className="w-full block text-center bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-4 rounded-lg transition-colors mb-3"
               >
-                Ödemeye Geç
+                {t.cart.checkout}
               </Link>
 
               <button
                 onClick={clearCart}
                 className="w-full border border-red-300 text-red-600 hover:bg-red-50 font-medium py-2 px-4 rounded-lg transition-colors"
               >
-                Sepeti Boşalt
+                {t.cart.clear_cart}
               </button>
 
               <div className="mt-6 p-4 bg-amber-50 rounded-lg">
                 <p className="text-sm text-amber-900">
-                  Türkiye geneline ücretsiz kargo<br />
-                  30 gün iade garantisi
+                  {t.cart.free_shipping_note}<br />
+                  {t.cart.return_guarantee}
                 </p>
               </div>
 
@@ -205,7 +207,7 @@ export default function CartPage() {
                   height={36}
                   className="h-7 w-auto"
                 />
-                <p className="text-[11px] text-gray-500 text-center">SSL ile güvenli ödeme</p>
+                <p className="text-[11px] text-gray-500 text-center">{t.cart.ssl_note}</p>
               </div>
             </div>
           </div>

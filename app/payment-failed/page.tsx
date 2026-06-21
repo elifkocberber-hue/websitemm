@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 
 function PaymentFailedContent() {
   const searchParams = useSearchParams();
+  const { t } = useLanguage();
   const [isMounted, setIsMounted] = useState(false);
   const errorReason = searchParams.get('reason') || 'Bilinmeyen Hata';
 
@@ -16,16 +18,24 @@ function PaymentFailedContent() {
   if (!isMounted) return null;
 
   const errorMessages: Record<string, string> = {
-    'card_declined': 'Kartınız reddedildi. Lütfen başka bir kart deneyin.',
-    'insufficient_funds': 'Kartınızda yeterli bakiye yok.',
-    'expired_card': 'Kart süresi dolmuş. Geçerli bir kartla deneyin.',
-    'invalid_card': 'Kart numarası geçersiz.',
-    'network_error': 'Ağ bağlantı hatası. Lütfen daha sonra tekrar deneyin.',
-    'timeout': 'İşlem zaman aşımına uğradı. Lütfen tekrar deneyin.',
+    'card_declined': t.payment_failed.err_card_declined,
+    'insufficient_funds': t.payment_failed.err_insufficient_funds,
+    'expired_card': t.payment_failed.err_expired_card,
+    'invalid_card': t.payment_failed.err_invalid_card,
+    'network_error': t.payment_failed.err_network_error,
+    'timeout': t.payment_failed.err_timeout,
   };
 
   const getErrorMessage = () => {
-    return errorMessages[errorReason] || 'Ödeme işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin.';
+    return errorMessages[errorReason] || t.payment_failed.err_generic;
+  };
+
+  const renderTip = (tip: string) => {
+    const idx = tip.indexOf(' - ');
+    if (idx === -1) return <span className="text-gray-700">{tip}</span>;
+    return (
+      <span className="text-gray-700"><strong>{tip.slice(0, idx)}</strong>{tip.slice(idx)}</span>
+    );
   };
 
   const getErrorIcon = () => {
@@ -68,18 +78,18 @@ function PaymentFailedContent() {
               {getErrorIcon()}
             </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Ödeme Başarısız</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{t.payment_failed.title}</h1>
           <p className="text-lg text-gray-600">
-            Maalesef ödeme işlemi tamamlanamadı. Lütfen aşağıdaki bilgileri okuyun.
+            {t.payment_failed.subtitle}
           </p>
         </div>
 
         {/* Error Details Card */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 border-t-4 border-red-600">
           <div className="bg-linear-to-r from-red-600 to-orange-500 px-8 py-6">
-            <h2 className="text-2xl font-bold text-white">Hata Detayları</h2>
+            <h2 className="text-2xl font-bold text-white">{t.payment_failed.error_details}</h2>
           </div>
-          
+
           <div className="px-8 py-8">
             {/* Error Message */}
             <div className="mb-8 pb-8 border-b border-gray-200">
@@ -94,22 +104,22 @@ function PaymentFailedContent() {
                 <svg className="w-6 h-6 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18.355 7.369a9 9 0 11-17.646 1.488M8.066 13.076l1.06-3.573m3.736 3.573l-1.06-3.573m2.828-1.414a3 3 0 11-4.243-4.243" clipRule="evenodd" />
                 </svg>
-                Yapabileceğiniz Çözümler
+                {t.payment_failed.solutions_title}
               </h3>
               <ul className="space-y-3">
                 {errorReason === 'card_declined' && (
                   <>
                     <li className="flex items-start gap-3">
                       <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">1</span>
-                      <span className="text-gray-700"><strong>Başka bir ödeme yöntemi deneyin</strong> - Farklı bir kredi kartı kullanın</span>
+                      {renderTip(t.payment_failed.cd1)}
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">2</span>
-                      <span className="text-gray-700"><strong>Kartınızı kontrol edin</strong> - Numarası, son kullanma tarihi ve CVC'yi doğrulayın</span>
+                      {renderTip(t.payment_failed.cd2)}
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">3</span>
-                      <span className="text-gray-700"><strong>Bankınızla iletişime geçin</strong> - Kart limitlerini veya güvenlik ayarlarını kontrol etmeleri için</span>
+                      {renderTip(t.payment_failed.cd3)}
                     </li>
                   </>
                 )}
@@ -117,15 +127,15 @@ function PaymentFailedContent() {
                   <>
                     <li className="flex items-start gap-3">
                       <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">1</span>
-                      <span className="text-gray-700"><strong>Kartınıza para yükleyin</strong> - Daha yüksek bakiyeli bir hesaptan transfer yapmayı deneyin</span>
+                      {renderTip(t.payment_failed.if1)}
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">2</span>
-                      <span className="text-gray-700"><strong>Başka bir kart kullanın</strong> - Daha yüksek limite sahip farklı bir kartık deneyin</span>
+                      {renderTip(t.payment_failed.if2)}
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">3</span>
-                      <span className="text-gray-700"><strong>Daha sonra deneyin</strong> - Hesap limitlerinin yenilenip yenilenmediğini kontrol edin</span>
+                      {renderTip(t.payment_failed.if3)}
                     </li>
                   </>
                 )}
@@ -133,15 +143,15 @@ function PaymentFailedContent() {
                   <>
                     <li className="flex items-start gap-3">
                       <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">1</span>
-                      <span className="text-gray-700"><strong>İnternet bağlantınızı kontrol edin</strong> - Stabil bir bağlantıda olduğunuzdan emin olun</span>
+                      {renderTip(t.payment_failed.net1)}
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">2</span>
-                      <span className="text-gray-700"><strong>Sayfayı yenileyin ve tekrar deneyin</strong> - Ağ hatasının geçit olması için bekleyin</span>
+                      {renderTip(t.payment_failed.net2)}
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">3</span>
-                      <span className="text-gray-700"><strong>Farklı bir zamanı deneyin</strong> - Sunucu yükü az olduğu bir saatte tekrar deneyin</span>
+                      {renderTip(t.payment_failed.net3)}
                     </li>
                   </>
                 )}
@@ -149,15 +159,15 @@ function PaymentFailedContent() {
                   <>
                     <li className="flex items-start gap-3">
                       <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">1</span>
-                      <span className="text-gray-700"><strong>Tüm bilgileri kontrol edin</strong> - Formda girdiğiniz tüm verilerin doğru olduğundan emin olun</span>
+                      {renderTip(t.payment_failed.def1)}
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">2</span>
-                      <span className="text-gray-700"><strong>Tekrar ödeme deneyin</strong> - Sepetiniz kaydedilmiştir, ödeme işlemine tekrar başlayın</span>
+                      {renderTip(t.payment_failed.def2)}
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">3</span>
-                      <span className="text-gray-700"><strong>Müşteri destek bize ulaşın</strong> - Sorun devam ederse, destek ekibimiz size yardımcı olabilir</span>
+                      {renderTip(t.payment_failed.def3)}
                     </li>
                   </>
                 )}
@@ -167,7 +177,7 @@ function PaymentFailedContent() {
             {/* Support Section */}
             <div className="grid md:grid-cols-2 gap-6 mb-8 pb-8 border-b border-gray-200">
               <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="font-bold text-gray-900 mb-3">Anında Yardım</h3>
+                <h3 className="font-bold text-gray-900 mb-3">{t.payment_failed.support_title}</h3>
                 <div className="space-y-3 text-sm text-gray-700">
                   <p className="flex items-center gap-2">
                     <svg className="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
@@ -187,11 +197,11 @@ function PaymentFailedContent() {
                 </div>
               </div>
               <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="font-bold text-gray-900 mb-3">Hesap Bilgileri</h3>
+                <h3 className="font-bold text-gray-900 mb-3">{t.payment_failed.account_title}</h3>
                 <ul className="space-y-2 text-sm text-gray-700">
-                  <li>Sepetiniz kaydedilmiş</li>
-                  <li>Hiçbir ücret alınmadı</li>
-                  <li>İstediğiniz zaman deneyin</li>
+                  <li>{t.payment_failed.acc1}</li>
+                  <li>{t.payment_failed.acc2}</li>
+                  <li>{t.payment_failed.acc3}</li>
                 </ul>
               </div>
             </div>
@@ -202,19 +212,19 @@ function PaymentFailedContent() {
                 href="/payment"
                 className="flex-1 text-center bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-md hover:shadow-lg"
               >
-                Ödemeyi Tekrar Deneyeceğim
+                {t.payment_failed.btn_retry}
               </Link>
               <Link
                 href="/cart"
                 className="flex-1 text-center border-2 border-orange-600 text-orange-600 hover:bg-orange-50 font-bold py-3 px-4 rounded-lg transition-colors"
               >
-                Sepete Dön
+                {t.payment_failed.btn_back_cart}
               </Link>
               <Link
                 href="/"
                 className="flex-1 text-center text-gray-600 hover:text-gray-900 font-bold py-3 px-4 rounded-lg transition-colors"
               >
-                Ana Sayfa
+                {t.payment_failed.btn_home}
               </Link>
             </div>
           </div>
@@ -223,7 +233,7 @@ function PaymentFailedContent() {
         {/* Security Banner */}
         <div className="bg-linear-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6 text-center">
           <p className="text-gray-700">
-            <span className="font-semibold">Verileriniz güvenlidir.</span> Tüm ödeme işlemleri 256-bit SSL şifreleme ile korunmaktadır. Hiçbir ücret alınmıştır.
+            <span className="font-semibold">{t.payment_failed.banner_title}</span> {t.payment_failed.banner_desc}
           </p>
         </div>
       </div>
