@@ -15,8 +15,6 @@ const clayTypeLabels: Record<string, { tr: string; en: string }> = {
   terracotta:  { tr: 'Terracotta', en: 'Terracotta' },
 };
 
-const imageClasses = ['aspect-[4/5]', 'aspect-[3/4]', 'aspect-square', 'aspect-[5/6]', 'aspect-[4/5]'];
-
 interface CeramicsClientProps {
   products: CeramicProduct[];
   definedCategories: string[];
@@ -145,10 +143,7 @@ export default function CeramicsClient({ products, definedCategories }: Ceramics
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {filteredProducts.map((product, i) => (
                 <ScrollReveal key={product.id} delay={Math.min(i * 60, 400)} className="h-full">
-                  <CeramicProductCard
-                    product={product}
-                    imageClass="aspect-[3/4]"
-                  />
+                  <CeramicProductCard product={product} />
                 </ScrollReveal>
               ))}
             </div>

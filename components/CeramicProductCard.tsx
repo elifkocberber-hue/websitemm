@@ -15,7 +15,9 @@ interface CeramicProductCardProps {
 
 export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
   product,
-  imageClass = 'aspect-[4/5]',
+  // Admin panelde görseller 1:1 kırpılır (ImageCropModal aspect={1}) — kart da
+  // 1:1 gösterir ki yüklenen kırpım vitrine aynen yansısın, tekrar kırpılmasın.
+  imageClass = 'aspect-square',
   objectFit = 'cover',
 }) => {
   const { addToCart } = useCart();
