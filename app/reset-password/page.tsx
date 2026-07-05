@@ -27,7 +27,8 @@ function ResetPasswordContent() {
       setError(t.auth.passwords_mismatch);
       return;
     }
-    if (password.length < 6) {
+    // Sunucu kuralıyla aynı: en az 8 karakter, büyük/küçük harf ve rakam
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password)) {
       setError(t.auth.password_min);
       return;
     }
@@ -95,7 +96,7 @@ function ResetPasswordContent() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            minLength={6}
+            minLength={8}
             disabled={!token}
             className="w-full px-4 py-3 bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors disabled:opacity-50"
             placeholder={t.auth.password_min_ph}

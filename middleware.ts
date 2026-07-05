@@ -82,6 +82,12 @@ export async function middleware(request: NextRequest) {
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     response.headers.set('Access-Control-Allow-Credentials', 'true');
     response.headers.set('Access-Control-Max-Age', '86400');
+
+    // API yanıtları kişisel veri içerebilir — paylaşımlı önbelleklerde saklanmasın.
+    // (/api/video hariç: video akışı kendi Cache-Control başlığını yönetir)
+    if (!pathname.startsWith('/api/video')) {
+      response.headers.set('Cache-Control', 'no-store');
+    }
   }
 
   // Security Headers - Tüm sayfalar için

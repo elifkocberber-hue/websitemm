@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
+import { isValidPassword } from '@/lib/validation';
 import bcrypt from 'bcrypt';
 
 function getSupabase() {
@@ -8,14 +10,27 @@ function getSupabase() {
 
 export async function POST(request: NextRequest) {
   try {
+    const rateLimitKey = getRateLimitKey(request, 'reset-password');
+    const { allowed } = await checkRateLimit(rateLimitKey, 10, 15 * 60 * 1000);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Çok fazla deneme. Lütfen daha sonra tekrar deneyin.' },
+        { status: 429, headers: { 'Retry-After': '900' } }
+      );
+    }
+
     const { token, password } = await request.json() as { token: string; password: string };
 
     if (!token || !password) {
       return NextResponse.json({ error: 'Token ve şifre gerekli' }, { status: 400 });
     }
 
-    if (password.length < 6) {
-      return NextResponse.json({ error: 'Şifre en az 6 karakter olmalıdır' }, { status: 400 });
+    // Kayıt ile aynı şifre politikası — sıfırlama üzerinden zayıf şifre belirlenemesin
+    if (!isValidPassword(password)) {
+      return NextResponse.json(
+        { error: 'Şifre en az 8 karakter olmalı; büyük harf, küçük harf ve rakam içermelidir' },
+        { status: 400 }
+      );
     }
 
     const supabase = getSupabase();

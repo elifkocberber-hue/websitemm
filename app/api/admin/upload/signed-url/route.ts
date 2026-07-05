@@ -6,12 +6,24 @@ const IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
 const ALLOWED_TYPES = [...IMAGE_TYPES, ...VIDEO_TYPES];
 
+// Uzantı, kullanıcı dosya adından değil doğrulanmış MIME tipinden türetilir
+// (dosya adıyla .html/.svg gibi uzantı veya '/' ile yol enjeksiyonu önlenir).
+const EXT_BY_TYPE: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/jpg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'video/mp4': 'mp4',
+  'video/webm': 'webm',
+  'video/quicktime': 'mov',
+};
+
 export async function POST(request: NextRequest) {
   if (!isAdminAuthenticated(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { fileName, contentType } = await request.json();
+  const { contentType } = await request.json();
 
   if (!ALLOWED_TYPES.includes(contentType)) {
     return NextResponse.json(
@@ -20,7 +32,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const ext = fileName.split('.').pop() || (VIDEO_TYPES.includes(contentType) ? 'mp4' : 'jpg');
+  const ext = EXT_BY_TYPE[contentType] || (VIDEO_TYPES.includes(contentType) ? 'mp4' : 'jpg');
   const path = `products/${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
 
   const { data, error } = await supabase.storage

@@ -118,6 +118,17 @@ export async function POST(request: NextRequest) {
             .single();
 
           if (order) {
+            // Ödeme ↔ sipariş bağı: iyzico'nun onayladığı tutar sipariş tutarıyla
+            // eşleşmiyorsa siparişi tamamlama (farklı bir ödemenin callback'i
+            // bu siparişe yönlendirilmiş olabilir).
+            const paidPrice = Number(result.paidPrice ?? result.price ?? NaN);
+            if (Number.isFinite(paidPrice) && Math.abs(paidPrice - Number(order.total_price)) > 0.01) {
+              console.error(
+                `3DS tutar uyuşmazlığı: sipariş ${order.id} tutarı ${order.total_price}, ödenen ${paidPrice}`
+              );
+              return NextResponse.redirect(`${siteUrl}/payment-failed?reason=amount_mismatch`, 303);
+            }
+
             orderId = `ORD-${order.id.slice(0, 8).toUpperCase()}`;
 
             // Yalnız ilk tamamlanmada güncelle + e-posta (iyzico tekrar çağırırsa mükerrer olmasın)

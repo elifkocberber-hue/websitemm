@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { fetchProducts, fetchProductById, getCeramicProductById, ceramicProducts } from '@/data/ceramicProducts';
+import { jsonLdSafe } from '@/lib/format';
 import CeramicDetailClient from './CeramicDetailClient';
 
 export const revalidate = 60; // 60 saniyede bir yeniden render
@@ -78,7 +79,7 @@ export default async function CeramicDetailPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: jsonLdSafe({
             '@context': 'https://schema.org',
             '@type': 'Product',
             name: product.name,
@@ -115,7 +116,7 @@ export default async function CeramicDetailPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: jsonLdSafe({
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
             itemListElement: [

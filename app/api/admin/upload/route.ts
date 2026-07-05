@@ -9,6 +9,18 @@ const ALLOWED_TYPES = [...IMAGE_TYPES, ...VIDEO_TYPES];
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;   // 5 MB
 const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100 MB
 
+// Uzantı, kullanıcı dosya adından değil doğrulanmış MIME tipinden türetilir
+// (dosya adıyla .html/.svg gibi uzantı veya '/' ile yol enjeksiyonu önlenir).
+const EXT_BY_TYPE: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/jpg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'video/mp4': 'mp4',
+  'video/webm': 'webm',
+  'video/quicktime': 'mov',
+};
+
 // Magic-byte (dosya imzası) kontrolü — sahte MIME ile yükleme önlemi.
 // Beyan edilen file.type'a güvenmek yerine içeriği doğrular.
 function sniffMatchesType(bytes: Uint8Array, declaredType: string): boolean {
@@ -66,7 +78,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const ext = file.name.split('.').pop() || (isVideo ? 'mp4' : 'jpg');
+    const ext = EXT_BY_TYPE[file.type] || (isVideo ? 'mp4' : 'jpg');
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
     const filePath = `products/${fileName}`;
 

@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { supabase } from '@/lib/supabase';
+import { jsonLdSafe } from '@/lib/format';
 import FaqClient, { type Faq } from './FaqClient';
 
 export const dynamic = 'force-dynamic';
@@ -41,7 +42,7 @@ export default async function FaqPage() {
         <script
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdSafe(faqJsonLd) }}
         />
       )}
       <FaqClient initialFaqs={faqs} />

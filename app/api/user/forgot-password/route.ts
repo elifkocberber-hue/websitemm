@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
 import { Resend } from 'resend';
 import crypto from 'crypto';
 
@@ -11,10 +12,30 @@ const TOKEN_TTL_MINUTES = 30;
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit (IP bazlı): e-posta bombardımanı / Resend kotası tüketimi önlemi
+    const ipKey = getRateLimitKey(request, 'forgot-password');
+    const { allowed } = await checkRateLimit(ipKey, 3, 60 * 60 * 1000);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Çok fazla deneme. Lütfen daha sonra tekrar deneyin.' },
+        { status: 429, headers: { 'Retry-After': '3600' } }
+      );
+    }
+
     const { email } = await request.json() as { email: string };
-    if (!email) return NextResponse.json({ error: 'E-posta gerekli' }, { status: 400 });
+    if (!email || typeof email !== 'string') {
+      return NextResponse.json({ error: 'E-posta gerekli' }, { status: 400 });
+    }
 
     const sanitized = email.toLowerCase().trim();
+
+    // Aynı hesaba dağıtık IP'lerden hedefli spam önlemi (e-posta bazlı limit)
+    const emailKey = `forgot-password-email:${sanitized}`;
+    const emailLimit = await checkRateLimit(emailKey, 3, 60 * 60 * 1000);
+    if (!emailLimit.allowed) {
+      // Enum saldırısına bilgi sızdırmamak için yine başarılı yanıt dön
+      return NextResponse.json({ success: true });
+    }
     const supabase = getSupabase();
 
     // Kullanıcıyı bul — e-posta yoksa yine "gönderildi" dön (enum saldırısı önlemi)

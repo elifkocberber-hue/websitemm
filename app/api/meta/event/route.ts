@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: Meta CAPI kotasının anonim isteklerle tüketilmesini önler
+    const rateLimitKey = getRateLimitKey(request, 'meta-event');
+    const { allowed } = await checkRateLimit(rateLimitKey, 60, 60 * 1000);
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     const { eventName, eventData, eventId, sourceUrl } = await request.json() as {
       eventName: string;
       eventData: Record<string, unknown>;

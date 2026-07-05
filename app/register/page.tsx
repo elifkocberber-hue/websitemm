@@ -27,7 +27,8 @@ export default function RegisterPage() {
       return;
     }
 
-    if (password.length < 6) {
+    // Sunucu kuralıyla aynı: en az 8 karakter, büyük/küçük harf ve rakam
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password)) {
       setError(t.auth.password_min);
       return;
     }
@@ -113,7 +114,7 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength={6}
+              minLength={8}
               className="w-full min-h-11 px-4 py-3 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
               placeholder={t.auth.password_min_ph}
             />
@@ -129,7 +130,7 @@ export default function RegisterPage() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              minLength={6}
+              minLength={8}
               className="w-full min-h-11 px-4 py-3 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
               placeholder={t.auth.confirm_password_ph}
             />
