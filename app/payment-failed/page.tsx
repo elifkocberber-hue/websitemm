@@ -32,9 +32,9 @@ function PaymentFailedContent() {
 
   const renderTip = (tip: string) => {
     const idx = tip.indexOf(' - ');
-    if (idx === -1) return <span className="text-gray-700">{tip}</span>;
+    if (idx === -1) return <span className="text-earth">{tip}</span>;
     return (
-      <span className="text-gray-700"><strong>{tip.slice(0, idx)}</strong>{tip.slice(idx)}</span>
+      <span className="text-earth"><strong className="text-charcoal">{tip.slice(0, idx)}</strong>{tip.slice(idx)}</span>
     );
   };
 
@@ -68,7 +68,7 @@ function PaymentFailedContent() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-red-50 via-white to-orange-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-bone py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         {/* Error Animation */}
         <div className="text-center mb-12">
@@ -78,21 +78,21 @@ function PaymentFailedContent() {
               {getErrorIcon()}
             </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{t.payment_failed.title}</h1>
-          <p className="text-lg text-gray-600">
+          <h1 className="heading-display text-4xl md:text-5xl text-charcoal mb-4">{t.payment_failed.title}</h1>
+          <p className="text-lg text-earth">
             {t.payment_failed.subtitle}
           </p>
         </div>
 
         {/* Error Details Card */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 border-t-4 border-red-600">
-          <div className="bg-linear-to-r from-red-600 to-orange-500 px-8 py-6">
-            <h2 className="text-2xl font-bold text-white">{t.payment_failed.error_details}</h2>
+        <div className="bg-white rounded-xl border border-warm-gray overflow-hidden mb-8">
+          <div className="bg-charcoal px-8 py-6">
+            <h2 className="heading-serif text-2xl text-bone">{t.payment_failed.error_details}</h2>
           </div>
 
           <div className="px-8 py-8">
             {/* Error Message */}
-            <div className="mb-8 pb-8 border-b border-gray-200">
+            <div className="mb-8 pb-8 border-b border-warm-gray">
               <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded">
                 <p className="text-red-800 font-semibold text-lg">{getErrorMessage()}</p>
               </div>
@@ -100,8 +100,8 @@ function PaymentFailedContent() {
 
             {/* Troubleshooting Tips */}
             <div className="mb-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <svg className="w-6 h-6 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+              <h3 className="heading-serif text-xl text-charcoal mb-4 flex items-center gap-2">
+                <svg className="w-6 h-6 text-accent" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18.355 7.369a9 9 0 11-17.646 1.488M8.066 13.076l1.06-3.573m3.736 3.573l-1.06-3.573m2.828-1.414a3 3 0 11-4.243-4.243" clipRule="evenodd" />
                 </svg>
                 {t.payment_failed.solutions_title}
@@ -110,15 +110,15 @@ function PaymentFailedContent() {
                 {errorReason === 'card_declined' && (
                   <>
                     <li className="flex items-start gap-3">
-                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">1</span>
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-warm-gray text-charcoal rounded-full text-sm font-bold">1</span>
                       {renderTip(t.payment_failed.cd1)}
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">2</span>
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-warm-gray text-charcoal rounded-full text-sm font-bold">2</span>
                       {renderTip(t.payment_failed.cd2)}
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">3</span>
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-warm-gray text-charcoal rounded-full text-sm font-bold">3</span>
                       {renderTip(t.payment_failed.cd3)}
                     </li>
                   </>
@@ -126,15 +126,15 @@ function PaymentFailedContent() {
                 {errorReason === 'insufficient_funds' && (
                   <>
                     <li className="flex items-start gap-3">
-                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">1</span>
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-warm-gray text-charcoal rounded-full text-sm font-bold">1</span>
                       {renderTip(t.payment_failed.if1)}
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">2</span>
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-warm-gray text-charcoal rounded-full text-sm font-bold">2</span>
                       {renderTip(t.payment_failed.if2)}
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">3</span>
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-warm-gray text-charcoal rounded-full text-sm font-bold">3</span>
                       {renderTip(t.payment_failed.if3)}
                     </li>
                   </>
@@ -142,15 +142,15 @@ function PaymentFailedContent() {
                 {(errorReason === 'network_error' || errorReason === 'timeout') && (
                   <>
                     <li className="flex items-start gap-3">
-                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">1</span>
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-warm-gray text-charcoal rounded-full text-sm font-bold">1</span>
                       {renderTip(t.payment_failed.net1)}
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">2</span>
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-warm-gray text-charcoal rounded-full text-sm font-bold">2</span>
                       {renderTip(t.payment_failed.net2)}
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">3</span>
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-warm-gray text-charcoal rounded-full text-sm font-bold">3</span>
                       {renderTip(t.payment_failed.net3)}
                     </li>
                   </>
@@ -158,15 +158,15 @@ function PaymentFailedContent() {
                 {!['card_declined', 'insufficient_funds', 'network_error', 'timeout'].includes(errorReason) && (
                   <>
                     <li className="flex items-start gap-3">
-                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">1</span>
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-warm-gray text-charcoal rounded-full text-sm font-bold">1</span>
                       {renderTip(t.payment_failed.def1)}
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">2</span>
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-warm-gray text-charcoal rounded-full text-sm font-bold">2</span>
                       {renderTip(t.payment_failed.def2)}
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-orange-200 text-orange-800 rounded-full text-sm font-bold">3</span>
+                      <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-warm-gray text-charcoal rounded-full text-sm font-bold">3</span>
                       {renderTip(t.payment_failed.def3)}
                     </li>
                   </>
@@ -175,30 +175,24 @@ function PaymentFailedContent() {
             </div>
 
             {/* Support Section */}
-            <div className="grid md:grid-cols-2 gap-6 mb-8 pb-8 border-b border-gray-200">
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="font-bold text-gray-900 mb-3">{t.payment_failed.support_title}</h3>
-                <div className="space-y-3 text-sm text-gray-700">
+            <div className="grid md:grid-cols-2 gap-6 mb-8 pb-8 border-b border-warm-gray">
+              <div className="bg-bone p-6 rounded-lg">
+                <h3 className="heading-serif text-charcoal mb-3">{t.payment_failed.support_title}</h3>
+                <div className="space-y-3 text-sm text-earth">
                   <p className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-5 h-5 text-accent shrink-0" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                       <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                     </svg>
-                    <a href="mailto:elsdreamfactory@gmail.com" className="text-orange-600 hover:underline font-medium">
+                    <a href="mailto:elsdreamfactory@gmail.com" className="text-accent hover:underline font-medium">
                       elsdreamfactory@gmail.com
                     </a>
                   </p>
-                  <p className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.823.728c.15.248.283.505.398.768.115.263.316.551.571.819.255.268.579.503.915.657.337.155.751.235 1.237.235 1.485 0 2.677-.402 3.353-.956.677-.554.988-1.262 1.087-2.008.098-.746.098-1.604 0-2.773-.098-1.169-.269-2.054-.47-2.53l-.466-1.04a1 1 0 00-.938-.556h-2.003V3z" />
-                    </svg>
-                    <span className="font-medium">+90 (555) 123-4567</span>
-                  </p>
                 </div>
               </div>
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="font-bold text-gray-900 mb-3">{t.payment_failed.account_title}</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
+              <div className="bg-bone p-6 rounded-lg">
+                <h3 className="heading-serif text-charcoal mb-3">{t.payment_failed.account_title}</h3>
+                <ul className="space-y-2 text-sm text-earth">
                   <li>{t.payment_failed.acc1}</li>
                   <li>{t.payment_failed.acc2}</li>
                   <li>{t.payment_failed.acc3}</li>
@@ -210,19 +204,19 @@ function PaymentFailedContent() {
             <div className="space-y-3 sm:space-y-0 sm:flex sm:gap-4">
               <Link
                 href="/payment"
-                className="flex-1 text-center bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-md hover:shadow-lg"
+                className="flex-1 block text-center bg-charcoal hover:bg-accent text-bone py-3.5 px-4 text-sm tracking-wider uppercase rounded-lg transition-colors duration-300"
               >
                 {t.payment_failed.btn_retry}
               </Link>
               <Link
                 href="/cart"
-                className="flex-1 text-center border-2 border-orange-600 text-orange-600 hover:bg-orange-50 font-bold py-3 px-4 rounded-lg transition-colors"
+                className="flex-1 block text-center border border-charcoal text-charcoal hover:bg-charcoal hover:text-bone py-3.5 px-4 text-sm tracking-wider uppercase rounded-lg transition-colors duration-300"
               >
                 {t.payment_failed.btn_back_cart}
               </Link>
               <Link
                 href="/"
-                className="flex-1 text-center text-gray-600 hover:text-gray-900 font-bold py-3 px-4 rounded-lg transition-colors"
+                className="flex-1 block text-center text-earth hover:text-charcoal py-3.5 px-4 text-sm tracking-wider uppercase rounded-lg transition-colors"
               >
                 {t.payment_failed.btn_home}
               </Link>
@@ -231,9 +225,9 @@ function PaymentFailedContent() {
         </div>
 
         {/* Security Banner */}
-        <div className="bg-linear-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6 text-center">
-          <p className="text-gray-700">
-            <span className="font-semibold">{t.payment_failed.banner_title}</span> {t.payment_failed.banner_desc}
+        <div className="bg-warm-gray/40 border border-warm-gray rounded-lg p-6 text-center">
+          <p className="text-earth">
+            <span className="font-medium text-charcoal">{t.payment_failed.banner_title}</span> {t.payment_failed.banner_desc}
           </p>
         </div>
       </div>

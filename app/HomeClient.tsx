@@ -8,6 +8,7 @@ import { CeramicProductCard } from '@/components/CeramicProductCard';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { NewsletterForm } from '@/components/NewsletterForm';
 import { useLanguage } from '@/context/LanguageContext';
+import { needsUnoptimized } from '@/lib/images';
 
 interface BannerData {
   items: string[];
@@ -79,7 +80,7 @@ export default function HomeClient({ featured, banner, about, homepage }: HomeCl
           fill
           className="object-cover"
           priority
-          unoptimized={banner.hero_image?.startsWith('http')}
+          unoptimized={needsUnoptimized(banner.hero_image)}
         />
         <div className="absolute inset-0 bg-white/40" />
 
@@ -294,7 +295,7 @@ export default function HomeClient({ featured, banner, about, homepage }: HomeCl
                 alt="El yapımı seramik atölyesi - seramik üretim süreci"
                 fill
                 className="object-cover"
-                unoptimized={about.craft_image.startsWith('http')}
+                unoptimized={needsUnoptimized(about.craft_image)}
               />
             </div>
           </ScrollReveal>

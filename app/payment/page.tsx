@@ -8,6 +8,15 @@ import Image from 'next/image';
 import { generateEventId } from '@/lib/pixel';
 import { useLanguage } from '@/context/LanguageContext';
 
+// Kart numarası ön ekinden marka algıla — kullanıcıya görsel geri bildirim için
+function detectCardBrand(digits: string): string | null {
+  if (/^9792/.test(digits)) return 'Troy';
+  if (/^4/.test(digits)) return 'Visa';
+  if (/^(5[1-5]|2(2[2-9]|[3-6]\d|7[01]|720))/.test(digits)) return 'Mastercard';
+  if (/^3[47]/.test(digits)) return 'Amex';
+  return null;
+}
+
 export default function PaymentPage() {
   const { items, totalPrice } = useCart();
   const { t } = useLanguage();
@@ -39,13 +48,13 @@ export default function PaymentPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-bone py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">{t.payment.empty_title}</h1>
-          <p className="text-gray-600 mb-6">{t.payment.empty_desc}</p>
+          <h1 className="heading-display text-3xl md:text-4xl text-charcoal mb-6">{t.payment.empty_title}</h1>
+          <p className="text-earth mb-6">{t.payment.empty_desc}</p>
           <Link
             href="/ceramics"
-            className="inline-block bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-lg"
+            className="inline-block bg-charcoal hover:bg-accent text-bone py-3.5 px-8 text-sm tracking-wider uppercase rounded-lg transition-colors duration-300"
           >
             {t.payment.continue_shopping}
           </Link>
@@ -124,49 +133,49 @@ export default function PaymentPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-bone py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Breadcrumb */}
-        <nav className="mb-8 text-sm text-gray-600">
-          <Link href="/" className="text-amber-600 hover:text-amber-800">{t.payment.breadcrumb_home}</Link>
+        <nav className="mb-8 text-sm text-earth">
+          <Link href="/" className="text-accent hover:text-charcoal transition-colors">{t.payment.breadcrumb_home}</Link>
           <span className="mx-2">›</span>
-          <Link href="/cart" className="text-amber-600 hover:text-amber-800">{t.payment.breadcrumb_cart}</Link>
+          <Link href="/cart" className="text-accent hover:text-charcoal transition-colors">{t.payment.breadcrumb_cart}</Link>
           <span className="mx-2">›</span>
           <span>{t.payment.breadcrumb_payment}</span>
         </nav>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">{t.payment.title}</h1>
+        <h1 className="heading-display text-3xl md:text-4xl text-charcoal mb-8">{t.payment.title}</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Payment Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-md p-8 mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">{t.payment.personal_info}</h2>
+            <div className="bg-white rounded-xl border border-warm-gray p-8 mb-8">
+              <h2 className="heading-serif text-2xl text-charcoal mb-6">{t.payment.personal_info}</h2>
 
               <form onSubmit={handlePayment} className="space-y-6">
                 {/* Name Fields */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.first_name}</label>
+                    <label className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">{t.payment.first_name}</label>
                     <input
                       type="text"
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleInputChange}
                       required
-                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
                       placeholder={t.payment.first_name_ph}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.last_name}</label>
+                    <label className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">{t.payment.last_name}</label>
                     <input
                       type="text"
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleInputChange}
                       required
-                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
                       placeholder={t.payment.last_name_ph}
                     />
                   </div>
@@ -175,21 +184,21 @@ export default function PaymentPage() {
                 {/* Email & Phone */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.email}</label>
+                    <label className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">{t.payment.email}</label>
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
                       placeholder="example@email.com"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.phone}</label>
+                    <label className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">{t.payment.phone}</label>
                     <div className="flex">
-                      <span className="inline-flex items-center px-3 min-h-11 border border-r-0 border-gray-300 rounded-l-lg bg-gray-100 text-gray-600 text-base select-none">+90</span>
+                      <span className="inline-flex items-center px-3 min-h-11 border border-r-0 border-warm-gray rounded-l-lg bg-warm-gray/60 text-earth text-base select-none">+90</span>
                       <input
                         type="tel"
                         inputMode="numeric"
@@ -198,24 +207,24 @@ export default function PaymentPage() {
                         onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value.replace(/\D/g, '').slice(0, 10) }))}
                         required
                         maxLength={10}
-                        className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                        className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-r-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
                         placeholder="5XX XXX XX XX"
                       />
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">{t.payment.phone_hint}</p>
+                    <p className="text-xs text-clay mt-1">{t.payment.phone_hint}</p>
                   </div>
                 </div>
 
                 {/* Address */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.address}</label>
+                  <label className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">{t.payment.address}</label>
                   <input
                     type="text"
                     name="address"
                     value={formData.address}
                     onChange={handleInputChange}
                     required
-                    className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
                     placeholder={t.payment.address_ph}
                   />
                 </div>
@@ -223,45 +232,45 @@ export default function PaymentPage() {
                 {/* City & Postal */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.city}</label>
+                    <label className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">{t.payment.city}</label>
                     <input
                       type="text"
                       name="city"
                       value={formData.city}
                       onChange={handleInputChange}
                       required
-                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
                       placeholder={t.payment.city_ph}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.postal_code}</label>
+                    <label className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">{t.payment.postal_code}</label>
                     <input
                       type="text"
                       name="postalCode"
                       value={formData.postalCode}
                       onChange={handleInputChange}
                       required
-                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
                       placeholder="34000"
                     />
                   </div>
                 </div>
 
                 {/* ═══════ KART BİLGİLERİ ═══════ */}
-                <div className="border-t border-gray-200 pt-6 mt-2">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">{t.payment.card_info}</h2>
+                <div className="border-t border-warm-gray pt-6 mt-2">
+                  <h2 className="heading-serif text-2xl text-charcoal mb-6">{t.payment.card_info}</h2>
 
                   {/* Kart Üzerindeki İsim */}
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.card_holder}</label>
+                    <label className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">{t.payment.card_holder}</label>
                     <input
                       type="text"
                       name="cardHolderName"
                       value={formData.cardHolderName}
                       onChange={handleInputChange}
                       required
-                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
                       placeholder={t.payment.card_holder_ph}
                       autoComplete="cc-name"
                     />
@@ -269,34 +278,42 @@ export default function PaymentPage() {
 
                   {/* Kart Numarası */}
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.card_number}</label>
-                    <input
-                      type="text"
-                      name="cardNumber"
-                      value={formData.cardNumber}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, '').slice(0, 16);
-                        const formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ');
-                        setFormData(prev => ({ ...prev, cardNumber: formatted }));
-                      }}
-                      required
-                      className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent font-mono tracking-wider"
-                      placeholder="0000 0000 0000 0000"
-                      maxLength={19}
-                      autoComplete="cc-number"
-                    />
+                    <label className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">{t.payment.card_number}</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        name="cardNumber"
+                        value={formData.cardNumber}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, '').slice(0, 16);
+                          const formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+                          setFormData(prev => ({ ...prev, cardNumber: formatted }));
+                        }}
+                        required
+                        className="w-full min-h-11 px-4 py-2 pr-28 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors font-mono tracking-wider"
+                        placeholder="0000 0000 0000 0000"
+                        maxLength={19}
+                        autoComplete="cc-number"
+                      />
+                      {detectCardBrand(formData.cardNumber.replace(/\s/g, '')) && (
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs tracking-[0.12em] uppercase font-medium text-earth bg-warm-gray/60 rounded px-2 py-1 select-none">
+                          {detectCardBrand(formData.cardNumber.replace(/\s/g, ''))}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* Son Kullanma & CVC */}
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.month}</label>
+                      <label className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">{t.payment.month}</label>
                       <select
                         name="expireMonth"
                         value={formData.expireMonth}
                         onChange={(e) => setFormData(prev => ({ ...prev, expireMonth: e.target.value }))}
                         required
-                        className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                        className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
                         title={t.payment.expire_month_title}
                       >
                         <option value="">{t.payment.month}</option>
@@ -308,13 +325,13 @@ export default function PaymentPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">{t.payment.year}</label>
+                      <label className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">{t.payment.year}</label>
                       <select
                         name="expireYear"
                         value={formData.expireYear}
                         onChange={(e) => setFormData(prev => ({ ...prev, expireYear: e.target.value }))}
                         required
-                        className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                        className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
                         title={t.payment.expire_year_title}
                       >
                         <option value="">{t.payment.year}</option>
@@ -329,9 +346,10 @@ export default function PaymentPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">CVC</label>
+                      <label className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">CVC</label>
                       <input
                         type="text"
+                        inputMode="numeric"
                         name="cvc"
                         value={formData.cvc}
                         onChange={(e) => {
@@ -339,7 +357,7 @@ export default function PaymentPage() {
                           setFormData(prev => ({ ...prev, cvc: value }));
                         }}
                         required
-                        className="w-full min-h-11 px-4 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent font-mono tracking-wider"
+                        className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors font-mono tracking-wider"
                         placeholder="000"
                         maxLength={4}
                         autoComplete="cc-csc"
@@ -348,8 +366,8 @@ export default function PaymentPage() {
                   </div>
                 </div>
 
-                {/* Iyzico Badge */}
-                <div className="flex flex-col items-center justify-center gap-3 p-4 bg-blue-50 rounded-lg">
+                {/* Iyzico Badge + güven sinyalleri */}
+                <div className="flex flex-col items-center justify-center gap-3 p-4 bg-warm-gray/40 rounded-lg">
                   <Image
                     src="/images/payment/logo_band_colored.png"
                     alt="iyzico ile Öde, Mastercard, Visa, American Express ve Troy ile güvenli ödeme"
@@ -357,26 +375,41 @@ export default function PaymentPage() {
                     height={36}
                     className="h-8 w-auto"
                   />
-                  <p className="text-xs text-gray-600 text-center">
+                  <p className="text-xs text-earth text-center">
                     {t.payment.iyzico_note}
                   </p>
+                  <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-earth">
+                    <span className="flex items-center gap-1">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0110 0v4" />
+                      </svg>
+                      {t.payment.trust_ssl}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                      </svg>
+                      {t.payment.trust_3ds}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Ön Bilgilendirme + MSS Onayı (TKHK Md.48) */}
-                <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                <div className="border border-warm-gray rounded-lg p-4 bg-bone/60">
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={mssAccepted}
                       onChange={(e) => { setMssAccepted(e.target.checked); setOnBilgiAccepted(e.target.checked); }}
                       required
-                      className="mt-1 w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500 shrink-0"
+                      className="mt-1 w-4 h-4 accent-[#5C0A1A] border-warm-gray rounded shrink-0"
                     />
-                    <span className="text-sm text-gray-700 leading-relaxed">
+                    <span className="text-sm text-charcoal/80 leading-relaxed">
                       {t.payment.consent_1}
-                      <a href="/returns" target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:underline font-medium">{t.payment.consent_link1}</a>
+                      <a href="/returns" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline font-medium">{t.payment.consent_link1}</a>
                       {t.payment.consent_2}
-                      <a href="/mesafeli-satis-sozlesmesi" target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:underline font-medium">{t.payment.consent_link2}</a>
+                      <a href="/mesafeli-satis-sozlesmesi" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline font-medium">{t.payment.consent_link2}</a>
                       {t.payment.consent_3}
                       <span className="text-red-500 ml-1">*</span>
                     </span>
@@ -387,8 +420,12 @@ export default function PaymentPage() {
                 <button
                   type="submit"
                   disabled={loading || !mssAccepted || !onBilgiAccepted}
-                  className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-colors"
+                  className="w-full bg-charcoal hover:bg-accent disabled:bg-warm-gray disabled:text-clay disabled:cursor-not-allowed text-bone py-3.5 px-4 text-sm tracking-wider uppercase rounded-lg transition-colors duration-300 flex items-center justify-center gap-2"
                 >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0110 0v4" />
+                  </svg>
                   {loading ? t.payment.processing : `${t.payment.pay_prefix}${totalPrice.toFixed(2)} ₺${t.payment.pay_suffix}`}
                 </button>
               </form>
@@ -397,13 +434,13 @@ export default function PaymentPage() {
 
           {/* Order Summary */}
           <div>
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-6">{t.payment.order_summary}</h3>
+            <div className="bg-white rounded-xl border border-warm-gray p-6 sticky top-24">
+              <h3 className="heading-serif text-xl text-charcoal mb-6">{t.payment.order_summary}</h3>
 
-              <div className="space-y-4 mb-6 border-b pb-6">
+              <div className="space-y-4 mb-6 border-b border-warm-gray pb-6">
                 {items.map(item => (
                   <div key={item.id} className="flex gap-3">
-                    <div className="w-16 h-16 bg-gray-100 rounded overflow-hidden shrink-0">
+                    <div className="w-16 h-16 bg-warm-gray rounded overflow-hidden shrink-0">
                       <Image
                         src={item.images[0]}
                         alt={item.name}
@@ -413,33 +450,53 @@ export default function PaymentPage() {
                       />
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900">{item.name}</p>
-                      <p className="text-sm text-gray-600">{t.payment.qty_label} {item.quantity}</p>
-                      <p className="text-amber-600 font-bold">₺{(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="font-medium text-charcoal">{item.name}</p>
+                      <p className="text-sm text-earth">{t.payment.qty_label} {item.quantity}</p>
+                      <p className="text-charcoal">₺{(item.price * item.quantity).toFixed(2)}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="space-y-3 mb-6 border-b pb-6">
+              <div className="space-y-3 mb-6 border-b border-warm-gray pb-6">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">{t.payment.subtotal}</span>
-                  <span className="font-medium">₺{totalPrice.toFixed(2)}</span>
+                  <span className="text-earth">{t.payment.subtotal}</span>
+                  <span className="font-medium text-charcoal">₺{totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">{t.payment.shipping}</span>
-                  <span className="font-medium text-green-600">{t.payment.free}</span>
+                  <span className="text-earth">{t.payment.shipping}</span>
+                  <span className="font-medium text-emerald-700">{t.payment.free}</span>
                 </div>
               </div>
 
-              <div className="flex justify-between mb-6 text-lg font-bold">
-                <span>{t.payment.total}</span>
-                <span className="text-amber-600">₺{totalPrice.toFixed(2)}</span>
+              <div className="flex justify-between mb-6 text-lg">
+                <span className="font-medium text-charcoal">{t.payment.total}</span>
+                <span className="heading-serif text-charcoal">₺{totalPrice.toFixed(2)}</span>
+              </div>
+
+              {/* Kargo + cayma hakkı güvencesi — ödeme anında görünür olsun */}
+              <div className="mb-6 p-4 bg-warm-gray/40 rounded-lg space-y-2">
+                <p className="flex items-center gap-2 text-xs text-earth">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="shrink-0">
+                    <rect x="1" y="3" width="15" height="13" rx="1" />
+                    <path d="M16 8h4l3 3v5h-7V8z" />
+                    <circle cx="5.5" cy="18.5" r="2.5" />
+                    <circle cx="18.5" cy="18.5" r="2.5" />
+                  </svg>
+                  {t.payment.trust_shipping}
+                </p>
+                <p className="flex items-center gap-2 text-xs text-earth">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="shrink-0">
+                    <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8" />
+                    <path d="M3 3v5h5" />
+                  </svg>
+                  {t.payment.trust_returns}
+                </p>
               </div>
 
               <Link
                 href="/cart"
-                className="w-full block text-center text-amber-600 hover:text-amber-800 font-medium py-2"
+                className="w-full block text-center text-sm tracking-wider uppercase text-earth hover:text-charcoal transition-colors py-2"
               >
                 {t.payment.back_to_cart}
               </Link>

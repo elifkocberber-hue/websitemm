@@ -59,7 +59,9 @@ export const Header: React.FC = () => {
   }, [menuOpen]);
 
   const viewportShift = Math.max(0, Math.min(1, (1200 - windowWidth) / 400));
-  const effectiveProgress = Math.max(scrollProgress, viewportShift);
+  // Mobilde logo sabit (küçük, sol üst) — scroll animasyonu yalnız masaüstünde
+  const isMobile = windowWidth < 768;
+  const effectiveProgress = isMobile ? 1 : Math.max(scrollProgress, viewportShift);
 
   const logoSize = 144 - effectiveProgress * 96;
   const logoTop = effectiveProgress * 12;

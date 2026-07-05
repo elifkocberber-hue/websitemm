@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { useLanguage } from '@/context/LanguageContext';
+import { needsUnoptimized } from '@/lib/images';
 
 export interface AboutSettings {
   hero_image: string;
@@ -74,7 +75,7 @@ export default function AboutClient({ about }: { about: AboutSettings | null }) 
           fill
           className="object-cover"
           priority
-          unoptimized={heroImage.startsWith('http')}
+          unoptimized={needsUnoptimized(heroImage)}
         />
         <div className="absolute inset-0 bg-charcoal/40" />
         <div className="relative z-10 h-full flex items-end pb-12 md:pb-16">

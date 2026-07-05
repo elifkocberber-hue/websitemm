@@ -96,13 +96,17 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
 
         <div className="flex items-center justify-between mt-auto pt-4">
           <span className="text-xl font-light text-charcoal">₺{product.price}</span>
-          <span className={`text-xs ${product.stock > 0 ? 'text-earth' : 'text-accent'}`}>
-            {product.stock > 0 ? `Stok: ${product.stock}` : 'Tükendi'}
-          </span>
+          {/* Kıtlık dili: bol stok sayısı göstermek satışa katkı yapmaz — yalnız azalınca vurgula */}
+          {product.stock === 0 ? (
+            <span className="text-xs text-accent">Tükendi</span>
+          ) : product.stock <= 3 ? (
+            <span className="text-xs text-accent font-medium">Son {product.stock} adet</span>
+          ) : null}
         </div>
 
         <button
           key={animKey}
+          type="button"
           onClick={handleAddToCart}
           disabled={product.stock === 0}
           className={`w-full mt-4 py-3.5 text-sm tracking-widest uppercase transition-colors duration-300 flex items-center justify-center gap-2 active:scale-95 ${
