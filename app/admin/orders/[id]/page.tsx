@@ -25,6 +25,8 @@ interface OrderDetail {
   carrier?: string | null;
   customer_email?: string | null;
   customer_name?: string | null;
+  refund_status?: string | null;
+  refund_error?: string | null;
   created_at: string;
   updated_at: string;
   users: {
@@ -241,6 +243,22 @@ export default function OrderDetailPage() {
                   {getStatusTurk(order.status)}
                 </span>
               </div>
+              {order.refund_status && (
+                <div className={`mt-4 rounded-lg px-4 py-3 border ${
+                  order.refund_status === 'refunded'
+                    ? 'bg-green-50 border-green-200'
+                    : 'bg-red-50 border-red-200'
+                }`}>
+                  <p className={`text-sm font-medium ${order.refund_status === 'refunded' ? 'text-green-800' : 'text-red-800'}`}>
+                    {order.refund_status === 'refunded'
+                      ? '↩️ Para iadesi otomatik yapıldı'
+                      : '⚠️ Otomatik iade BAŞARISIZ — iyzico panelinden manuel iade gerekli'}
+                  </p>
+                  {order.refund_error && (
+                    <p className="text-xs text-red-700 mt-1">Hata: {order.refund_error}</p>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Kargo Bilgileri */}

@@ -58,6 +58,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Sipariş iptal edilemedi' }, { status: 500 });
     }
 
+    // İade sonucunu kaydet — admin panelde takip için. Ayrı çağrı: refund_status
+    // kolonu henüz yoksa (migration çalıştırılmadıysa) iptal akışını bozmaz.
+    await supabaseAdmin
+      .from('orders')
+      .update({
+        refund_status: refund.ok ? 'refunded' : 'failed',
+        refund_error: refund.ok ? null : (refund.error || 'bilinmeyen hata'),
+      })
+      .eq('id', order.id)
+      .then(({ error }) => {
+        if (error) console.error('refund_status kaydedilemedi (migration eksik olabilir):', error.message);
+      });
+
     // Bilgilendirme e-postaları (hata olsa da iptali etkilemez)
     const resendKey = process.env.RESEND_API_KEY;
     if (resendKey) {

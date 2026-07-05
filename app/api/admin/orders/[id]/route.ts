@@ -29,6 +29,8 @@ export async function GET(
         status,
         payment_id,
         iyzico_payment_id,
+        refund_status,
+        refund_error,
         tracking_number,
         carrier,
         shipping_address,
