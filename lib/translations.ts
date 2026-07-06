@@ -8,6 +8,7 @@ export const tr = {
     logout: 'Çıkış Yap',
     hello: 'Merhaba',
     user_menu: 'Kullanıcı menüsü',
+    orders: 'Siparişlerim',
   },
   footer: {
     tagline: 'Her parça,\nbir hikaye taşır.',
@@ -105,6 +106,7 @@ export const tr = {
     in_stock: 'Stokta Var',
     out_of_stock: 'Stokta Yok',
     sold_out: 'Tükendi',
+    last_one: 'Son 1 adet',
     quantity_label: 'Ürün adedi',
     add_to_cart: 'Sepete Ekle',
     added_to_cart: 'Sepete Eklendi',
@@ -112,6 +114,14 @@ export const tr = {
     related_title: 'İlgili Ürünler',
     no_image: 'Görsel bulunmuyor',
     image_thumb: 'Görüntü',
+  },
+  card: {
+    add_to_cart: 'Sepete Ekle',
+    added_to_cart: 'Sepete Eklendi',
+    sold_out: 'Tükendi',
+    last_one: 'Son 1 adet',
+    fav_add: 'Favorilere ekle',
+    fav_remove: 'Favorilerden çıkar',
   },
   newsletter: {
     placeholder: 'E-posta adresiniz',
@@ -370,6 +380,7 @@ export const en = {
     logout: 'Sign Out',
     hello: 'Hello',
     user_menu: 'User menu',
+    orders: 'My Orders',
   },
   footer: {
     tagline: 'Every piece\ntells a story.',
@@ -467,6 +478,7 @@ export const en = {
     in_stock: 'In Stock',
     out_of_stock: 'Out of Stock',
     sold_out: 'Sold Out',
+    last_one: 'Last one',
     quantity_label: 'Quantity',
     add_to_cart: 'Add to Cart',
     added_to_cart: 'Added to Cart',
@@ -474,6 +486,14 @@ export const en = {
     related_title: 'Related Products',
     no_image: 'No image available',
     image_thumb: 'Image',
+  },
+  card: {
+    add_to_cart: 'Add to Cart',
+    added_to_cart: 'Added to Cart',
+    sold_out: 'Sold Out',
+    last_one: 'Last one',
+    fav_add: 'Add to favorites',
+    fav_remove: 'Remove from favorites',
   },
   newsletter: {
     placeholder: 'Your email address',

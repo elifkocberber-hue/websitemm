@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { CeramicProduct } from '@/types/ceramic';
 import { useCart } from '@/context/CeramicCartContext';
 import { useFavorites } from '@/context/FavoritesContext';
+import { useLanguage } from '@/context/LanguageContext';
+import { needsUnoptimized } from '@/lib/images';
 import { useState } from 'react';
 
 interface CeramicProductCardProps {
@@ -22,17 +24,20 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
 }) => {
   const { addToCart } = useCart();
   const { toggleFavorite, isFavorited } = useFavorites();
+  const { t } = useLanguage();
   const [addedToCart, setAddedToCart] = useState(false);
   const [animKey, setAnimKey] = useState(0);
   const favorited = isFavorited(product.id);
 
-  const clayTypeLabels: Record<string, string> = {
-    stoneware: 'Stoneware',
-    porcelain: 'Porselen',
-    earthenware: 'Toprak',
-    'bone-china': 'Bone China',
-    terracotta: 'Terracotta',
-  };
+  const clayLabel = t.materials[product.clayType as keyof typeof t.materials];
+
+  // Vitrin kartında yalnız görseller kullanılır; video karesi Next Image'de
+  // render edilemez ve kartı bozar. Bu yüzden video URL'lerini eleyip ilk iki
+  // görseli (ana + hover) alıyoruz. Video ilk sıraya konsa bile kart bozulmaz.
+  const isVideo = (url: string) => /\.(mp4|webm|mov)$/i.test(url);
+  const cardImages = (product.images || []).filter((u) => u && !isVideo(u));
+  const primaryImage = cardImages[0] ?? '/images/arkaplan.jpg';
+  const secondaryImage = cardImages[1];
 
   const handleAddToCart = () => {
     addToCart(product, 1);
@@ -47,26 +52,28 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
       <Link href={`/ceramic/${product.id}`} aria-label={product.name}>
         <div className={`product-image-hover relative ${imageClass} bg-warm-gray overflow-hidden`}>
           <Image
-            src={product.images[0]}
+            src={primaryImage}
             alt={`${product.name} — el yapımı ${product.category} seramik`}
             fill
             className={`${objectFit === 'contain' ? 'object-contain' : 'object-cover'} img-primary`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            unoptimized={needsUnoptimized(primaryImage)}
           />
-          {product.images.length > 1 && (
+          {secondaryImage && (
             <Image
-              src={product.images[1]}
+              src={secondaryImage}
               alt={`${product.name} — detay`}
               fill
               className="object-cover img-secondary"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              unoptimized={needsUnoptimized(secondaryImage)}
             />
           )}
           <button
             type="button"
             onClick={(e) => { e.preventDefault(); toggleFavorite(product.id); }}
             className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center bg-white/80 rounded-full backdrop-blur-sm hover:bg-white transition-colors duration-200"
-            aria-label={favorited ? 'Favorilerden çıkar' : 'Favorilere ekle'}
+            aria-label={favorited ? t.card.fav_remove : t.card.fav_add}
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill={favorited ? '#DD6B56' : 'none'} stroke={favorited ? '#DD6B56' : 'currentColor'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -82,27 +89,23 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
             {product.category}
           </p>
           <p className="text-[12px] sm:text-[11px] tracking-[0.08em] sm:tracking-widest uppercase text-clay truncate">
-            {clayTypeLabels[product.clayType]}
+            {clayLabel}
           </p>
         </div>
 
         <Link href={`/ceramic/${product.id}`}>
-          <h3 className="heading-serif text-lg text-charcoal group-hover:text-accent transition-colors duration-300 line-clamp-2 min-h-[3.5rem]">
+          <h3 className="heading-serif text-lg text-charcoal group-hover:text-accent transition-colors duration-300 line-clamp-2 min-h-14">
             {product.name}
           </h3>
         </Link>
 
-        <p className="text-earth text-sm mt-1 line-clamp-2 leading-relaxed min-h-[2.5rem]">
-          {product.description}
-        </p>
-
         <div className="flex items-center justify-between mt-auto pt-4">
           <span className="text-xl font-light text-charcoal">₺{product.price}</span>
-          {/* Kıtlık dili: bol stok sayısı göstermek satışa katkı yapmaz — yalnız azalınca vurgula */}
+          {/* Kıtlık dili: yalnız tükenince ya da son 1 adette vurgula; 1'den fazla stokta sayı gösterme */}
           {product.stock === 0 ? (
-            <span className="text-xs text-accent">Tükendi</span>
-          ) : product.stock <= 3 ? (
-            <span className="text-xs text-accent font-medium">Son {product.stock} adet</span>
+            <span className="text-xs text-accent">{t.card.sold_out}</span>
+          ) : product.stock === 1 ? (
+            <span className="text-xs text-accent font-medium">{t.card.last_one}</span>
           ) : null}
         </div>
 
@@ -124,9 +127,9 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              Sepete Eklendi
+              {t.card.added_to_cart}
             </>
-          ) : product.stock === 0 ? 'Tükendi' : 'Sepete Ekle'}
+          ) : product.stock === 0 ? t.card.sold_out : t.card.add_to_cart}
         </button>
       </div>
     </div>

@@ -67,9 +67,49 @@ export default function ProductsAdminPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [dragImageIndex, setDragImageIndex] = useState<number | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
-  const [cropQueue, setCropQueue] = useState<string[]>([]); // base64 kuyruğu
+  // Kırpma editörü: base64 kaynak + hangi görselin düzenlendiği (null = yeni ekleme).
+  // editIndex doluysa kırpım o indeksteki görselin yerine geçer, yeni eklenmez.
+  const [cropSrc, setCropSrc] = useState<string | null>(null);
+  const [cropEditIndex, setCropEditIndex] = useState<number | null>(null);
   const [cropUploading, setCropUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const descRef = useRef<HTMLTextAreaElement>(null);
+
+  // Açıklama alanında seçili metni işaretleme sözdizimiyle sarar (bold/italik) veya
+  // satır başına önek ekler (madde). Detay sayfası bu işaretlemeyi biçimli gösterir.
+  const applyDescFormat = (kind: 'bold' | 'italic' | 'bullet') => {
+    const ta = descRef.current;
+    if (!ta) return;
+    const text = formData.description;
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const selected = text.slice(start, end);
+    let next: string;
+    let cursorStart: number;
+    let cursorEnd: number;
+
+    if (kind === 'bullet') {
+      // Seçili satırların (yoksa imlecin bulunduğu satırın) başına "- " ekle
+      const lineStart = text.lastIndexOf('\n', start - 1) + 1;
+      const block = text.slice(lineStart, end || start);
+      const bulleted = block.split('\n').map(l => (l.startsWith('- ') ? l : `- ${l}`)).join('\n');
+      next = text.slice(0, lineStart) + bulleted + text.slice(end || start);
+      cursorStart = lineStart;
+      cursorEnd = lineStart + bulleted.length;
+    } else {
+      const marker = kind === 'bold' ? '**' : '*';
+      const inner = selected || (kind === 'bold' ? 'kalın metin' : 'italik metin');
+      next = text.slice(0, start) + marker + inner + marker + text.slice(end);
+      cursorStart = start + marker.length;
+      cursorEnd = cursorStart + inner.length;
+    }
+
+    setFormData(prev => ({ ...prev, description: next }));
+    requestAnimationFrame(() => {
+      ta.focus();
+      ta.setSelectionRange(cursorStart, cursorEnd);
+    });
+  };
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -148,6 +188,7 @@ export default function ProductsAdminPage() {
     setFormData(EMPTY_PRODUCT);
   };
 
+  // Kırpma onayı: yeni ekleme ise sona ekler; edit ise ilgili görselin yerine koyar.
   const handleProductCropConfirm = useCallback(async (blob: Blob) => {
     setCropUploading(true);
     try {
@@ -156,7 +197,15 @@ export default function ProductsAdminPage() {
       const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
       const data = await res.json();
       if (res.ok && data.url) {
-        setFormData(prev => ({ ...prev, images: [...prev.images, data.url] }));
+        setFormData(prev => {
+          const images = [...prev.images];
+          if (cropEditIndex !== null && cropEditIndex < images.length) {
+            images[cropEditIndex] = data.url; // mevcut görseli düzenlenmiş haliyle değiştir
+          } else {
+            images.push(data.url);
+          }
+          return { ...prev, images };
+        });
       } else {
         showMessage('error', data.error || 'Yükleme başarısız');
       }
@@ -164,63 +213,104 @@ export default function ProductsAdminPage() {
       showMessage('error', 'Yükleme sırasında hata oluştu');
     } finally {
       setCropUploading(false);
-      setCropQueue(prev => prev.slice(1));
+      setCropSrc(null);
+      setCropEditIndex(null);
     }
-  }, []);
+  }, [cropEditIndex]);
 
-  // Seçilen görselleri base64'e çevir, kırpma kuyruğuna ekle
-  const openCropQueue = useCallback((files: File[]) => {
-    const imageFiles = files.filter(f => /^image\//.test(f.type));
-    if (!imageFiles.length) return;
-    Promise.all(
-      imageFiles.map(f => new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.readAsDataURL(f);
-      }))
-    ).then(srcs => setCropQueue(srcs));
-  }, []);
+  // Bir görsel dosyasını (kırpmadan) doğrudan Supabase'e yükler, URL döndürür.
+  const uploadImageFile = async (file: File): Promise<string | null> => {
+    const name = file.name.toLowerCase();
+    const contentType =
+      /\.png$/.test(name) ? 'image/png' :
+      /\.webp$/.test(name) ? 'image/webp' : 'image/jpeg';
+    try {
+      const signRes = await fetch('/api/admin/upload/signed-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileName: file.name, contentType }),
+      });
+      if (!signRes.ok) { showMessage('error', 'Görsel URL alınamadı'); return null; }
+      const { signedUrl, publicUrl } = await signRes.json();
+      const uploadRes = await fetch(signedUrl, { method: 'PUT', headers: { 'Content-Type': contentType }, body: file });
+      if (!uploadRes.ok) { showMessage('error', `"${file.name}" yüklenemedi`); return null; }
+      return publicUrl;
+    } catch (err) {
+      showMessage('error', 'Görsel yükleme hatası: ' + (err instanceof Error ? err.message : String(err)));
+      return null;
+    }
+  };
+
+  // Bir video dosyasını doğrudan yükler (oran korunur — kırpma yok).
+  const uploadVideoFile = async (file: File): Promise<string | null> => {
+    const name = file.name.toLowerCase();
+    const contentType = /\.webm$/.test(name) ? 'video/webm' : /\.mov$/.test(name) ? 'video/quicktime' : 'video/mp4';
+    try {
+      const signRes = await fetch('/api/admin/upload/signed-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileName: file.name, contentType }),
+      });
+      if (!signRes.ok) { showMessage('error', 'Video URL alınamadı'); return null; }
+      const { signedUrl, publicUrl } = await signRes.json();
+      const uploadRes = await fetch(signedUrl, { method: 'PUT', headers: { 'Content-Type': contentType }, body: file });
+      if (!uploadRes.ok) { showMessage('error', `"${file.name}" yüklenemedi`); return null; }
+      return publicUrl;
+    } catch (err) {
+      showMessage('error', 'Video yükleme hatası: ' + (err instanceof Error ? err.message : String(err)));
+      return null;
+    }
+  };
+
+  // Seçilen dosyaları işler: görseller de videolar da doğrudan yüklenir (kırpma zorunlu değil).
+  // Kullanıcı sonradan bir görsele tıklayıp isteğe bağlı kırpabilir.
+  const processFiles = async (files: File[]) => {
+    const imageFiles = files.filter(f => /^image\//.test(f.type) || /\.(jpg|jpeg|png|webp)$/i.test(f.name));
+    const videoFiles = files.filter(f => /^video\//.test(f.type) || /\.(mp4|webm|mov)$/i.test(f.name));
+    if (!imageFiles.length && !videoFiles.length) return;
+
+    setUploading(true);
+    const uploaded: string[] = [];
+    for (const file of imageFiles) {
+      const url = await uploadImageFile(file);
+      if (url) uploaded.push(url);
+    }
+    for (const file of videoFiles) {
+      const url = await uploadVideoFile(file);
+      if (url) uploaded.push(url);
+    }
+    if (uploaded.length) {
+      setFormData(prev => ({ ...prev, images: [...prev.images, ...uploaded] }));
+    }
+    setUploading(false);
+  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    if (!files.length) return;
-    openCropQueue(files);
     if (fileInputRef.current) fileInputRef.current.value = '';
+    processFiles(files);
   };
 
   const handleDropFiles = async (files: FileList) => {
-    if (!files.length) return;
-    const allFiles = Array.from(files);
-    const imageFiles = allFiles.filter(f => /^image\//.test(f.type) || /\.(jpg|jpeg|png|webp)$/i.test(f.name));
-    const videoFiles = allFiles.filter(f => /\.(mp4|webm|mov)$/i.test(f.name));
+    processFiles(Array.from(files));
+  };
 
-    // Görseller → kırpma kuyruğuna
-    if (imageFiles.length) openCropQueue(imageFiles);
-
-    // Videolar → doğrudan yükle
-    if (videoFiles.length) {
-      setUploading(true);
-      const newImages = [...formData.images];
-      for (const file of videoFiles) {
-        const name = file.name.toLowerCase();
-        const contentType = /\.webm$/.test(name) ? 'video/webm' : /\.mov$/.test(name) ? 'video/quicktime' : 'video/mp4';
-        try {
-          const signRes = await fetch('/api/admin/upload/signed-url', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ fileName: file.name, contentType }),
-          });
-          if (!signRes.ok) { showMessage('error', 'Video URL alınamadı'); continue; }
-          const { signedUrl, publicUrl } = await signRes.json();
-          const uploadRes = await fetch(signedUrl, { method: 'PUT', headers: { 'Content-Type': contentType }, body: file });
-          if (!uploadRes.ok) { showMessage('error', `"${file.name}" yüklenemedi`); continue; }
-          newImages.push(publicUrl);
-        } catch (err) {
-          showMessage('error', 'Video yükleme hatası: ' + (err instanceof Error ? err.message : String(err)));
-        }
+  // Grid'deki bir görsele tıklayınca kırpma editörünü aç (videolar kırpılamaz).
+  const handleEditImage = async (index: number) => {
+    const img = formData.images[index];
+    if (/\.(mp4|webm|mov)$/i.test(img)) return;
+    // Uzak görseli base64'e çevir (crop editörü CORS için proxy'den okur)
+    try {
+      const res = await fetch(`/api/admin/proxy-image?url=${encodeURIComponent(img)}`);
+      const data = await res.json();
+      if (res.ok && data.dataUrl) {
+        setCropEditIndex(index);
+        setCropSrc(data.dataUrl);
+      } else {
+        showMessage('error', 'Görsel düzenleme için yüklenemedi');
       }
-      setFormData(prev => ({ ...prev, images: newImages }));
-      setUploading(false);
+    } catch {
+      showMessage('error', 'Görsel düzenleme için yüklenemedi');
     }
   };
 
@@ -540,6 +630,7 @@ export default function ProductsAdminPage() {
                   <p><strong>📷 Görsel sırası önerisi:</strong></p>
                   <p><strong>1. görsel:</strong> sade/krem zeminde net ürün çekimi — vitrinde bu görünür.</p>
                   <p><strong>2. görsel:</strong> ürünü kullanımda gösteren yaşam karesi (masada, rafta) — müşteri kartın üzerine geldiğinde otomatik bu görsele geçer.</p>
+                  <p className="pt-1 text-gray-500">Görseller olduğu gibi yüklenir. Vitrin kartlarında kare gösterildiği için, kadrajı ayarlamak isterseniz görselin üzerine gelip <strong>Düzenle</strong>&apos;ye tıklayın. Videolar kendi oranını korur.</p>
                 </div>
 
                 {/* Resim grid - sürükle & bırak ile sıralama */}
@@ -564,7 +655,15 @@ export default function ProductsAdminPage() {
                         {/\.(mp4|webm|mov)$/i.test(img) && (
                           <div className="absolute top-1 right-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">▶ Video</div>
                         )}
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+                          {!/\.(mp4|webm|mov)$/i.test(img) && (
+                            <button
+                              type="button"
+                              onClick={() => handleEditImage(i)}
+                              className="bg-white/90 text-gray-800 px-3 h-8 rounded-full flex items-center justify-center text-xs font-medium hover:bg-white"
+                              title="Kadrajı düzenle"
+                            >Düzenle</button>
+                          )}
                           <button
                             type="button"
                             onClick={() => handleRemoveImage(i)}
@@ -612,6 +711,7 @@ export default function ProductsAdminPage() {
                           {isDragging ? 'Bırakın, yüklensin!' : 'Sürükle bırak veya tıklayarak seçin'}
                         </p>
                         <p className="text-gray-400 text-sm mt-1">Resim: JPEG, PNG, WebP (maks. 5MB) · Video: MP4, WebM, MOV (maks. 100MB)</p>
+                        <p className="text-amber-600 text-xs mt-1">Öneri: video için <strong>MP4</strong> kullanın — MOV bazı tarayıcılarda (Chrome/Firefox) oynatılamaz.</p>
                       </>
                     )}
                   </label>
@@ -634,12 +734,20 @@ export default function ProductsAdminPage() {
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Açıklama</label>
+                    {/* Basit biçimlendirme araç çubuğu — seçili metni işaretler */}
+                    <div className="flex items-center gap-1 mb-2">
+                      <button type="button" onClick={() => applyDescFormat('bold')} title="Kalın" className="w-9 h-9 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100 font-bold text-gray-800">B</button>
+                      <button type="button" onClick={() => applyDescFormat('italic')} title="İtalik" className="w-9 h-9 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100 italic text-gray-800">I</button>
+                      <button type="button" onClick={() => applyDescFormat('bullet')} title="Madde işareti" className="w-9 h-9 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100 text-gray-800">•</button>
+                      <span className="text-xs text-gray-400 ml-2">Metni seçip butona basın</span>
+                    </div>
                     <textarea
+                      ref={descRef}
                       value={formData.description}
                       onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                      rows={3}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#DD6B56] focus:border-transparent outline-none resize-none"
-                      placeholder="Ürün açıklaması yazın..."
+                      rows={8}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#DD6B56] focus:border-transparent outline-none resize-y font-sans leading-relaxed"
+                      placeholder="Ürün açıklaması yazın... Kalın için **metin**, italik için *metin*, madde için satır başına - koyun."
                     />
                   </div>
                   <div>
@@ -869,14 +977,14 @@ export default function ProductsAdminPage() {
         )}
       </main>
 
-      {/* ── Ürün görseli kırpma modalı ── */}
-      {cropQueue.length > 0 && (
+      {/* ── Ürün görseli kırpma modalı (isteğe bağlı — görsele tıklayınca açılır) ── */}
+      {cropSrc && (
         <ImageCropModal
-          src={cropQueue[0]}
+          src={cropSrc}
           aspect={1}
           uploading={cropUploading}
           onConfirm={handleProductCropConfirm}
-          onClose={() => setCropQueue([])}
+          onClose={() => { setCropSrc(null); setCropEditIndex(null); }}
         />
       )}
     </div>

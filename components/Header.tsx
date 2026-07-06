@@ -182,7 +182,7 @@ export const Header: React.FC = () => {
                       onClick={() => setUserMenuOpen(false)}
                       className="block px-4 py-3 text-sm text-earth hover:bg-bone hover:text-charcoal transition-colors"
                     >
-                      Siparişlerim
+                      {t.nav.orders}
                     </Link>
                     <button
                       type="button"
@@ -257,7 +257,7 @@ export const Header: React.FC = () => {
             <>
               <p className="text-earth text-sm">{t.nav.hello}, {user.firstName}</p>
               <Link href="/orders" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
-                Siparişlerim
+                {t.nav.orders}
               </Link>
               <button
                 type="button"
