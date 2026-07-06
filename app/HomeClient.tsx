@@ -177,28 +177,33 @@ export default function HomeClient({ featured, banner, about, homepage }: HomeCl
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        {/* Kahraman karo düzeni: admin'in öne çıkanlar sıralamasındaki ilk ürün
+            sol yarıda büyük; kalan üçü sağda 2×2 grid'de, dördüncü hücre koleksiyona
+            davet eden "Tümünü Gör" karosu */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <ScrollReveal delay={100} className="h-full">
             <CeramicProductCard product={featured[0]} />
           </ScrollReveal>
-          <ScrollReveal delay={200} className="h-full">
-            <CeramicProductCard product={featured[1]} />
-          </ScrollReveal>
-          <ScrollReveal delay={300} className="h-full">
-            <CeramicProductCard product={featured[2]} />
-          </ScrollReveal>
-          <ScrollReveal delay={400} className="h-full">
-            <CeramicProductCard product={featured[3]} />
-          </ScrollReveal>
-        </div>
-
-        <div className="text-center mt-12 md:hidden">
-          <Link
-            href="/ceramics"
-            className="inline-block border border-charcoal text-charcoal px-8 py-3 text-sm tracking-wider uppercase hover:bg-charcoal hover:text-bone transition-colors"
-          >
-            {t.home.see_all}
-          </Link>
+          <div className="grid grid-cols-2 gap-4 md:gap-6">
+            <ScrollReveal delay={200} className="h-full">
+              <CeramicProductCard product={featured[1]} />
+            </ScrollReveal>
+            <ScrollReveal delay={300} className="h-full">
+              <CeramicProductCard product={featured[2]} />
+            </ScrollReveal>
+            <ScrollReveal delay={400} className="h-full">
+              <CeramicProductCard product={featured[3]} />
+            </ScrollReveal>
+            <ScrollReveal delay={500} className="h-full">
+              <Link
+                href="/ceramics"
+                className="group flex h-full min-h-44 flex-col items-center justify-center gap-3 bg-charcoal text-bone hover:bg-accent transition-colors duration-300 p-6 text-center"
+              >
+                <span className="heading-serif text-xl md:text-2xl">{t.home.see_all}</span>
+                <span aria-hidden="true" className="text-2xl transition-transform duration-300 group-hover:translate-x-2">→</span>
+              </Link>
+            </ScrollReveal>
+          </div>
         </div>
       </section>
 

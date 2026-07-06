@@ -74,7 +74,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
               onMouseMove={handleMouseMove}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
-              className="relative w-full h-[360px] sm:h-[440px] md:h-[520px] bg-warm-gray/50 rounded-lg overflow-hidden cursor-zoom-in"
+              className="relative w-full aspect-square bg-warm-gray/50 rounded-lg overflow-hidden cursor-zoom-in"
             >
               {product.images.length > 0 ? (
                 /\.(mp4|webm|mov)$/i.test(product.images[currentImageIndex]) ? (
