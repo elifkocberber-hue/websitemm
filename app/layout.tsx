@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Geist } from "next/font/google";
 import { Playfair_Display } from "next/font/google";
 import "./globals.css";
@@ -123,13 +124,19 @@ export const metadata: Metadata = {
   category: "El Yapımı Seramik & Hediye",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Middleware'in yazdığı yoldan dili SSR'da belirle: /en* → İngilizce (html lang
+  // dahil), diğerleri Türkçe. Bu, Header/Footer/içeriğin tutarlı dilde render'ını sağlar.
+  const pathname = (await headers()).get('x-pathname') ?? '';
+  const isEn = pathname === '/en' || pathname.startsWith('/en/');
+  const htmlLang = isEn ? 'en' : 'tr';
+
   return (
-    <html lang="tr">
+    <html lang={htmlLang}>
       <head>
         {/* JSON-LD: Organization */}
         <script
@@ -237,7 +244,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${playfair.variable} antialiased`}
       >
-        <LanguageProvider>
+        <LanguageProvider forcedLanguage={isEn ? 'en' : undefined}>
         <AdminProvider>
           <UserProvider>
           <FavoritesProvider>

@@ -13,7 +13,10 @@ export const Header: React.FC = () => {
   const { totalItems } = useCart();
   const { totalFavorites } = useFavorites();
   const { user, logout } = useUser();
+  // language, kök LanguageProvider tarafından /en yolunda otomatik 'en' olur ve
+  // setLanguage yol değişimini kendisi yönetir (URL-farkında).
   const { t, language, setLanguage } = useLanguage();
+  const toggleLanguage = () => setLanguage(language === 'tr' ? 'en' : 'tr');
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -211,7 +214,7 @@ export const Header: React.FC = () => {
             {/* Language Switcher */}
             <button
               type="button"
-              onClick={() => setLanguage(language === 'tr' ? 'en' : 'tr')}
+              onClick={toggleLanguage}
               className="text-[12px] tracking-[0.12em] font-medium text-earth hover:text-charcoal transition-colors border border-earth/30 hover:border-charcoal/50 rounded px-2 py-0.5"
               aria-label="Switch language"
             >
@@ -275,7 +278,7 @@ export const Header: React.FC = () => {
           {/* Language Switcher - Mobile */}
           <button
             type="button"
-            onClick={() => { setLanguage(language === 'tr' ? 'en' : 'tr'); setMenuOpen(false); }}
+            onClick={() => { setMenuOpen(false); toggleLanguage(); }}
             className="mt-4 text-sm tracking-widest font-medium text-earth hover:text-charcoal transition-colors border border-earth/30 rounded px-4 py-2"
           >
             {language === 'tr' ? 'English' : 'Türkçe'}

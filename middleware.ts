@@ -63,7 +63,11 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const response = NextResponse.next();
+  // İstek yolunu header'a yaz — kök layout (server) bunu okuyup /en sayfalarında
+  // dili SSR'da 'en' olarak belirler (client usePathname prerender cache sorununu aşar).
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', pathname);
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
 
   // CORS Headers - API çağrıları için
   if (pathname.startsWith('/api/')) {
