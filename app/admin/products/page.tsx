@@ -535,7 +535,12 @@ export default function ProductsAdminPage() {
               {/* Resimler */}
               <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-1">Ürün Resimleri</h3>
-                <p className="text-sm text-gray-500 mb-4">Görselleri sürükleyerek sıralarını değiştirebilirsiniz. İlk görsel ana resim olarak kullanılır.</p>
+                <p className="text-sm text-gray-500 mb-2">Görselleri sürükleyerek sıralarını değiştirebilirsiniz. İlk görsel ana resim olarak kullanılır.</p>
+                <div className="text-sm text-gray-600 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-4 space-y-1">
+                  <p><strong>📷 Görsel sırası önerisi:</strong></p>
+                  <p><strong>1. görsel:</strong> sade/krem zeminde net ürün çekimi — vitrinde bu görünür.</p>
+                  <p><strong>2. görsel:</strong> ürünü kullanımda gösteren yaşam karesi (masada, rafta) — müşteri kartın üzerine geldiğinde otomatik bu görsele geçer.</p>
+                </div>
 
                 {/* Resim grid - sürükle & bırak ile sıralama */}
                 {formData.images.length > 0 && (
