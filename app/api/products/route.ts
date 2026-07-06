@@ -51,6 +51,7 @@ function mapProduct(p: Record<string, unknown>) {
     id: p.id,
     name: p.name,
     description: p.description,
+    descriptionEn: p.description_en || '',
     price: p.price,
     stock: p.stock,
     clayType: p.clay_type,

@@ -17,7 +17,13 @@ interface CeramicDetailClientProps {
 
 export default function CeramicDetailClient({ product, relatedProducts }: CeramicDetailClientProps) {
   const { addToCart } = useCart();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  // EN modunda İngilizce açıklama gösterilir; boşsa Türkçe açıklamaya düşülür.
+  const activeDescription =
+    language === 'en' && product.descriptionEn?.trim()
+      ? product.descriptionEn
+      : product.description;
 
   useEffect(() => {
     trackViewContent(product);
@@ -165,7 +171,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
 
           <div
             className="product-description text-earth text-lg mb-6 leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: renderDescriptionHtml(product.description) }}
+            dangerouslySetInnerHTML={{ __html: renderDescriptionHtml(activeDescription) }}
           />
 
           {/* Variations */}

@@ -16,6 +16,7 @@ interface Product {
   id: string;
   name: string;
   description: string;
+  description_en?: string;
   price: number;
   stock: number;
   clay_type: string;
@@ -38,6 +39,7 @@ interface Product {
 const EMPTY_PRODUCT = {
   name: '',
   description: '',
+  descriptionEn: '',
   price: 0,
   stock: 0,
   clayType: '',
@@ -74,16 +76,22 @@ export default function ProductsAdminPage() {
   const [cropUploading, setCropUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const descRef = useRef<HTMLTextAreaElement>(null);
+  const descEnRef = useRef<HTMLTextAreaElement>(null);
 
   // Açıklama alanında seçili metni işaretleme sözdizimiyle sarar (bold/italik) veya
   // satır başına önek ekler (madde). Detay sayfası bu işaretlemeyi biçimli gösterir.
-  const applyDescFormat = (kind: 'bold' | 'italic' | 'bullet') => {
-    const ta = descRef.current;
+  // field: hangi dil alanına uygulanacağı ('description' | 'descriptionEn').
+  const applyDescFormat = (
+    kind: 'bold' | 'italic' | 'bullet',
+    field: 'description' | 'descriptionEn'
+  ) => {
+    const ta = field === 'descriptionEn' ? descEnRef.current : descRef.current;
     if (!ta) return;
-    const text = formData.description;
+    const text = formData[field];
     const start = ta.selectionStart;
     const end = ta.selectionEnd;
     const selected = text.slice(start, end);
+    const isEn = field === 'descriptionEn';
     let next: string;
     let cursorStart: number;
     let cursorEnd: number;
@@ -98,13 +106,14 @@ export default function ProductsAdminPage() {
       cursorEnd = lineStart + bulleted.length;
     } else {
       const marker = kind === 'bold' ? '**' : '*';
-      const inner = selected || (kind === 'bold' ? 'kalın metin' : 'italik metin');
+      const placeholder = kind === 'bold' ? (isEn ? 'bold text' : 'kalın metin') : (isEn ? 'italic text' : 'italik metin');
+      const inner = selected || placeholder;
       next = text.slice(0, start) + marker + inner + marker + text.slice(end);
       cursorStart = start + marker.length;
       cursorEnd = cursorStart + inner.length;
     }
 
-    setFormData(prev => ({ ...prev, description: next }));
+    setFormData(prev => ({ ...prev, [field]: next }));
     requestAnimationFrame(() => {
       ta.focus();
       ta.setSelectionRange(cursorStart, cursorEnd);
@@ -162,6 +171,7 @@ export default function ProductsAdminPage() {
     setFormData({
       name: product.name,
       description: product.description,
+      descriptionEn: product.description_en || '',
       price: product.price,
       stock: product.stock,
       clayType: product.clay_type,
@@ -733,12 +743,12 @@ export default function ProductsAdminPage() {
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Açıklama</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Açıklama <span className="text-gray-400 font-normal">(Türkçe)</span></label>
                     {/* Basit biçimlendirme araç çubuğu — seçili metni işaretler */}
                     <div className="flex items-center gap-1 mb-2">
-                      <button type="button" onClick={() => applyDescFormat('bold')} title="Kalın" className="w-9 h-9 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100 font-bold text-gray-800">B</button>
-                      <button type="button" onClick={() => applyDescFormat('italic')} title="İtalik" className="w-9 h-9 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100 italic text-gray-800">I</button>
-                      <button type="button" onClick={() => applyDescFormat('bullet')} title="Madde işareti" className="w-9 h-9 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100 text-gray-800">•</button>
+                      <button type="button" onClick={() => applyDescFormat('bold', 'description')} title="Kalın" className="w-9 h-9 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100 font-bold text-gray-800">B</button>
+                      <button type="button" onClick={() => applyDescFormat('italic', 'description')} title="İtalik" className="w-9 h-9 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100 italic text-gray-800">I</button>
+                      <button type="button" onClick={() => applyDescFormat('bullet', 'description')} title="Madde işareti" className="w-9 h-9 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100 text-gray-800">•</button>
                       <span className="text-xs text-gray-400 ml-2">Metni seçip butona basın</span>
                     </div>
                     <textarea
@@ -748,6 +758,24 @@ export default function ProductsAdminPage() {
                       rows={8}
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#DD6B56] focus:border-transparent outline-none resize-y font-sans leading-relaxed"
                       placeholder="Ürün açıklaması yazın... Kalın için **metin**, italik için *metin*, madde için satır başına - koyun."
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Description <span className="text-gray-400 font-normal">(English)</span></label>
+                    <div className="flex items-center gap-1 mb-2">
+                      <button type="button" onClick={() => applyDescFormat('bold', 'descriptionEn')} title="Bold" className="w-9 h-9 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100 font-bold text-gray-800">B</button>
+                      <button type="button" onClick={() => applyDescFormat('italic', 'descriptionEn')} title="Italic" className="w-9 h-9 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100 italic text-gray-800">I</button>
+                      <button type="button" onClick={() => applyDescFormat('bullet', 'descriptionEn')} title="Bullet list" className="w-9 h-9 flex items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-100 text-gray-800">•</button>
+                      <span className="text-xs text-gray-400 ml-2">Boş bırakılırsa müşteri EN modunda Türkçe açıklamayı görür.</span>
+                    </div>
+                    <textarea
+                      ref={descEnRef}
+                      value={formData.descriptionEn}
+                      onChange={(e) => setFormData(prev => ({ ...prev, descriptionEn: e.target.value }))}
+                      rows={8}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#DD6B56] focus:border-transparent outline-none resize-y font-sans leading-relaxed"
+                      placeholder="English description... Use **text** for bold, *text* for italic, and start a line with - for a bullet."
                     />
                   </div>
                   <div>

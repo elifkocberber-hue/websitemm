@@ -7,6 +7,7 @@ export interface CeramicProduct {
   id: number | string;
   name: string;
   description: string;
+  descriptionEn?: string; // İngilizce açıklama; boşsa müşteri tarafında 'description'a düşülür
   price: number;
   stock: number;
   clayType: string;

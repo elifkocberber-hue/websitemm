@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
       .insert({
         name: body.name,
         description: body.description || '',
+        description_en: body.descriptionEn || '',
         price: body.price || 0,
         stock: body.stock || 0,
         clay_type: body.clayType || 'stoneware',
