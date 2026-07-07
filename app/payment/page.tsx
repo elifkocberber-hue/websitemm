@@ -7,6 +7,14 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { generateEventId } from '@/lib/pixel';
 import { useLanguage } from '@/context/LanguageContext';
+import { COUNTRIES } from '@/lib/countries';
+
+interface ShippingRateInfo {
+  code: string;
+  name: string;
+  cost: number;
+  freeOverThreshold: boolean;
+}
 
 // Kart numarası ön ekinden marka algıla — kullanıcıya görsel geri bildirim için
 function detectCardBrand(digits: string): string | null {
@@ -19,7 +27,7 @@ function detectCardBrand(digits: string): string | null {
 
 export default function PaymentPage() {
   const { items, totalPrice } = useCart();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,6 +39,7 @@ export default function PaymentPage() {
     address: '',
     city: '',
     postalCode: '',
+    country: 'TR',
     cardHolderName: '',
     cardNumber: '',
     expireMonth: '',
@@ -40,9 +49,31 @@ export default function PaymentPage() {
   const [mssAccepted, setMssAccepted] = useState(false);
   const [onBilgiAccepted, setOnBilgiAccepted] = useState(false);
 
+  // Kargo ücretleri (admin tanımlı) + ücretsiz kargo eşiği
+  const [shippingRates, setShippingRates] = useState<ShippingRateInfo[] | null>(null);
+  const [freeThreshold, setFreeThreshold] = useState<number | null>(null);
+
   useEffect(() => {
     setIsMounted(true);
+    fetch('/api/shipping')
+      .then((r) => r.json())
+      .then((d) => {
+        if (Array.isArray(d.rates)) setShippingRates(d.rates);
+        setFreeThreshold(d.threshold ?? null);
+      })
+      .catch(() => setShippingRates([{ code: 'TR', name: 'Türkiye', cost: 0, freeOverThreshold: false }]));
   }, []);
+
+  // Seçili ülkenin kargo bilgisi — kaydı yoksa o ülkeye satış yapılmıyor demektir.
+  // (Gösterim amaçlı; asıl tutar sunucuda yeniden hesaplanıp doğrulanır.)
+  const selectedRate = shippingRates?.find((r) => r.code === formData.country) ?? null;
+  const shippingKnown = shippingRates !== null;
+  const shippingSupported = !shippingKnown || selectedRate !== null; // yüklenene dek engelleme
+  const shippingCost = selectedRate
+    ? (freeThreshold !== null && selectedRate.freeOverThreshold && totalPrice >= freeThreshold ? 0 : selectedRate.cost)
+    : 0;
+  const grandTotal = totalPrice + shippingCost;
+  const isTR = formData.country === 'TR';
 
   if (!isMounted) return null;
 
@@ -83,7 +114,7 @@ export default function PaymentPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          totalPrice: totalPrice,
+          totalPrice: grandTotal, // ürünler + kargo (sunucu yeniden hesaplayıp doğrular)
           items: items,
           customer: formData,
         }),
@@ -96,7 +127,7 @@ export default function PaymentPage() {
         sessionStorage.setItem('last_purchase', JSON.stringify({
           orderId: 'pending',
           items: items.map(i => ({ id: i.id, quantity: i.quantity })),
-          totalPrice,
+          totalPrice: grandTotal,
           eventId: generateEventId(),
         }));
 
@@ -116,7 +147,7 @@ export default function PaymentPage() {
         sessionStorage.setItem('last_purchase', JSON.stringify({
           orderId,
           items: items.map(i => ({ id: i.id, quantity: i.quantity })),
-          totalPrice,
+          totalPrice: grandTotal,
           eventId: generateEventId(),
         }));
         router.push(`/thank-you?orderId=${orderId}&date=${encodeURIComponent(date)}`);
@@ -197,22 +228,58 @@ export default function PaymentPage() {
                   </div>
                   <div>
                     <label className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">{t.payment.phone}</label>
-                    <div className="flex">
-                      <span className="inline-flex items-center px-3 min-h-11 border border-r-0 border-warm-gray rounded-l-lg bg-warm-gray/60 text-earth text-base select-none">+90</span>
+                    {isTR ? (
+                      <div className="flex">
+                        <span className="inline-flex items-center px-3 min-h-11 border border-r-0 border-warm-gray rounded-l-lg bg-warm-gray/60 text-earth text-base select-none">+90</span>
+                        <input
+                          type="tel"
+                          inputMode="numeric"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value.replace(/\D/g, '').slice(0, 10) }))}
+                          required
+                          maxLength={10}
+                          className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-r-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
+                          placeholder="5XX XXX XX XX"
+                        />
+                      </div>
+                    ) : (
                       <input
                         type="tel"
-                        inputMode="numeric"
                         name="phone"
                         value={formData.phone}
-                        onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value.replace(/\D/g, '').slice(0, 10) }))}
+                        onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value.replace(/[^\d\s+()-]/g, '').slice(0, 20) }))}
                         required
-                        maxLength={10}
-                        className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-r-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
-                        placeholder="5XX XXX XX XX"
+                        className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-lg text-charcoal placeholder:text-clay focus:outline-none focus:border-charcoal transition-colors"
+                        placeholder={t.payment.phone_intl_ph}
                       />
-                    </div>
-                    <p className="text-xs text-clay mt-1">{t.payment.phone_hint}</p>
+                    )}
+                    {isTR && <p className="text-xs text-clay mt-1">{t.payment.phone_hint}</p>}
                   </div>
+                </div>
+
+                {/* Ülke — kargo ücreti ve satış bölgesi bu seçime göre belirlenir */}
+                <div>
+                  <label htmlFor="country" className="block text-xs tracking-[0.15em] uppercase text-earth mb-2">{t.payment.country}</label>
+                  <select
+                    id="country"
+                    name="country"
+                    value={formData.country}
+                    onChange={(e) => setFormData(prev => ({ ...prev, country: e.target.value, phone: '' }))}
+                    required
+                    className="w-full min-h-11 px-4 py-2 text-base bg-white border border-warm-gray rounded-lg text-charcoal focus:outline-none focus:border-charcoal transition-colors"
+                  >
+                    {COUNTRIES.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {language === 'en' ? c.en : c.tr}
+                      </option>
+                    ))}
+                  </select>
+                  {!shippingSupported && (
+                    <div className="mt-3 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                      {t.payment.no_shipping_to_country}
+                    </div>
+                  )}
                 </div>
 
                 {/* Address */}
@@ -419,14 +486,14 @@ export default function PaymentPage() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  disabled={loading || !mssAccepted || !onBilgiAccepted}
+                  disabled={loading || !mssAccepted || !onBilgiAccepted || !shippingSupported}
                   className="w-full bg-charcoal hover:bg-accent disabled:bg-warm-gray disabled:text-clay disabled:cursor-not-allowed text-bone py-3.5 px-4 text-sm tracking-wider uppercase rounded-lg transition-colors duration-300 flex items-center justify-center gap-2"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                     <path d="M7 11V7a5 5 0 0110 0v4" />
                   </svg>
-                  {loading ? t.payment.processing : `${t.payment.pay_prefix}${totalPrice.toFixed(2)} ₺${t.payment.pay_suffix}`}
+                  {loading ? t.payment.processing : `${t.payment.pay_prefix}${grandTotal.toFixed(2)} ₺${t.payment.pay_suffix}`}
                 </button>
               </form>
             </div>
@@ -465,13 +532,19 @@ export default function PaymentPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-earth">{t.payment.shipping}</span>
-                  <span className="font-medium text-emerald-700">{t.payment.free}</span>
+                  {!shippingSupported ? (
+                    <span className="font-medium text-red-600">—</span>
+                  ) : shippingCost === 0 ? (
+                    <span className="font-medium text-emerald-700">{t.payment.free}</span>
+                  ) : (
+                    <span className="font-medium text-charcoal">₺{shippingCost.toFixed(2)}</span>
+                  )}
                 </div>
               </div>
 
               <div className="flex justify-between mb-6 text-lg">
                 <span className="font-medium text-charcoal">{t.payment.total}</span>
-                <span className="heading-serif text-charcoal">₺{totalPrice.toFixed(2)}</span>
+                <span className="heading-serif text-charcoal">₺{grandTotal.toFixed(2)}</span>
               </div>
 
               {/* Kargo + cayma hakkı güvencesi — ödeme anında görünür olsun */}

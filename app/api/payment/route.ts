@@ -4,6 +4,8 @@ import { checkRateLimit, getRateLimitKey } from '@/lib/rateLimit';
 import { threedsInitialize } from '@/lib/iyzipay';
 import { getSessionUser } from '@/lib/userAuth';
 import { titleCaseName } from '@/lib/format';
+import { getShippingQuote } from '@/lib/shipping';
+import { getCountry, getCountryNameEn } from '@/lib/countries';
 
 function generateRandomId(): string {
   return Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
@@ -24,8 +26,17 @@ export async function POST(request: NextRequest) {
 
     const { totalPrice, items, customer } = await request.json();
 
-    // Validate customer data
-    const validation = validateCustomerData(customer);
+    // Ülke: ISO-2 kod (yoksa TR varsayılır — eski istemcilerle geriye uyumlu)
+    const countryCode = String(customer?.country || 'TR').toUpperCase();
+    if (!getCountry(countryCode)) {
+      return NextResponse.json(
+        { success: false, error: 'Geçersiz ülke seçimi' },
+        { status: 400 }
+      );
+    }
+
+    // Validate customer data (ülkeye göre TR/uluslararası kurallar)
+    const validation = validateCustomerData(customer, countryCode);
     if (!validation.valid) {
       return NextResponse.json(
         { success: false, error: 'Geçersiz müşteri bilgileri', details: validation.errors },
@@ -121,11 +132,35 @@ export async function POST(request: NextRequest) {
       price: (v.unitPrice * v.quantity).toFixed(2),
     }));
 
-    // Sepet kalemlerinin toplamı — iyzico price/paidPrice ile birebir eşit olmalı
+    // Ürünlerin ara toplamı (kargo hariç)
     const basketSum = basketItems.reduce((s, b) => s + parseFloat(b.price), 0);
 
+    // Kargo: SUNUCU hesaplar — client'ın kargo tutarına güvenilmez.
+    // Ücreti tanımlı olmayan ülkeye satış yapılmaz.
+    const shipping = await getShippingQuote(countryCode, basketSum);
+    if (!shipping.supported) {
+      return NextResponse.json(
+        { success: false, errorCode: 'no_shipping', error: 'Üzgünüz, şu anda bu ülkeye gönderim yapamıyoruz.' },
+        { status: 400 }
+      );
+    }
+
+    // Kargo > 0 ise iyzico sepetine ayrı kalem — iyzico "basketItems toplamı == price" ister
+    if (shipping.cost > 0) {
+      basketItems.push({
+        id: 'shipping',
+        name: 'Kargo Ücreti',
+        category1: 'Kargo',
+        itemType: 'PHYSICAL',
+        price: shipping.cost.toFixed(2),
+      });
+    }
+
+    // Beklenen toplam = ürünler + kargo; iyzico price/paidPrice ile birebir eşit olmalı
+    const expectedTotal = basketSum + shipping.cost;
+
     // Doğrulanmış toplam, client'ın gönderdiği tutarla uyuşmuyorsa reddet
-    if (Math.abs(basketSum - totalPrice) > Math.max(basketSum * 0.01, 0.01)) {
+    if (Math.abs(expectedTotal - totalPrice) > Math.max(expectedTotal * 0.01, 0.01)) {
       return NextResponse.json(
         { success: false, error: 'Fiyat uyuşmazlığı tespit edildi. Lütfen sayfayı yenileyip tekrar deneyin.' },
         { status: 400 }
@@ -138,18 +173,20 @@ export async function POST(request: NextRequest) {
       '85.34.78.112';
 
     const conversationId = generateRandomId();
-    const priceStr = basketSum.toFixed(2);
+    const priceStr = expectedTotal.toFixed(2);
+    const countryNameEn = getCountryNameEn(countryCode);
+    const countryDisplay = getCountry(countryCode)?.tr ?? countryCode;
 
     // Bekleyen siparişi oluştur — 3DS sonrası callback'te 'completed' yapılır.
     // payment_id = conversationId ile callback siparişi bulur.
     const session = getSessionUser(request);
-    const shippingAddress = `${customer.address}, ${customer.city} ${customer.postalCode}`.trim();
+    const shippingAddress = `${customer.address}, ${customer.city} ${customer.postalCode}, ${countryDisplay}`.trim();
 
     const { data: pendingOrder, error: orderErr } = await supabaseAdmin
       .from('orders')
       .insert({
         user_id: session?.id ?? null,
-        total_price: basketSum,
+        total_price: expectedTotal,
         status: 'pending',
         payment_id: conversationId,
         shipping_address: shippingAddress,
@@ -164,15 +201,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Sipariş oluşturulamadı' }, { status: 500 });
     }
 
-    const { error: itemsErr } = await supabaseAdmin.from('order_items').insert(
-      verifiedItems.map((v) => ({
+    // Kargo > 0 ise sipariş kalemi olarak kaydet — admin sipariş detayı, müşteri
+    // "Siparişlerim" ve onay e-postası order_items'tan beslendiği için kargo her
+    // yerde otomatik görünür ve toplamlar tutar.
+    const orderItemRows = verifiedItems.map((v) => ({
+      order_id: pendingOrder.id,
+      product_id: v.id,
+      product_name: v.name,
+      quantity: v.quantity,
+      price: v.unitPrice,
+    }));
+    if (shipping.cost > 0) {
+      orderItemRows.push({
         order_id: pendingOrder.id,
-        product_id: v.id,
-        product_name: v.name,
-        quantity: v.quantity,
-        price: v.unitPrice,
-      }))
-    );
+        product_id: 'shipping',
+        product_name: 'Kargo Ücreti',
+        quantity: 1,
+        price: shipping.cost,
+      });
+    }
+
+    const { error: itemsErr } = await supabaseAdmin.from('order_items').insert(orderItemRows);
 
     if (itemsErr) {
       console.error('Sipariş kalemi hatası:', itemsErr);
@@ -205,26 +254,30 @@ export async function POST(request: NextRequest) {
         id: generateRandomId(),
         name: customer.firstName,
         surname: customer.lastName,
-        gsmNumber: '+90' + String(customer.phone || '').replace(/\D/g, '').slice(-10),
+        // TR: +90 + son 10 hane; yurtdışı: müşterinin girdiği uluslararası numara
+        gsmNumber:
+          countryCode === 'TR'
+            ? '+90' + String(customer.phone || '').replace(/\D/g, '').slice(-10)
+            : '+' + String(customer.phone || '').replace(/\D/g, ''),
         email: customer.email,
         identityNumber: customer.identityNumber || '11111111111',
         registrationAddress: customer.address,
         ip: clientIp,
         city: customer.city,
-        country: 'Turkey',
+        country: countryNameEn,
         zipCode: customer.postalCode,
       },
       shippingAddress: {
         contactName: `${customer.firstName} ${customer.lastName}`,
         city: customer.city,
-        country: 'Turkey',
+        country: countryNameEn,
         address: customer.address,
         zipCode: customer.postalCode,
       },
       billingAddress: {
         contactName: `${customer.firstName} ${customer.lastName}`,
         city: customer.city,
-        country: 'Turkey',
+        country: countryNameEn,
         address: customer.address,
         zipCode: customer.postalCode,
       },

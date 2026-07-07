@@ -40,6 +40,27 @@ export const isValidPassword = (password: string): boolean => {
   return passwordRegex.test(password);
 };
 
+// ── Yurtdışı siparişler için esnek kurallar ─────────────────────────────────
+// TR formatları (telefon 10 hane, posta kodu 5 rakam, isimde Türkçe harf seti)
+// yabancı müşteride form doldurmayı imkansızlaştırır; ülke TR değilse
+// uluslararası desenler kullanılır.
+
+// Uluslararası telefon: 7-15 hane (E.164 esnek; +, boşluk, tire, parantez ayıklanır)
+export const isValidInternationalPhone = (phone: string): boolean => {
+  const digits = phone.replace(/[\s\-().+]/g, '');
+  return /^\d{7,15}$/.test(digits);
+};
+
+// Uluslararası posta kodu: 3-10 alfanumerik (UK/CA/NL harfli kodlar için)
+export const isValidInternationalPostalCode = (postalCode: string): boolean => {
+  return /^[A-Za-z0-9\s-]{3,10}$/.test(postalCode.trim());
+};
+
+// Unicode harflerle isim/şehir (São Paulo, Kraków, Zürich...)
+export const isValidInternationalName = (name: string): boolean => {
+  return /^[\p{L}\s'.-]{2,50}$/u.test(name.trim());
+};
+
 // Validate customer data
 export interface CustomerData {
   firstName: string;
@@ -49,16 +70,22 @@ export interface CustomerData {
   address: string;
   city: string;
   postalCode: string;
+  country?: string; // ISO-2; verilmezse TR varsayılır
 }
 
-export const validateCustomerData = (data: CustomerData): { valid: boolean; errors: string[] } => {
+export const validateCustomerData = (
+  data: CustomerData,
+  countryCode?: string
+): { valid: boolean; errors: string[] } => {
   const errors: string[] = [];
+  const isTR = ((countryCode ?? data.country ?? 'TR').toUpperCase()) === 'TR';
 
-  if (!isValidName(data.firstName)) {
+  const nameOk = isTR ? isValidName : isValidInternationalName;
+  if (!nameOk(data.firstName)) {
     errors.push('Geçerli bir ad girin (2-50 karakter)');
   }
 
-  if (!isValidName(data.lastName)) {
+  if (!nameOk(data.lastName)) {
     errors.push('Geçerli bir soyad girin (2-50 karakter)');
   }
 
@@ -66,20 +93,20 @@ export const validateCustomerData = (data: CustomerData): { valid: boolean; erro
     errors.push('Geçerli bir e-posta adresi girin');
   }
 
-  if (!isValidPhone(data.phone)) {
-    errors.push('Geçerli bir telefon numarası girin (Türkiye formatı)');
+  if (isTR ? !isValidPhone(data.phone) : !isValidInternationalPhone(data.phone)) {
+    errors.push(isTR ? 'Geçerli bir telefon numarası girin (Türkiye formatı)' : 'Geçerli bir telefon numarası girin');
   }
 
   if (!isValidAddress(data.address)) {
     errors.push('Geçerli bir adres girin (5-200 karakter)');
   }
 
-  if (!isValidCity(data.city)) {
+  if (isTR ? !isValidCity(data.city) : !isValidInternationalName(data.city)) {
     errors.push('Geçerli bir şehir adı girin');
   }
 
-  if (!isValidPostalCode(data.postalCode)) {
-    errors.push('Geçerli bir posta kodu girin (5 rakam)');
+  if (isTR ? !isValidPostalCode(data.postalCode) : !isValidInternationalPostalCode(data.postalCode)) {
+    errors.push(isTR ? 'Geçerli bir posta kodu girin (5 rakam)' : 'Geçerli bir posta kodu girin');
   }
 
   return {

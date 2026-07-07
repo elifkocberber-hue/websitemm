@@ -11,9 +11,15 @@ export default function CartPage() {
   const { items, removeFromCart, updateQuantity, totalPrice, clearCart } = useCart();
   const { t } = useLanguage();
   const [isMounted, setIsMounted] = useState(false);
+  // Ücretsiz kargo eşiği (bilgilendirme — kesin kargo tutarı ödeme adımında ülkeye göre)
+  const [freeThreshold, setFreeThreshold] = useState<number | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
+    fetch('/api/shipping')
+      .then((r) => r.json())
+      .then((d) => setFreeThreshold(d.threshold ?? null))
+      .catch(() => {});
   }, []);
 
   if (!isMounted) return null;
@@ -169,8 +175,17 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-earth">{t.cart.shipping}</span>
-                  <span className="font-medium text-emerald-700">{t.cart.free}</span>
+                  {freeThreshold !== null && totalPrice >= freeThreshold ? (
+                    <span className="font-medium text-emerald-700">{t.cart.free}</span>
+                  ) : (
+                    <span className="text-sm text-earth">{t.cart.shipping_at_checkout}</span>
+                  )}
                 </div>
+                {freeThreshold !== null && totalPrice < freeThreshold && (
+                  <p className="text-xs text-clay">
+                    {freeThreshold.toFixed(0)}{t.cart.free_over_hint}
+                  </p>
+                )}
               </div>
 
               <div className="flex justify-between mb-6 text-lg">

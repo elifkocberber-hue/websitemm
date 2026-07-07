@@ -208,6 +208,12 @@ export default function AdminDashboardPage() {
           >
             Ödeme Sonrası Metin
           </Link>
+          <Link
+            href="/admin/shipping"
+            className="inline-flex items-center gap-2 bg-[#DD6B56] hover:bg-[#C45540] text-white font-medium py-2 px-5 rounded-lg transition"
+          >
+            Kargo Ücretleri
+          </Link>
         </div>
 
         {/* Stats Cards */}
