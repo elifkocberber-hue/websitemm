@@ -50,6 +50,7 @@ function mapProduct(p: Record<string, unknown>) {
   return {
     id: p.id,
     name: p.name,
+    nameEn: p.name_en || '',
     description: p.description,
     descriptionEn: p.description_en || '',
     price: p.price,

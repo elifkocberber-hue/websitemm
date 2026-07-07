@@ -24,12 +24,16 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
 }) => {
   const { addToCart } = useCart();
   const { toggleFavorite, isFavorited } = useFavorites();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [addedToCart, setAddedToCart] = useState(false);
   const [animKey, setAnimKey] = useState(0);
   const favorited = isFavorited(product.id);
 
   const clayLabel = t.materials[product.clayType as keyof typeof t.materials];
+
+  // EN modda İngilizce ad (varsa); boşsa Türkçe ada düşülür
+  const displayName =
+    language === 'en' && product.nameEn?.trim() ? product.nameEn : product.name;
 
   // Vitrin kartında yalnız görseller kullanılır; video karesi Next Image'de
   // render edilemez ve kartı bozar. Bu yüzden video URL'lerini eleyip ilk iki
@@ -49,11 +53,11 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
   return (
     <div className="group flex flex-col h-full">
       {/* Image with hover */}
-      <Link href={`/ceramic/${product.id}`} aria-label={product.name}>
+      <Link href={`/ceramic/${product.id}`} aria-label={displayName}>
         <div className={`product-image-hover relative ${imageClass} bg-warm-gray overflow-hidden`}>
           <Image
             src={primaryImage}
-            alt={`${product.name} — el yapımı ${product.category} seramik`}
+            alt={`${displayName} — ${language === 'en' ? `handmade ${product.category} ceramic` : `el yapımı ${product.category} seramik`}`}
             fill
             className={`${objectFit === 'contain' ? 'object-contain' : 'object-cover'} img-primary`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -62,7 +66,7 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
           {secondaryImage && (
             <Image
               src={secondaryImage}
-              alt={`${product.name} — detay`}
+              alt={`${displayName} — ${language === 'en' ? 'detail' : 'detay'}`}
               fill
               className="object-cover img-secondary"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -95,7 +99,7 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
 
         <Link href={`/ceramic/${product.id}`}>
           <h3 className="heading-serif text-lg text-charcoal group-hover:text-accent transition-colors duration-300 line-clamp-2 min-h-14">
-            {product.name}
+            {displayName}
           </h3>
         </Link>
 

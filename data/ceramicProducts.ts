@@ -24,6 +24,7 @@ export async function fetchProducts(): Promise<CeramicProduct[]> {
     return data.map((p: Record<string, unknown>) => ({
       id: p.id,
       name: p.name,
+      nameEn: (p.name_en as string) || '',
       description: p.description,
       descriptionEn: (p.description_en as string) || '',
       price: p.price,
@@ -71,6 +72,7 @@ export async function fetchProductById(id: string): Promise<CeramicProduct | und
     return {
       id: p.id,
       name: p.name,
+      nameEn: (p.name_en as string) || '',
       description: p.description,
       descriptionEn: (p.description_en as string) || '',
       price: p.price,

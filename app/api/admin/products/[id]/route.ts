@@ -39,6 +39,7 @@ export async function PUT(
 
     const updateData: Record<string, unknown> = {};
     if (body.name !== undefined) updateData.name = body.name;
+    if (body.nameEn !== undefined) updateData.name_en = body.nameEn;
     if (body.description !== undefined) updateData.description = body.description;
     if (body.descriptionEn !== undefined) updateData.description_en = body.descriptionEn;
     if (body.price !== undefined) updateData.price = body.price;

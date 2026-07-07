@@ -21,32 +21,35 @@ export async function buildProductMetadata(id: string, locale: 'tr' | 'en'): Pro
 
   const enDesc = product.descriptionEn?.trim() || product.description;
   const description = locale === 'en' ? enDesc : product.description;
+  // EN sayfada İngilizce ad (varsa); boşsa Türkçe ada düşülür
+  const displayName =
+    locale === 'en' && product.nameEn?.trim() ? product.nameEn : product.name;
   const path = locale === 'en' ? `/en/ceramic/${product.id}` : `/ceramic/${product.id}`;
 
   const title =
     locale === 'en'
-      ? `${product.name} | Handmade Ceramics`
-      : `${product.name} | El Yapımı Seramik`;
+      ? `${displayName} | Handmade Ceramics`
+      : `${displayName} | El Yapımı Seramik`;
   const keywords =
     locale === 'en'
-      ? `${product.name}, ${product.category}, handmade ceramics, ${product.clayType}, ceramic gift`
-      : `${product.name}, ${product.category}, el yapımı seramik, ${product.clayType}, seramik hediye`;
+      ? `${displayName}, ${product.category}, handmade ceramics, ${product.clayType}, ceramic gift`
+      : `${displayName}, ${product.category}, el yapımı seramik, ${product.clayType}, seramik hediye`;
 
   return {
     title,
     description,
     keywords,
     openGraph: {
-      title: `${product.name} | El's Dream Factory`,
+      title: `${displayName} | El's Dream Factory`,
       description,
       type: 'website',
       locale: locale === 'en' ? 'en_US' : 'tr_TR',
       url: `${BASE}${path}`,
-      images: [{ url: imageUrl, width: 800, height: 800, alt: product.name }],
+      images: [{ url: imageUrl, width: 800, height: 800, alt: displayName }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${product.name} | El's Dream Factory`,
+      title: `${displayName} | El's Dream Factory`,
       description,
       images: [imageUrl],
     },
@@ -77,6 +80,7 @@ export async function ProductDetailView({ id, locale }: { id: string; locale: 't
   const isEn = locale === 'en';
   const productUrl = isEn ? `${BASE}/en/ceramic/${product.id}` : `${BASE}/ceramic/${product.id}`;
   const jsonDescription = isEn ? (product.descriptionEn?.trim() || product.description) : product.description;
+  const jsonName = isEn && product.nameEn?.trim() ? product.nameEn : product.name;
 
   const breadcrumb = isEn
     ? [
@@ -98,7 +102,7 @@ export async function ProductDetailView({ id, locale }: { id: string; locale: 't
           __html: jsonLdSafe({
             '@context': 'https://schema.org',
             '@type': 'Product',
-            name: product.name,
+            name: jsonName,
             description: jsonDescription,
             image: product.images.map((img) =>
               img.startsWith('http') ? img : `${BASE}${img}`
@@ -139,7 +143,7 @@ export async function ProductDetailView({ id, locale }: { id: string; locale: 't
               {
                 '@type': 'ListItem',
                 position: breadcrumb.length + 1,
-                name: product.name,
+                name: jsonName,
                 item: productUrl,
               },
             ],

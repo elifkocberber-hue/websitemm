@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
       .from('products')
       .insert({
         name: body.name,
+        name_en: body.nameEn || '',
         description: body.description || '',
         description_en: body.descriptionEn || '',
         price: body.price || 0,

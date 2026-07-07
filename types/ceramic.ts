@@ -6,6 +6,7 @@ export interface ProductVariations {
 export interface CeramicProduct {
   id: number | string;
   name: string;
+  nameEn?: string; // İngilizce ad; boşsa müşteri tarafında 'name'e düşülür
   description: string;
   descriptionEn?: string; // İngilizce açıklama; boşsa müşteri tarafında 'description'a düşülür
   price: number;

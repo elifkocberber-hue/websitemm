@@ -15,6 +15,7 @@ interface ProductVariations {
 interface Product {
   id: string;
   name: string;
+  name_en?: string;
   description: string;
   description_en?: string;
   price: number;
@@ -38,6 +39,7 @@ interface Product {
 
 const EMPTY_PRODUCT = {
   name: '',
+  nameEn: '',
   description: '',
   descriptionEn: '',
   price: 0,
@@ -170,6 +172,7 @@ export default function ProductsAdminPage() {
     setIsCreating(false);
     setFormData({
       name: product.name,
+      nameEn: product.name_en || '',
       description: product.description,
       descriptionEn: product.description_en || '',
       price: product.price,
@@ -733,7 +736,7 @@ export default function ProductsAdminPage() {
                 <h3 className="text-lg font-bold text-gray-900 mb-4">Temel Bilgiler</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Adı *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Ürün Adı * <span className="text-gray-400 font-normal">(Türkçe)</span></label>
                     <input
                       type="text"
                       value={formData.name}
@@ -741,6 +744,17 @@ export default function ProductsAdminPage() {
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#DD6B56] focus:border-transparent outline-none"
                       placeholder="Örn: El Yapımı Seramik Vazo"
                     />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Name <span className="text-gray-400 font-normal">(English)</span></label>
+                    <input
+                      type="text"
+                      value={formData.nameEn}
+                      onChange={(e) => setFormData(prev => ({ ...prev, nameEn: e.target.value }))}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#DD6B56] focus:border-transparent outline-none"
+                      placeholder="e.g. Handmade Ceramic Vase"
+                    />
+                    <p className="text-xs text-gray-400 mt-1">Boş bırakılırsa müşteri İngilizce modda Türkçe adı görür.</p>
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Açıklama <span className="text-gray-400 font-normal">(Türkçe)</span></label>

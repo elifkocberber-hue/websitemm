@@ -19,7 +19,9 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
   const { addToCart } = useCart();
   const { t, language } = useLanguage();
 
-  // EN modunda İngilizce açıklama gösterilir; boşsa Türkçe açıklamaya düşülür.
+  // EN modunda İngilizce ad/açıklama gösterilir; boşsa Türkçe'ye düşülür.
+  const displayName =
+    language === 'en' && product.nameEn?.trim() ? product.nameEn : product.name;
   const activeDescription =
     language === 'en' && product.descriptionEn?.trim()
       ? product.descriptionEn
@@ -68,7 +70,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
         <span>›</span>
         <Link href="/ceramics" className="hover:text-charcoal transition-colors">{t.product.breadcrumb_collection}</Link>
         <span>›</span>
-        <span className="text-charcoal truncate max-w-[60vw] sm:max-w-none">{product.name}</span>
+        <span className="text-charcoal truncate max-w-[60vw] sm:max-w-none">{displayName}</span>
       </div>
 
       {/* Product Detail */}
@@ -103,7 +105,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
                   >
                     <Image
                       src={product.images[currentImageIndex]}
-                      alt={`${product.name} — el yapımı ${product.category} seramik`}
+                      alt={`${displayName} — ${language === 'en' ? `handmade ${product.category} ceramic` : `el yapımı ${product.category} seramik`}`}
                       fill
                       className="object-contain"
                       priority
@@ -140,7 +142,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
                 ) : (
                   <Image
                     src={image}
-                    alt={`${product.name} - ${t.product.image_thumb} ${idx + 1}`}
+                    alt={`${displayName} - ${t.product.image_thumb} ${idx + 1}`}
                     fill
                     className="object-contain"
                   />
@@ -163,7 +165,7 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
             ))}
           </div>
 
-          <h1 className="heading-display text-4xl text-charcoal mb-3">{product.name}</h1>
+          <h1 className="heading-display text-4xl text-charcoal mb-3">{displayName}</h1>
 
           <div className="flex items-center gap-4 mb-6">
             <span className="text-4xl font-light text-charcoal">₺{product.price}</span>

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { CeramicProduct } from '@/types/ceramic';
 import { ceramicProducts } from '@/data/ceramicProducts';
+import { useLanguage } from '@/context/LanguageContext';
 import Image from 'next/image';
 
 interface SearchResult {
@@ -15,6 +16,7 @@ interface SearchResult {
 }
 
 export const SearchBar: React.FC = () => {
+  const { language } = useLanguage();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -44,22 +46,26 @@ export const SearchBar: React.FC = () => {
       .filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
+          (p.nameEn || '').toLowerCase().includes(q) ||
           p.category.toLowerCase().includes(q) ||
           p.description.toLowerCase().includes(q) ||
+          (p.descriptionEn || '').toLowerCase().includes(q) ||
           p.clayType.toLowerCase().includes(q)
       )
       .slice(0, 6)
       .map((p) => ({
         id: p.id,
-        name: p.name,
+        // EN modda İngilizce ad (varsa); boşsa Türkçe ada düşülür
+        name: language === 'en' && p.nameEn?.trim() ? p.nameEn : p.name,
         category: p.category,
         price: p.price,
-        image: p.images[0],
+        // Video kareleri Image'de render edilemez — ilk GÖRSELİ seç
+        image: (p.images || []).find((u) => u && !/\.(mp4|webm|mov)$/i.test(u)) ?? p.images[0],
       }));
 
     setResults(filtered);
     setIsOpen(filtered.length > 0);
-  }, [query, products]);
+  }, [query, products, language]);
 
   // Close on click outside
   useEffect(() => {
