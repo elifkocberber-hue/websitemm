@@ -9,6 +9,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useState, useRef, useEffect } from 'react';
 import { trackViewContent } from '@/lib/pixel';
 import { renderDescriptionHtml } from '@/lib/format';
+import { SHOP_ENABLED } from '@/lib/shop';
 
 interface CeramicDetailClientProps {
   product: CeramicProduct;
@@ -167,9 +168,11 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
 
           <h1 className="heading-display text-4xl text-charcoal mb-3">{displayName}</h1>
 
+          {SHOP_ENABLED && (
           <div className="flex items-center gap-4 mb-6">
             <span className="text-4xl font-light text-charcoal">₺{product.price}</span>
           </div>
+          )}
 
           <div
             className="product-description text-earth text-lg mb-6 leading-relaxed"
@@ -181,24 +184,28 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
             <div className="mb-6">
               <h3 className="text-sm font-semibold text-charcoal mb-2">{product.variations.typeName}</h3>
               <div className="flex flex-wrap gap-2">
-                {product.variations.options.map((opt, i) => (
+                {product.variations.options.map((opt, i) => {
+                  // Portfolyo modunda stok gösterilmez; seçenekler yalnız bilgi amaçlı
+                  const soldOut = SHOP_ENABLED && opt.stock === 0;
+                  return (
                   <button
                     type="button"
                     key={i}
                     onClick={() => { setSelectedVariation(i); setQuantity(1); }}
-                    disabled={opt.stock === 0}
+                    disabled={soldOut}
                     className={`px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
                       selectedVariation === i
                         ? 'border-charcoal bg-charcoal text-bone'
-                        : opt.stock === 0
+                        : soldOut
                         ? 'border-warm-gray bg-warm-gray/40 text-clay cursor-not-allowed line-through'
                         : 'border-warm-gray bg-white text-charcoal hover:border-accent'
                     }`}
                   >
                     {opt.name}
-                    {opt.stock === 0 && ` (${t.product.sold_out})`}
+                    {soldOut && ` (${t.product.sold_out})`}
                   </button>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -230,6 +237,9 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
             </div>
           )}
 
+          {/* Stok + sepet — portfolyo modunda gizli (lib/shop.ts) */}
+          {SHOP_ENABLED && (
+          <>
           {/* Stock Status — 1'den fazla stokta sayı gösterme; son 1'de vurgula; yoksa tükendi */}
           <div className="mb-8">
             {availableStock === 0 ? (
@@ -287,6 +297,8 @@ export default function CeramicDetailClient({ product, relatedProducts }: Cerami
               {addedToCart ? `${t.product.added_to_cart}` : t.product.add_to_cart}
             </button>
           </div>
+          </>
+          )}
 
           {/* Back Link */}
           <Link

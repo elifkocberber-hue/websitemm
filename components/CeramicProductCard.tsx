@@ -7,6 +7,7 @@ import { useCart } from '@/context/CeramicCartContext';
 import { useFavorites } from '@/context/FavoritesContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { needsUnoptimized } from '@/lib/images';
+import { SHOP_ENABLED } from '@/lib/shop';
 import { useState } from 'react';
 
 interface CeramicProductCardProps {
@@ -103,6 +104,9 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
           </h3>
         </Link>
 
+        {/* Fiyat, stok ve sepet butonu — portfolyo modunda gizli (lib/shop.ts) */}
+        {SHOP_ENABLED && (
+        <>
         <div className="flex items-center justify-between mt-auto pt-4">
           <span className="text-xl font-light text-charcoal">₺{product.price}</span>
           {/* Kıtlık dili: yalnız tükenince ya da son 1 adette vurgula; 1'den fazla stokta sayı gösterme */}
@@ -135,6 +139,8 @@ export const CeramicProductCard: React.FC<CeramicProductCardProps> = ({
             </>
           ) : product.stock === 0 ? t.card.sold_out : t.card.add_to_cart}
         </button>
+        </>
+        )}
       </div>
     </div>
   );

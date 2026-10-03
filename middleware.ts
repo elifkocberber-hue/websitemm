@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { SHOP_ENABLED, SHOP_ONLY_PAGES, SHOP_ONLY_APIS, matchesPath } from '@/lib/shop';
 
 // Edge runtime'da Node 'crypto' yok; HMAC doğrulamasını Web Crypto ile yaparız.
 function base64urlToUint8(input: string): Uint8Array {
@@ -60,6 +61,20 @@ export async function middleware(request: NextRequest) {
     const adminToken = request.cookies.get('adminToken')?.value;
     if (!adminToken || !(await verifyAdminToken(adminToken))) {
       return NextResponse.redirect(new URL('/sergenim/login', request.url));
+    }
+  }
+
+  // Portfolyo modu (lib/shop.ts): satış sayfaları ana sayfaya, satış API'leri 503.
+  // Yönlendirme geçicidir (307) — satış açılınca arama motorları eski URL'leri korur.
+  if (!SHOP_ENABLED) {
+    if (matchesPath(pathname, SHOP_ONLY_APIS)) {
+      return NextResponse.json(
+        { error: 'Satış şu anda kapalı' },
+        { status: 503, headers: { 'Cache-Control': 'no-store' } }
+      );
+    }
+    if (matchesPath(pathname, SHOP_ONLY_PAGES)) {
+      return NextResponse.redirect(new URL('/', request.url), 307);
     }
   }
 

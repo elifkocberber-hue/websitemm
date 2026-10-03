@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
+import { SHOP_ENABLED } from '@/lib/shop';
 
 export const Footer: React.FC = () => {
   const { t } = useLanguage();
@@ -35,8 +36,12 @@ export const Footer: React.FC = () => {
               <li><Link href="/privacy" className="text-sm text-bone/60 hover:text-bone transition-colors">{t.footer.privacy}</Link></li>
               <li><Link href="/cookie-policy" className="text-sm text-bone/60 hover:text-bone transition-colors">{t.footer.cookie}</Link></li>
               <li><Link href="/terms" className="text-sm text-bone/60 hover:text-bone transition-colors">{t.footer.terms}</Link></li>
-              <li><Link href="/returns" className="text-sm text-bone/60 hover:text-bone transition-colors">{t.footer.returns}</Link></li>
-              <li><Link href="/mesafeli-satis-sozlesmesi" className="text-sm text-bone/60 hover:text-bone transition-colors">Mesafeli Satış Sözleşmesi</Link></li>
+              {SHOP_ENABLED && (
+                <>
+                  <li><Link href="/returns" className="text-sm text-bone/60 hover:text-bone transition-colors">{t.footer.returns}</Link></li>
+                  <li><Link href="/mesafeli-satis-sozlesmesi" className="text-sm text-bone/60 hover:text-bone transition-colors">Mesafeli Satış Sözleşmesi</Link></li>
+                </>
+              )}
               <li><Link href="/faq" className="text-sm text-bone/60 hover:text-bone transition-colors">{t.footer.faq}</Link></li>
             </ul>
           </div>
@@ -68,7 +73,8 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Secure Payment */}
+        {/* Secure Payment — portfolyo modunda gizli (lib/shop.ts) */}
+        {SHOP_ENABLED && (
         <div className="border-t border-bone/10 pt-8 mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <p className="text-[11px] tracking-[0.2em] uppercase text-clay">{t.footer.secure_payment}</p>
           <Image
@@ -79,6 +85,7 @@ export const Footer: React.FC = () => {
             className="h-8 w-auto opacity-90"
           />
         </div>
+        )}
 
 
         {/* Bottom */}

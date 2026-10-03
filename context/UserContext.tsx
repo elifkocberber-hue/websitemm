@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { SHOP_ENABLED } from '@/lib/shop';
 
 export interface UserData {
   id: string;
@@ -21,10 +22,13 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Portfolyo modunda oturum sorgulanmaz → baştan yüklenmiş sayılır
+  const [loading, setLoading] = useState(SHOP_ENABLED);
 
   // Oturum kaynağı: httpOnly cookie. Mount'ta sunucudan doğrula.
   useEffect(() => {
+    // Portfolyo modunda üyelik kapalı ve /api/user 503 döner — hiç sorma
+    if (!SHOP_ENABLED) return;
     let active = true;
     fetch('/api/user/me', { credentials: 'same-origin' })
       .then((res) => (res.ok ? res.json() : { user: null }))

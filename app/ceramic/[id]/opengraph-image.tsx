@@ -1,13 +1,17 @@
 import { ImageResponse } from 'next/og';
 import { fetchProductById, getCeramicProductById } from '@/data/ceramicProducts';
+import { SHOP_ENABLED } from '@/lib/shop';
 
 export const runtime = 'nodejs';
 export const alt = 'El\'s Dream Factory ürün görseli';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-export default async function ProductOGImage({ params }: { params: { id: string } }) {
-  const product = (await fetchProductById(params.id)) ?? getCeramicProductById(params.id);
+// Next 16: params bir Promise — await edilmezse id undefined olur ve her ürün
+// için aşağıdaki "bulunamadı" görseli üretilir.
+export default async function ProductOGImage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const product = (await fetchProductById(id)) ?? getCeramicProductById(id);
 
   if (!product) {
     return new ImageResponse(
@@ -32,9 +36,12 @@ export default async function ProductOGImage({ params }: { params: { id: string 
     );
   }
 
-  const productImage = product.images[0]?.startsWith('http')
-    ? product.images[0]
-    : `https://www.elsdreamfactory.com${product.images[0]}`;
+  // Video karesi <img> ile çizilemez — ilk GÖRSELİ seç (vitrin kartıyla aynı kural)
+  const firstImage =
+    (product.images || []).find((u) => u && !/\.(mp4|webm|mov)$/i.test(u)) ?? '/images/arkaplan.jpg';
+  const productImage = firstImage.startsWith('http')
+    ? firstImage
+    : `https://www.elsdreamfactory.com${firstImage}`;
 
   return new ImageResponse(
     (
@@ -103,15 +110,17 @@ export default async function ProductOGImage({ params }: { params: { id: string 
             {product.name}
           </div>
           <div style={{ width: 60, height: 2, background: '#B8860B' }} />
-          <div
-            style={{
-              fontSize: 36,
-              color: '#5C0A1A',
-              fontWeight: 'bold',
-            }}
-          >
-            ₺{product.price}
-          </div>
+          {SHOP_ENABLED && (
+            <div
+              style={{
+                fontSize: 36,
+                color: '#5C0A1A',
+                fontWeight: 'bold',
+              }}
+            >
+              ₺{product.price}
+            </div>
+          )}
           <div
             style={{
               marginTop: 'auto',

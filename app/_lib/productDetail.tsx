@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { fetchProducts, fetchProductById, getCeramicProductById } from '@/data/ceramicProducts';
 import { jsonLdSafe } from '@/lib/format';
+import { SHOP_ENABLED } from '@/lib/shop';
 import CeramicDetailClient from '../ceramic/[id]/CeramicDetailClient';
 import type { Metadata } from 'next';
 
@@ -108,17 +109,20 @@ export async function ProductDetailView({ id, locale }: { id: string; locale: 't
               img.startsWith('http') ? img : `${BASE}${img}`
             ),
             brand: { '@type': 'Brand', name: "El's Dream Factory" },
-            offers: {
-              '@type': 'Offer',
-              url: productUrl,
-              priceCurrency: 'TRY',
-              price: product.price.toFixed(2),
-              availability:
-                product.stock > 0
-                  ? 'https://schema.org/InStock'
-                  : 'https://schema.org/OutOfStock',
-              seller: { '@type': 'Organization', name: "El's Dream Factory" },
-            },
+            // Portfolyo modunda fiyat/satış bilgisi arama motorlarına da verilmez
+            ...(SHOP_ENABLED && {
+              offers: {
+                '@type': 'Offer',
+                url: productUrl,
+                priceCurrency: 'TRY',
+                price: product.price.toFixed(2),
+                availability:
+                  product.stock > 0
+                    ? 'https://schema.org/InStock'
+                    : 'https://schema.org/OutOfStock',
+                seller: { '@type': 'Organization', name: "El's Dream Factory" },
+              },
+            }),
             category: product.category,
             material: product.clayType,
             ...(product.weight && {

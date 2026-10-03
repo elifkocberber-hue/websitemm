@@ -7,6 +7,7 @@ import { useFavorites } from '@/context/FavoritesContext';
 import { useUser } from '@/context/UserContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { SearchBar } from '@/components/SearchBar';
+import { SHOP_ENABLED } from '@/lib/shop';
 import { useState, useEffect, useRef } from 'react';
 
 export const Header: React.FC = () => {
@@ -141,7 +142,8 @@ export const Header: React.FC = () => {
               )}
             </Link>
 
-            {/* Cart */}
+            {/* Cart — portfolyo modunda gizli (lib/shop.ts) */}
+            {SHOP_ENABLED && (
             <Link
               href="/cart"
               className="relative flex items-center justify-center w-11 h-11 -mr-2"
@@ -158,9 +160,10 @@ export const Header: React.FC = () => {
                 </span>
               )}
             </Link>
+            )}
 
-            {/* User Auth */}
-            {user ? (
+            {/* User Auth — portfolyo modunda gizli (üyelik yalnız sipariş içindir) */}
+            {!SHOP_ENABLED ? null : user ? (
               <div ref={userMenuRef} className="relative">
                 <button
                   type="button"
@@ -253,10 +256,12 @@ export const Header: React.FC = () => {
           <Link href="/favorites" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
             {t.nav.favorites}{totalFavorites > 0 ? ` (${totalFavorites})` : ''}
           </Link>
+          {SHOP_ENABLED && (
           <Link href="/cart" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">
             {t.nav.cart}{totalItems > 0 ? ` (${totalItems})` : ''}
           </Link>
-          {user ? (
+          )}
+          {!SHOP_ENABLED ? null : user ? (
             <>
               <p className="text-earth text-sm">{t.nav.hello}, {user.firstName}</p>
               <Link href="/orders" onClick={() => setMenuOpen(false)} className="heading-serif text-2xl text-charcoal hover:text-accent transition-colors">

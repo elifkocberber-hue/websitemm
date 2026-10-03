@@ -6,6 +6,7 @@ import { CeramicProduct } from '@/types/ceramic';
 import { ceramicProducts } from '@/data/ceramicProducts';
 import { useLanguage } from '@/context/LanguageContext';
 import Image from 'next/image';
+import { SHOP_ENABLED } from '@/lib/shop';
 
 interface SearchResult {
   id: number | string;
@@ -181,9 +182,11 @@ export const SearchBar: React.FC = () => {
                 <p className="text-sm font-medium text-charcoal truncate">{item.name}</p>
                 <p className="text-xs text-earth">{item.category}</p>
               </div>
-              <span className="text-sm font-medium text-charcoal whitespace-nowrap">
-                ₺{item.price.toFixed(2)}
-              </span>
+              {SHOP_ENABLED && (
+                <span className="text-sm font-medium text-charcoal whitespace-nowrap">
+                  ₺{item.price.toFixed(2)}
+                </span>
+              )}
             </button>
           ))}
           {query.trim().length >= 2 && (

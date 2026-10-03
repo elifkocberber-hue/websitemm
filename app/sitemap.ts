@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { ceramicProducts } from '@/data/ceramicProducts';
+import { SHOP_ENABLED } from '@/lib/shop';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.elsdreamfactory.com';
@@ -21,7 +22,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   });
 
   // Yalnız TR sayfalar (yasal/politika — çevirisi yok)
-  const trOnly: MetadataRoute.Sitemap = ['/privacy', '/cookie-policy', '/terms', '/returns'].map((path) => ({
+  // /returns yalnız satış açıkken (portfolyo modunda ana sayfaya yönlenir — lib/shop.ts)
+  const trOnlyPaths = ['/privacy', '/cookie-policy', '/terms', ...(SHOP_ENABLED ? ['/returns'] : [])];
+  const trOnly: MetadataRoute.Sitemap = trOnlyPaths.map((path) => ({
     url: `${baseUrl}${path}`,
     lastModified: new Date(),
     changeFrequency: 'yearly' as const,
